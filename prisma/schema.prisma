@@ -1,0 +1,18 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  // 어떤 객체가 다른 객체랑 매핑될때 다른 객체의 존재를 확인하는 옵션
+  // MySQL은 오류가 자동으로 나지만 Vitess는 나지않음
+  // ex) 댓글을 작성할때 유저id가 없는 아이디일때 Vitess는 userid가 존재하는지
+  // 먼저 확인을 하지 않기 때문에 오류가 발생하지 않지만 그래선 안됨.
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  // ''
+  referentialIntegrity = "prisma"
+}

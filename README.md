@@ -1,8 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Next.js + Typescript + tailwindcss + Prisma + SWR + framerMotion
 
-## Getting Started
-
-1. .env DATABASE_URL="mysql://127.0.0.1:3306/your-db"
+### please add .env -> DATABASE_URL="mysql://127.0.0.1:3306/your-db"
 
 ```json
 {
@@ -17,10 +15,13 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.0",
+    "@types/styled-components": "^5.1.25",
+    "framer-motion": "^6.3.0",
     "next": "12.1.4",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-hook-form": "^7.30.0",
+    "styled-components": "^5.3.5",
     "swr": "^1.3.0"
   },
   "devDependencies": {

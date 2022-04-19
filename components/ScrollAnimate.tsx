@@ -26,7 +26,7 @@ export default function ScrollAnimate({ children }: Props) {
         ref={ref}
         animate={controls}
         initial="hidden"
-        transition={{ type: "spring", duration: 0.8 }}
+        transition={{ type: "spring", duration: 0.8, delay: 0.1 }}
         variants={{
           visible: { opacity: 1, y: -64, rotate: -180 },
           hidden: { opacity: 0, y: 0 },

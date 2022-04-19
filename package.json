@@ -1,5 +1,5 @@
 {
-  "name": "next-template",
+  "name": "modu-post",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,10 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next-auth/prisma-adapter": "^1.0.3",
+    "@prisma/client": "^3.12.0",
     "@tailwindcss/forms": "^0.5.0",
     "@types/styled-components": "^5.1.25",
     "framer-motion": "^6.3.0",
     "next": "12.1.4",
+    "next-auth": "^4.3.2",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-hook-form": "^7.30.0",

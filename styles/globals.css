@@ -3,4 +3,9 @@
 @tailwind utilities;
 body {
   font-family: "Noto Sans KR", sans-serif;
+  overflow-x: hidden;
+}
+
+.post-content p {
+  @apply text-xl font-bold;
 }

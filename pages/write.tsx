@@ -2,19 +2,46 @@
 import Layout from "@components/Layout";
 import type { NextPage } from "next";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
-import TextArea from "@components/textarea";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "@components/button";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import WysiwygEditor from "@components/WysiwygEditor";
+import { useForm } from "react-hook-form";
+import useMutation from "@libs/client/useMutation";
+import { useRouter } from "next/router";
+import { Post } from "@prisma/client";
+interface PostForm {
+  title: string;
+}
+interface PostCreateResponse {
+  ok: boolean;
+  post: Post;
+}
 const Write: NextPage = () => {
-  const [pop, setPop] = useState(false);
-  const onPop = () => {
-    setPop((prev) => !prev);
+  const router = useRouter();
+  const [content, setContent] = useState("");
+  const { register, handleSubmit } = useForm<PostForm>();
+  const [postSubmit, { data, loading }] = useMutation<PostCreateResponse>(
+    `/api/post`,
+    "POST"
+  );
+  const onValid = ({ title }: PostForm) => {
+    if (loading) return;
+    postSubmit({
+      title,
+      content,
+    });
   };
+  useEffect(() => {
+    if (data?.ok) {
+      router.push(`/post/${data.post.id}`);
+    }
+  }, [data, router]);
   return (
     <Layout>
-      <div className="bg-white w-[70%] right-0 left-0 m-auto min-w-[800px] mt-32 p-12 text-gray-800 ">
+      <div className="right-0 left-0 m-auto mt-32 w-[70%] min-w-[800px] bg-white p-12 text-gray-800 ">
         {/* post header */}
-        <form>
+        <form onSubmit={handleSubmit(onValid)}>
           <div className="space-y-12">
             <div className="w-full ">
               <svg
@@ -34,21 +61,23 @@ const Write: NextPage = () => {
             </div>
             {/* title */}
             <input
+              {...register("title", { required: true })}
               placeholder="제목을 입력해주세요"
-              className="w-full border-b-2 text-4xl font-bold p-2 appearance-none focus:outline-none"
+              required
+              className="w-full appearance-none border-b-2 p-2 text-4xl font-bold focus:outline-none"
             ></input>
             {/* tag */}
-            <div className="space-x-2 pb-8 flex items-center">
-              <div className="w-auto bg-slate-500 text-white font-bold rounded-xl  py-1 px-2">
+            <div className="flex items-center space-x-2 pb-8">
+              <div className="w-auto rounded-xl bg-slate-500 py-1 px-2  font-bold text-white">
                 React
               </div>
-              <div className="w-auto bg-slate-500 text-white font-bold rounded-xl  py-1 px-2">
+              <div className="w-auto rounded-xl bg-slate-500 py-1 px-2  font-bold text-white">
                 Next.js
               </div>
-              <div className="w-auto bg-slate-500 text-white font-bold rounded-xl  py-1 px-2">
+              <div className="w-auto rounded-xl bg-slate-500 py-1 px-2  font-bold text-white">
                 Typescript
               </div>
-              <div className="flex item-center cursor-pointer">
+              <div className="item-center flex cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 text-slate-500 "
@@ -63,15 +92,14 @@ const Write: NextPage = () => {
                     d="M12 4v16m8-8H4"
                   />
                 </svg>
-                <span className="font-semibold text-base text-slate-500">
+                <span className="text-base font-semibold text-slate-500">
                   태그추가
                 </span>
               </div>
             </div>
           </div>
-          <div className=" h-[800px] border-4 p-12"></div>
-          <div className="flex space-x-2 p-4 justify-end">
-            <Button text="취소" large css="bg-slate-400"></Button>
+          <WysiwygEditor onChange={(value) => setContent(value)} />
+          <div className="flex justify-end space-x-2 p-4">
             <Button text="글 등록" large css="bg-slate-800"></Button>
           </div>
         </form>

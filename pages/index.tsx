@@ -2,14 +2,18 @@
 // 최신순, 인기순
 //
 import Layout from "@components/Layout";
-import type { NextPage } from "next";
+import type { NextApiRequest, NextPage } from "next";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import CategoryIcon from "@components/categoryIcon";
 import { useSession } from "next-auth/react";
+import client from "@libs/server/client";
+import { getSession } from "next-auth/react";
+import { UserSession } from "./api/user/session";
+import { useRouter } from "next/router";
 const Home: NextPage = () => {
-  const { data } = useSession();
+  const router = useRouter();
   const [category, setCategory] = useState("");
   const onSetCategory = (category: string) => {
     setCategory(category);
@@ -17,11 +21,16 @@ const Home: NextPage = () => {
   return (
     <Layout>
       {/* main */}
-      <div className="bg-white w-full h-[30rem] flex  justify-start items-center space-x-24">
+      <div className="flex h-[30rem] w-full items-center  justify-start space-x-24 bg-white">
         <div className="space-y-8 p-4">
-          <div className="text-6xl font-bold">모두의 hook</div>
+          <div
+            onClick={() => router.push("post/8")}
+            className="text-6xl font-bold"
+          >
+            모두의 hook
+          </div>
           <div className="text-2xl font-bold">
-            개발자 동료들에게 도움이 되는 여러분만의 코드를 공유해보세요.
+            개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요.
           </div>
         </div>
         <div className="flex space-x-24">
@@ -31,7 +40,7 @@ const Home: NextPage = () => {
         </div>
       </div>
       {/* category */}
-      <div className="bg-slate-200 w-full  flex flex-wrap justify-center items-center space-x-2">
+      <div className="flex w-full  flex-wrap items-center justify-center space-x-2 bg-slate-200">
         {category && (
           <CategoryIcon layoutId="Posts" text="전체" onClick={onSetCategory} />
         )}
@@ -41,7 +50,7 @@ const Home: NextPage = () => {
       </div>
       {/* posts */}
       <div>
-        <div className="w-full h-[10rem] pt-8 px-8 bg-white flex justify-between items-center space-x-8">
+        <div className="flex h-[10rem] w-full items-center justify-between space-x-8 bg-white px-8 pt-8">
           {!category ? (
             <div className="flex items-center space-x-4">
               <CategoryIcon layoutId="Posts" onClick={onSetCategory} />
@@ -73,7 +82,7 @@ const Home: NextPage = () => {
             <></>
           )}
           <div className="flex space-x-4">
-            <div className="font-bold text-2xl flex items-center text-gray-800">
+            <div className="flex items-center text-2xl font-bold text-gray-800">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-8 w-8"
@@ -95,7 +104,7 @@ const Home: NextPage = () => {
               </svg>
               <span>인기</span>
             </div>
-            <div className="font-bold text-2xl flex items-center text-gray-800">
+            <div className="flex items-center text-2xl font-bold text-gray-800">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-8 w-8"
@@ -114,14 +123,14 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-6 m-12 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        <div className="m-12 grid grid-cols-2 gap-6 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {[
             1, 1, 1, 1, 1, 1, 11, 1, 1, 1, 1, 11, 1, 1, 1, 11, 1, 1, 1, 1, 1, 1,
           ].map((post, index) => {
             return (
               <div
                 key={index}
-                className="w-full aspect-square max-w-md bg-orange-500 rounded-lg p-4"
+                className="aspect-square w-full max-w-md rounded-lg bg-orange-500 p-4"
               >
                 {index}
               </div>
@@ -132,5 +141,24 @@ const Home: NextPage = () => {
     </Layout>
   );
 };
-
+export const getServerSideProps = async ({ req }: any) => {
+  const session: UserSession = await getSession({ req });
+  console.log(session);
+  if (!session)
+    return {
+      props: {
+        user: null,
+      },
+    };
+  const user = await client.user.findFirst({
+    where: {
+      email: session?.user?.email,
+    },
+  });
+  return {
+    props: {
+      user,
+    },
+  };
+};
 export default Home;

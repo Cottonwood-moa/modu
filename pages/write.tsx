@@ -5,11 +5,14 @@ import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "@components/button";
 import "@toast-ui/editor/dist/toastui-editor.css";
+import "tui-color-picker/dist/tui-color-picker.css";
+import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import WysiwygEditor from "@components/WysiwygEditor";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
 import { useRouter } from "next/router";
 import { Post } from "@prisma/client";
+import Swal from "sweetalert2";
 interface PostForm {
   title: string;
 }
@@ -27,19 +30,67 @@ const Write: NextPage = () => {
   );
   const onValid = ({ title }: PostForm) => {
     if (loading) return;
-    postSubmit({
-      title,
-      content,
+    Swal.fire({
+      title: "게시글을 등록하시겠습니까?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#475569",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "확인",
+      cancelButtonText: "취소",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // try catch 문으로 요청이 실패할 때 error를 fire하는 걸 추가해야 하는데 그냥 생략하도록 하자
+        try {
+          postSubmit({
+            title,
+            content,
+          });
+          let timerInterval: any;
+          Swal.fire({
+            title: "게시글을 발행 중입니다.",
+            html: "<b></b> milliseconds.",
+            timer: 1200,
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading();
+              const b = Swal?.getHtmlContainer()?.querySelector("b");
+              timerInterval = setInterval(() => {
+                // @ts-ignore
+                b.textContent = Swal.getTimerLeft();
+              }, 100);
+            },
+            willClose: () => {
+              clearInterval(timerInterval);
+            },
+          }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+              console.log("I was closed by the timer");
+            }
+          });
+        } catch (err: any) {
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "게시글 등록에 실패했습니다.",
+            footer: `Error : ${err?.message}`,
+            confirmButtonColor: "#475569",
+            denyButtonColor: "#475569",
+            cancelButtonColor: "#475569",
+          });
+        }
+      }
     });
   };
   useEffect(() => {
-    if (data?.ok) {
+    if (data && data?.ok) {
       router.push(`/post/${data.post.id}`);
     }
   }, [data, router]);
   return (
     <Layout>
-      <div className="right-0 left-0 m-auto mt-32 w-[70%] min-w-[800px] bg-white p-12 text-gray-800 ">
+      <div className="right-0 left-0 m-auto mt-32 w-[90%] min-w-[800px] bg-white p-12 text-gray-800 ">
         {/* post header */}
         <form onSubmit={handleSubmit(onValid)}>
           <div className="space-y-12">
@@ -98,7 +149,9 @@ const Write: NextPage = () => {
               </div>
             </div>
           </div>
-          <WysiwygEditor onChange={(value) => setContent(value)} />
+          <div className="text-editor">
+            <WysiwygEditor onChange={(value) => setContent(value)} />
+          </div>
           <div className="flex justify-end space-x-2 p-4">
             <Button text="글 등록" large css="bg-slate-800"></Button>
           </div>

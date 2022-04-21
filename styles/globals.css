@@ -7,5 +7,36 @@ body {
 }
 
 .post-content p {
-  @apply text-xl font-bold;
+  @apply text-xl font-medium;
 }
+.post-content .block-quote p {
+  @apply border-l-4 pl-4 text-2xl font-bold text-gray-400;
+}
+.post-content h6 {
+  @apply text-2xl font-medium;
+}
+.post-content h5 {
+  @apply text-3xl font-medium;
+}
+.post-content h4 {
+  @apply text-4xl font-medium;
+}
+.post-content h3 {
+  @apply text-5xl font-medium;
+}
+.post-content h2 {
+  @apply text-6xl font-medium;
+}
+.post-content h1 {
+  @apply text-7xl font-medium;
+}
+.post-content ul {
+  @apply list-disc;
+}
+.post-content ol {
+  @apply list-decimal;
+}
+
+/* .text-editor p {
+  @apply text-xl font-bold;
+} */

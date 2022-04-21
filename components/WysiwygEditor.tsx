@@ -3,6 +3,7 @@ import * as React from "react";
 import { Editor as EditorType, EditorProps } from "@toast-ui/react-editor";
 import { TuiEditorWithForwardedProps } from "@components/TuiEditorWrapper";
 
+import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 interface EditorPropsWithHandlers extends EditorProps {
   onChange?(value: string): void;
 }
@@ -31,6 +32,7 @@ const WysiwygEditor: React.FC<Props> = (props) => {
     height,
     initialEditType,
     useCommandShortcut,
+    plugins,
   } = props;
 
   const editorRef = React.useRef<EditorType>();
@@ -56,6 +58,7 @@ const WysiwygEditor: React.FC<Props> = (props) => {
         height={height || "600px"}
         initialEditType={initialEditType || "markdown"}
         useCommandShortcut={useCommandShortcut || true}
+        plugins={[colorSyntax]}
         ref={editorRef}
         onChange={handleChange}
       />

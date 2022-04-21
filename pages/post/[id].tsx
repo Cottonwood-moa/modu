@@ -9,13 +9,14 @@ import { Post, User } from "@prisma/client";
 import jsonSerialize from "@libs/server/jsonSerialize";
 import PostComment from "@components/PostComment";
 // import ReactMarkdown from "react-markdown";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import PageLoading from "@components/pageLoading";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGfm from "remark-gfm";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
-import PageLoading from "@components/pageLoading";
+import rehypeRaw from "rehype-raw";
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
 export interface PostWithUser extends Post {
   user: User;
@@ -39,6 +40,18 @@ const PostDetail: NextPage<staticProps> = ({
   const onPop = () => {
     setPop((prev) => !prev);
   };
+  console.log(content?.replace(/\n\s\n\s/gi, "\n\n&nbsp;\n\n"));
+  console.log(content);
+
+  /*  const [parsedFile, setParsedFile] = useState("");
+  const file = unified()
+    .use(remarkParse)
+    .use(remarkGfm, { singleTilde: false })
+    .use(remarkRehype)
+    .use(rehypeStringify)
+    .process(content)
+    .then((content) => setParsedFile(content.value.toString())); */
+  // console.log(parsedFile);
   if (router.isFallback) {
     return <PageLoading text="포스트 생성중" />;
   }
@@ -74,7 +87,7 @@ const PostDetail: NextPage<staticProps> = ({
               <span className="text-lg font-semibold xl:text-2xl ">{name}</span>
             </div>
             <div className="text-lg font-semibold text-slate-500 xl:text-2xl">
-              2022-04-19
+              {createdAt}
             </div>
           </div>
           {/* tag */}
@@ -91,10 +104,11 @@ const PostDetail: NextPage<staticProps> = ({
           </div>
         </div>
         {/* post content */}
-        <div className="post-content">
+        <div className="post-content py-12">
           <ReactMarkdown
-            children={content}
+            rehypePlugins={[rehypeRaw]}
             remarkPlugins={[remarkGfm]}
+            children={content?.replace(/\n\s\n\s/gi, "\n\n&nbsp;\n\n")}
             components={{
               code({ node, inline, className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || "");
@@ -107,9 +121,22 @@ const PostDetail: NextPage<staticProps> = ({
                     {...props}
                   />
                 ) : (
-                  <code className={className} {...props}>
+                  <SyntaxHighlighter
+                    children={String(children).replace(/\n$/, "")}
+                    style={a11yDark}
+                    language="textile"
+                    PreTag="div"
+                    {...props}
+                  />
+                );
+              },
+              // 인용문
+              blockquote({ node, children, ...props }) {
+                return (
+                  // @ts-ignore
+                  <div className="block-quote" {...props}>
                     {children}
-                  </code>
+                  </div>
                 );
               },
             }}

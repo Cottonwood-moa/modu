@@ -27,7 +27,7 @@ export default function withHandler({
       return res.status(405).end();
     }
     if (isPrivate && !session) {
-      return res.status(401).json({ ok: false, error: "Plz login" });
+      return res.json({ ok: false, error: "Plz login" });
     }
     try {
       // handler 호출 부분

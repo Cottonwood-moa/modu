@@ -8,6 +8,7 @@ import useSWR from "swr";
 import Button from "./button";
 import TextArea from "./textarea";
 import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 interface CommentProps {
   id: number;
   userId: string;
@@ -38,36 +39,56 @@ export default function PostComment({ id, userId }: CommentProps) {
   const [deleteComment, { data: deleteData, loading: deleteCommentLoading }] =
     useMutation<CreateCommentResponse>(`/api/comment/${id}`, "DELETE");
   const { user } = useUser();
+  const router = useRouter();
   const { register, handleSubmit, reset } = useForm<FormData>();
   const onValid = ({ comment }: FormData) => {
     if (createCommentLoading) return;
-    Swal.fire({
-      title: "댓글을 등록하시겠습니까?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#475569",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "확인",
-      cancelButtonText: "취소",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          createComment(comment);
-        } catch (err: any) {
-          Swal.fire({
-            icon: "error",
-            title: "Error!",
-            text: "댓글 등록에 실패했습니다.",
-            footer: `Error : ${err?.message}`,
-            confirmButtonColor: "#475569",
-            denyButtonColor: "#475569",
-            cancelButtonColor: "#475569",
-          });
-        } finally {
-          reset();
+    if (!user) {
+      Swal.fire({
+        title: "로그인이 필요합니다!",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#475569",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push("/login");
+          return;
+        } else {
+          return;
         }
-      }
-    });
+      });
+    } else {
+      Swal.fire({
+        title: "댓글을 등록하시겠습니까?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#475569",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            createComment(comment);
+          } catch (err: any) {
+            Swal.fire({
+              icon: "error",
+              title: "Error!",
+              text: "댓글 등록에 실패했습니다.",
+              footer: `Error : ${err?.message}`,
+              confirmButtonColor: "#475569",
+              denyButtonColor: "#475569",
+              cancelButtonColor: "#475569",
+            });
+          } finally {
+            reset();
+          }
+        }
+      });
+    }
   };
   const deleteHandle = (id: number) => {
     if (deleteCommentLoading) return;
@@ -152,7 +173,7 @@ export default function PostComment({ id, userId }: CommentProps) {
                 </div>
                 {comment?.user?.id === user?.id ? (
                   <div
-                    className="cursor-pointer p-2 text-base font-normal text-gray-400"
+                    className="flex cursor-pointer items-center whitespace-nowrap p-2 text-base font-normal text-gray-400"
                     onClick={() => deleteHandle(comment?.id)}
                   >
                     삭제

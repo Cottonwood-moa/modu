@@ -28,7 +28,7 @@ export default function TextArea({
         className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 "
         rows={4}
         required
-        maxLength={100}
+        maxLength={1000}
         {...rest}
         {...register}
       />

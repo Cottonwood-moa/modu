@@ -17,9 +17,19 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import Image from "next/image";
+import useSWR from "swr";
+import { cls } from "@libs/client/utils";
+import useUser from "@libs/client/useUser";
+import useMutation from "@libs/client/useMutation";
+import Swal from "sweetalert2";
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
 export interface PostWithUser extends Post {
   user: User;
+}
+interface IsLikedResponse {
+  ok: boolean;
+  liked: boolean;
 }
 interface staticProps {
   id: number;
@@ -44,16 +54,38 @@ const PostDetail: NextPage<staticProps> = ({
   const onPop = () => {
     setPop((prev) => !prev);
   };
-
-  /*  const [parsedFile, setParsedFile] = useState("");
-  const file = unified()
-    .use(remarkParse)
-    .use(remarkGfm, { singleTilde: false })
-    .use(remarkRehype)
-    .use(rehypeStringify)
-    .process(content)
-    .then((content) => setParsedFile(content.value.toString())); */
-  // console.log(parsedFile);
+  const { user } = useUser();
+  const { data, mutate } = useSWR<IsLikedResponse>(
+    userId && id ? `/api/post/fav?userId=${user?.id}&postId=${id}` : null
+  );
+  const [like, { loading }] = useMutation(`/api/post/fav`, "POST");
+  const likeClickHandle = () => {
+    if (loading) return;
+    if (!user) {
+      Swal.fire({
+        title: "로그인이 필요합니다!",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#475569",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push("/login");
+          return;
+        } else {
+          return;
+        }
+      });
+    } else {
+      mutate((prev) => prev && { ...prev, liked: !prev.liked }, false);
+      like({
+        userId: user?.id,
+        postId: id,
+      });
+    }
+  };
   if (router.isFallback) {
     return <PageLoading text="포스트 생성중" />;
   }
@@ -62,7 +94,7 @@ const PostDetail: NextPage<staticProps> = ({
       <div className="right-0 left-0 m-auto mt-32 w-[60%] min-w-[800px] bg-white p-12 text-gray-800 ">
         {/* post header */}
         <div className="space-y-12">
-          <div className="w-full ">
+          <div className="flex w-full items-center justify-between">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-12 w-12"
@@ -77,6 +109,57 @@ const PostDetail: NextPage<staticProps> = ({
                 d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z"
               />
             </svg>
+            {data?.liked ? (
+              <motion.div
+                layoutId="liked"
+                onClick={likeClickHandle}
+                animate={{ rotate: 360 }}
+                whileHover={{ scale: 1.2 }}
+                className={
+                  "flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-red-400"
+                }
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              </motion.div>
+            ) : (
+              <motion.div
+                layoutId="liked"
+                onClick={likeClickHandle}
+                animate={{ rotate: 0 }}
+                whileHover={{ scale: 1.2 }}
+                className={
+                  "flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-gray-400"
+                }
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              </motion.div>
+            )}
           </div>
           {/* title */}
           <div className="w-full text-3xl font-bold xl:text-4xl 2xl:text-5xl">
@@ -85,7 +168,13 @@ const PostDetail: NextPage<staticProps> = ({
           {/* user & date */}
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="h-12 w-12 rounded-full bg-blue-500" />
+              <Image
+                src={avatar ? avatar : "/images/react.png"}
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded-full bg-slate-600"
+                alt=""
+              />
               <span className="text-lg font-semibold xl:text-2xl ">{name}</span>
             </div>
             <div className="text-lg font-semibold text-slate-500 xl:text-2xl">
@@ -257,6 +346,7 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
       },
     },
   });
+
   if (!post)
     return {
       redirect: {

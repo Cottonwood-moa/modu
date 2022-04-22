@@ -9,16 +9,16 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
+  const session: UserSession = await getSession({ req });
+  const user = await client.user.findFirst({
+    where: {
+      email: session?.user?.email,
+    },
+  });
   if (req.method === "POST") {
-    const session: UserSession = await getSession({ req });
     const {
       body: { title, content, thumbnailId },
     } = req;
-    const user = await client.user.findFirst({
-      where: {
-        email: session?.user?.email,
-      },
-    });
     const post = await client.post.create({
       data: {
         title,
@@ -38,9 +38,8 @@ async function handler(
   }
   if (req.method === "GET") {
     const {
-      query: { page },
+      query: { page, postId },
     } = req;
-    console.log(page);
     // post 전체 갯수
     const postsCount = await client.post.count();
     // 페이지 전체 갯수
@@ -49,6 +48,9 @@ async function handler(
     const posts = await client.post.findMany({
       take: 8,
       skip: 8 * (+page - 1),
+      orderBy: {
+        id: "desc",
+      },
       include: {
         user: {
           select: {
@@ -59,10 +61,12 @@ async function handler(
         _count: {
           select: {
             favs: true,
+            comments: true,
           },
         },
       },
     });
+
     if (!posts) {
       return res.json({
         ok: false,

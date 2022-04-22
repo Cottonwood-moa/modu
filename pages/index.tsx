@@ -19,7 +19,7 @@ interface PostWithInclude extends Post {
   user: User;
   _count: {
     favs: number;
-    comment: number;
+    comments: number;
   };
 }
 interface PostsResponse {
@@ -44,7 +44,6 @@ const Home: NextPage = () => {
   };
   const { data, setSize, isValidating } = useSWRInfinite<PostsResponse>(getKey);
   const posts = data ? data.map((post) => post?.posts).flat() : [];
-  console.log(posts);
   const page = useInfiniteScroll();
   useEffect(() => {
     setSize(page);
@@ -173,7 +172,7 @@ const Home: NextPage = () => {
                     alt=""
                   />
                 </div>
-                <div className="text-xl font-bold text-gray-800">
+                <div className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-bold text-gray-800">
                   {post.title}
                 </div>
                 <div className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium text-gray-600">
@@ -195,7 +194,7 @@ const Home: NextPage = () => {
                     <div>{post.user.name}</div>
                   </div>
                   <div className="absolute right-0 flex items-center justify-end space-x-4">
-                    <div className="flex items-center">
+                    <div className="flex items-center space-x-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-6 w-6"
@@ -213,7 +212,7 @@ const Home: NextPage = () => {
                       {/* ++++++++++++++++++++++++++++++변경필요 */}
                       <span>{post._count.favs}</span>
                     </div>
-                    <div className="flex items-center text-gray-800">
+                    <div className="flex items-center space-x-2 text-gray-800">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-6 w-6"
@@ -228,7 +227,7 @@ const Home: NextPage = () => {
                           d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
                         />
                       </svg>
-                      <span>{post._count.favs}</span>
+                      <span>{post._count.comments}</span>
                     </div>
                   </div>
                 </div>

@@ -2,7 +2,7 @@ import useUser from "@libs/client/useUser";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import OutsideClickHandler from "react-outside-click-handler";
@@ -11,7 +11,7 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const { user } = useUser();
+  const { user, mutate } = useUser();
   const [info, setInfo] = useState(false);
   const router = useRouter();
   const onInfo = () => {
@@ -21,12 +21,15 @@ export default function Layout({ children }: LayoutProps) {
   const onLogin = () => {
     router.push("/login");
   };
+  const onSignOut = () => {
+    signOut();
+  };
   const onTitleClick = () => {
     router.push("/");
   };
   return (
     <div>
-      <div className="z-10 flex h-24 w-full items-center justify-between bg-white px-6 text-lg font-bold">
+      <div className="z-10 flex h-24 w-full  items-center justify-between bg-white px-6 text-lg font-bold">
         <div
           onClick={onTitleClick}
           className="cursor-pointer font-[Gugi] text-4xl font-bold"
@@ -136,7 +139,7 @@ export default function Layout({ children }: LayoutProps) {
                         </Link>
                         <div
                           className="text-gray-800 hover:text-blue-400"
-                          onClick={() => signOut()}
+                          onClick={onSignOut}
                         >
                           로그아웃
                         </div>

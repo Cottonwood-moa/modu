@@ -1,4 +1,4 @@
-import { UserSession } from "./../user/session";
+import { UserSession } from "../user/session";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 import client from "@libs/server/client";
@@ -9,75 +9,72 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
+  const { query, body } = req;
   if (req.method === "POST") {
     const session: UserSession = await getSession({ req });
-    const {
-      body: { title, content, thumbnailId },
-    } = req;
+    if (!session)
+      return res.json({
+        ok: false,
+        messgae: "Plz login",
+      });
     const user = await client.user.findFirst({
       where: {
         email: session?.user?.email,
       },
     });
-    const post = await client.post.create({
+    const comment = await client.comment.create({
       data: {
-        title,
-        content,
-        thumnail: thumbnailId,
+        content: body,
+        post: {
+          connect: {
+            id: +query.id.toString(),
+          },
+        },
         user: {
           connect: {
-            id: user?.id,
+            id: user?.id.toString(),
           },
         },
       },
     });
-    return res.json({
+    res.json({
       ok: true,
-      post,
     });
   }
   if (req.method === "GET") {
-    const {
-      query: { page },
-    } = req;
-    console.log(page);
-    // post 전체 갯수
-    const postsCount = await client.post.count();
-    // 페이지 전체 갯수
-    const pages = Math.ceil(postsCount / 8);
-
-    const posts = await client.post.findMany({
-      take: 8,
-      skip: 8 * (+page - 1),
+    const comments = await client.comment.findMany({
+      where: {
+        postId: +query?.id.toString(),
+      },
       include: {
         user: {
           select: {
+            id: true,
             name: true,
             image: true,
           },
         },
-        _count: {
-          select: {
-            favs: true,
-          },
-        },
       },
     });
-    if (!posts) {
-      return res.json({
-        ok: false,
-        message: "There is no Posts",
-      });
-    }
     res.json({
-      posts: jsonSerialize(posts),
-      pages,
+      ok: true,
+      comments,
+    });
+  }
+  if (req.method === "DELETE") {
+    const { body } = req;
+    const deleteData = await client.comment.delete({
+      where: {
+        id: body,
+      },
+    });
+    res.json({
       ok: true,
     });
   }
 }
 
 export default withHandler({
-  method: ["POST", "GET"],
+  method: ["GET", "POST", "DELETE"],
   handler,
 });

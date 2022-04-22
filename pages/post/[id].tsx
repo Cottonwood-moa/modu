@@ -22,6 +22,8 @@ export interface PostWithUser extends Post {
   user: User;
 }
 interface staticProps {
+  id: number;
+  userId: string;
   title: string;
   content: string;
   name: string;
@@ -34,14 +36,14 @@ const PostDetail: NextPage<staticProps> = ({
   name,
   avatar,
   createdAt,
+  id,
+  userId,
 }) => {
   const router = useRouter();
   const [pop, setPop] = useState(false);
   const onPop = () => {
     setPop((prev) => !prev);
   };
-  console.log(content?.replace(/\n\s\n\s/gi, "\n\n&nbsp;\n\n"));
-  console.log(content);
 
   /*  const [parsedFile, setParsedFile] = useState("");
   const file = unified()
@@ -108,7 +110,7 @@ const PostDetail: NextPage<staticProps> = ({
           <ReactMarkdown
             rehypePlugins={[rehypeRaw]}
             remarkPlugins={[remarkGfm]}
-            children={content?.replace(/\n\s\n\s/gi, "\n\n&nbsp;\n\n")}
+            children={content?.replace(/\n/gi, "\n\n&nbsp;\n\n")}
             components={{
               code({ node, inline, className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || "");
@@ -142,7 +144,7 @@ const PostDetail: NextPage<staticProps> = ({
             }}
           />
         </div>
-        <PostComment />
+        <PostComment id={id} userId={userId} />
         {/* 추천 글 */}
         {pop ? (
           <motion.div
@@ -264,8 +266,10 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
     };
   return {
     props: {
+      id: post?.id,
       title: post?.title,
       content: post?.content,
+      userId: post?.user?.id,
       name: post?.user?.name,
       avatar: post?.user?.image,
       createdAt: jsonSerialize(post?.createdAt),

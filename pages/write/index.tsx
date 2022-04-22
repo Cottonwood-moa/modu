@@ -7,14 +7,17 @@ import Button from "@components/button";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
+
 import WysiwygEditor from "@components/WysiwygEditor";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
 import { useRouter } from "next/router";
 import { Post } from "@prisma/client";
 import Swal from "sweetalert2";
+
 interface PostForm {
   title: string;
+  thumbnail: string;
 }
 interface PostCreateResponse {
   ok: boolean;
@@ -28,8 +31,11 @@ const Write: NextPage = () => {
     `/api/post`,
     "POST"
   );
-  const onValid = ({ title }: PostForm) => {
+  const onValid = ({ title, thumbnail }: PostForm) => {
     if (loading) return;
+    const thumbnailId = thumbnail
+      ? thumbnail
+      : "46b90817-c0a8-4b58-c379-d981ce79f400";
     Swal.fire({
       title: "게시글을 등록하시겠습니까?",
       icon: "question",
@@ -39,12 +45,15 @@ const Write: NextPage = () => {
       confirmButtonText: "확인",
       cancelButtonText: "취소",
     }).then(async (result) => {
+      // https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/46b90817-c0a8-4b58-c379-d981ce79f400/avatar
+      // https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/<image_id>/<variant_name>
       if (result.isConfirmed) {
-        // try catch 문으로 요청이 실패할 때 error를 fire하는 걸 추가해야 하는데 그냥 생략하도록 하자
         try {
           postSubmit({
             title,
             content,
+            // default
+            thumbnailId,
           });
           let timerInterval: any;
           Swal.fire({
@@ -153,7 +162,7 @@ const Write: NextPage = () => {
             <WysiwygEditor onChange={(value) => setContent(value)} />
           </div>
           <div className="flex justify-end space-x-2 p-4">
-            <Button text="글 등록" large css="bg-slate-800"></Button>
+            <Button text={"글 등록"} large css="bg-slate-800"></Button>
           </div>
         </form>
       </div>

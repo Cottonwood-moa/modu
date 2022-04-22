@@ -71,6 +71,7 @@ model Post {
   updatedAt DateTime  @updatedAt
   title     String    @db.MediumText
   content   String    @db.LongText
+  thumnail  String    @db.TinyText
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   comments  Comment[]

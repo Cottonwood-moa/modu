@@ -2,8 +2,9 @@ import dynamic from "next/dynamic";
 import * as React from "react";
 import { Editor as EditorType, EditorProps } from "@toast-ui/react-editor";
 import { TuiEditorWithForwardedProps } from "@components/TuiEditorWrapper";
+import useMutation from "@libs/client/useMutation";
+// import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 
-import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 interface EditorPropsWithHandlers extends EditorProps {
   onChange?(value: string): void;
 }
@@ -12,6 +13,7 @@ const Editor = dynamic<TuiEditorWithForwardedProps>(
   () => import("./TuiEditorWrapper"),
   { ssr: false }
 );
+
 // eslint-disable-next-line react/display-name
 const EditorWithForwardedRef = React.forwardRef<
   EditorType | undefined,
@@ -58,8 +60,28 @@ const WysiwygEditor: React.FC<Props> = (props) => {
         height={height || "600px"}
         initialEditType={initialEditType || "markdown"}
         useCommandShortcut={useCommandShortcut || true}
-        plugins={[colorSyntax]}
+        // plugins={[colorSyntax]}
         ref={editorRef}
+        // UTF-8로 인코딩 되는 이미지 업로드 방식을
+        // cloudflare에 바로 이미지를 저장해주고 반환되는 url을 md에 삽입하는 방식으로 변경
+        hooks={{
+          addImageBlobHook: async (blob, callback) => {
+            const { uploadURL } = await (await fetch(`/api/files`)).json();
+            const form = new FormData();
+            form.append("file", blob);
+            const {
+              result: { id },
+            } = await (
+              await fetch(uploadURL, {
+                method: "POST",
+                body: form,
+              })
+            ).json();
+            callback(
+              `https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${id}/public`
+            );
+          },
+        }}
         onChange={handleChange}
       />
     </div>

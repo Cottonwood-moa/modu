@@ -1,9 +1,9 @@
 import { cls } from "@libs/client/utils";
-
 interface ButtonProps {
   large?: boolean;
   text: string;
   css?: string;
+  loading?: boolean;
   [key: string]: any;
 }
 
@@ -12,6 +12,7 @@ export default function Button({
   onClick,
   css,
   text,
+  loading,
   ...rest
 }: ButtonProps) {
   return (

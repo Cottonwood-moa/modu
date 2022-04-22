@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 export const SignIn: NextPage<{ providers: AppProvider }> = ({ providers }) => {
   return (
-    <div className="flex w-full h-[100vh] justify-center items-center space-x-6">
+    <div className="flex h-[100vh] w-full items-center justify-center space-x-6">
       <div className="space-y-4">
         <motion.div
           initial={{ scale: 0, rotate: 180 }}
@@ -35,9 +35,13 @@ export const SignIn: NextPage<{ providers: AppProvider }> = ({ providers }) => {
               rotate: [0, 32, 0],
               transition: { type: "spring", damping: 20 },
             }}
-            className="flex flex-col justify-center items-center cursor-pointer"
+            className="flex cursor-pointer flex-col items-center justify-center"
             onClick={() =>
-              signIn(provider.id, { callbackUrl: "http://localhost:3000/" })
+              signIn(provider.id, {
+                callbackUrl: document.referrer
+                  ? document.referrer
+                  : "http://localhost:3000/",
+              })
             }
           >
             <Image

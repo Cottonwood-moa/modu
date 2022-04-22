@@ -15,7 +15,7 @@ interface ConfigType {
 export default function withHandler({
   method,
   handler,
-  isPrivate = true,
+  isPrivate = false,
 }: ConfigType) {
   // 여기서 return하는 function은 next.js api router에서 함수로 return 해줘야 하기 때문
   return async function (

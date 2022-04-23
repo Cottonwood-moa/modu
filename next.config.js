@@ -8,6 +8,9 @@ const nextConfig = {
       "avatars.githubusercontent.com",
     ],
   },
+  experimental: {
+    scrollRestoration: true,
+  },
 };
 
 module.exports = nextConfig;

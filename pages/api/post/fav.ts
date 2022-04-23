@@ -26,20 +26,21 @@ async function handler(
   }
   if (req.method === "POST") {
     const { body } = req;
-
+    // 로그인 된 유저가 해당 포스트를 좋아요 했는지
     const liked = await client.fav.findFirst({
       where: {
         userId: body.userId.toString(),
         postId: +body.postId.toString(),
       },
     });
-
+    // 했다면 unLiked
     if (liked) {
       await client.fav.delete({
         where: {
           id: liked.id,
         },
       });
+      // 안했다면 like
     } else {
       await client.fav.create({
         data: {
@@ -56,6 +57,7 @@ async function handler(
         },
       });
     }
+    // 알림 추가
     res.json({
       ok: true,
     });

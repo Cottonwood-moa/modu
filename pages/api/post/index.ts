@@ -19,11 +19,13 @@ async function handler(
     const {
       body: { title, content, thumbnailId },
     } = req;
+
     const post = await client.post.create({
       data: {
         title,
         content,
         thumnail: thumbnailId,
+        category: "임시",
         user: {
           connect: {
             id: user?.id,
@@ -58,6 +60,7 @@ async function handler(
             image: true,
           },
         },
+        favs: true,
         _count: {
           select: {
             favs: true,

@@ -15,6 +15,7 @@ import useSWRInfinite from "swr/infinite";
 import { Post, User } from "@prisma/client";
 import { useInfiniteScroll } from "@libs/client/useInfiniteScroll";
 import useUser from "@libs/client/useUser";
+import SkeletonCard from "@components/skeletonCard";
 interface PostWithInclude extends Post {
   user: User;
   _count: {
@@ -30,7 +31,7 @@ interface PostsResponse {
 const Home: NextPage = () => {
   const router = useRouter();
   const [category, setCategory] = useState("");
-  const { user } = useUser();
+  const [skeleton, setSkeleton] = useState(true);
   const onSetCategory = (category: string) => {
     setCategory(category);
   };
@@ -48,6 +49,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     setSize(page);
   }, [setSize, page]);
+
   return (
     <Layout>
       {/* main */}
@@ -154,86 +156,90 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="m-12 grid grid-cols-2 gap-6  xl:grid-cols-3 2xl:grid-cols-4">
-          {posts?.map((post, index) => {
-            return (
-              <motion.div
-                key={index}
-                whileHover={{
-                  scale: 1.1,
-                }}
-                className="aspect-square w-full min-w-[300px] max-w-md cursor-pointer space-y-2 rounded-md bg-white p-4 shadow-lg"
-                onClick={() => toPostDetail(post.id)}
-              >
-                <div className="relative h-[80%] w-full">
-                  <Image
-                    className="rounded-md"
-                    src={`https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${post.thumnail}/thumbnail`}
-                    layout={"fill"}
-                    alt=""
-                  />
-                </div>
-                <div className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-bold text-gray-800">
-                  {post.title}
-                </div>
-                <div className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium text-gray-600">
-                  {post.content}
-                </div>
-                <div className="relative flex w-full items-center text-gray-800">
-                  <div className="flex items-center space-x-2">
-                    <Image
-                      src={
-                        post?.user?.image
-                          ? post?.user?.image
-                          : "/images/react.png"
-                      }
-                      width={48}
-                      height={48}
-                      className="h-12 w-12 rounded-full bg-slate-600"
-                      alt=""
-                    />
-                    <div>{post.user.name}</div>
-                  </div>
-                  <div className="absolute right-0 flex items-center justify-end space-x-4">
-                    <div className="flex items-center space-x-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="#4B5563"
-                        strokeWidth="2"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                        />
-                      </svg>
-                      {/* ++++++++++++++++++++++++++++++변경필요 */}
-                      <span>{post._count.favs}</span>
+          {!data && isValidating
+            ? Array.from({ length: 8 }, (v, i) => i).map((index) => {
+                return <SkeletonCard key={index} />;
+              })
+            : posts?.map((post, index) => {
+                return (
+                  <motion.div
+                    key={index}
+                    whileHover={{
+                      scale: 1.1,
+                    }}
+                    className="aspect-square w-full min-w-[300px] max-w-md cursor-pointer space-y-2 rounded-md bg-white p-4 shadow-lg"
+                    onClick={() => toPostDetail(post.id)}
+                  >
+                    <div className="relative h-[80%] w-full">
+                      <Image
+                        className="rounded-md"
+                        src={`https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${post.thumnail}/thumbnail`}
+                        layout={"fill"}
+                        alt=""
+                      />
                     </div>
-                    <div className="flex items-center space-x-2 text-gray-800">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="#4B5563"
-                        strokeWidth="2"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-                        />
-                      </svg>
-                      <span>{post._count.comments}</span>
+                    <div className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-bold text-gray-800">
+                      {post.title}
                     </div>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+                    <div className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium text-gray-600">
+                      {post.content}
+                    </div>
+                    <div className="relative flex w-full items-center text-gray-800">
+                      <div className="flex items-center space-x-2">
+                        <Image
+                          src={
+                            post?.user?.image
+                              ? post?.user?.image
+                              : "/images/react.png"
+                          }
+                          width={48}
+                          height={48}
+                          className="h-12 w-12 rounded-full bg-slate-600"
+                          alt=""
+                        />
+                        <div>{post.user.name}</div>
+                      </div>
+                      <div className="absolute right-0 flex items-center justify-end space-x-4">
+                        <div className="flex items-center space-x-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="#d63031"
+                            strokeWidth="2"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                            />
+                          </svg>
+                          {/* ++++++++++++++++++++++++++++++변경필요 */}
+                          <span>{post._count.favs}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-800">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="#4B5563"
+                            strokeWidth="2"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                            />
+                          </svg>
+                          <span>{post._count.comments}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
         </div>
       </div>
     </Layout>

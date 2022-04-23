@@ -45,16 +45,19 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?        @unique
   emailVerified DateTime?
   image         String?
+  alert         Int            @default(0)
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
   comments      Comment[]
   favs          Fav[]
+  tags          Tag[]
+  notification  Notification[]
 }
 
 model VerificationToken {
@@ -66,16 +69,20 @@ model VerificationToken {
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  title     String    @db.MediumText
-  content   String    @db.LongText
-  thumnail  String    @db.TinyText
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  comments  Comment[]
-  favs      Fav[]
+  id            Int            @id @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  title         String         @db.MediumText
+  content       String         @db.LongText
+  thumnail      String         @db.TinyText
+  category      String         @db.TinyText
+  views         Int            @default(0)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  comments      Comment[]
+  favs          Fav[]
+  tags          Tag[]
+  notifications Notification[]
 }
 
 model Comment {
@@ -94,8 +101,38 @@ model Fav {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  post      Post     @relation(fields: [postId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   postId    Int
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  text      String   @db.TinyText
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  postId    Int
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  message   String   @db.Text
+  kind      String   @db.TinyText
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+}
+
+model Test {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  count     Int      @default(0)
 }

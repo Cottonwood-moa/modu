@@ -72,7 +72,7 @@ export default function PostComment({ id, userId }: CommentProps) {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            createComment(comment);
+            createComment({ comment, userId });
           } catch (err: any) {
             Swal.fire({
               icon: "error",

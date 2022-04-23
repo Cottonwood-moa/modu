@@ -4,7 +4,10 @@ import { getProviders, signIn, useSession } from "next-auth/react";
 import { getSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-export const SignIn: NextPage<{ providers: AppProvider }> = ({ providers }) => {
+export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
+  providers,
+  previous,
+}) => {
   return (
     <div className="flex h-[100vh] w-full items-center justify-center space-x-6">
       <div className="space-y-4">
@@ -38,9 +41,7 @@ export const SignIn: NextPage<{ providers: AppProvider }> = ({ providers }) => {
             className="flex cursor-pointer flex-col items-center justify-center"
             onClick={() =>
               signIn(provider.id, {
-                callbackUrl: document.referrer
-                  ? document.referrer
-                  : "http://localhost:3000/",
+                callbackUrl: previous,
               })
             }
           >
@@ -61,7 +62,12 @@ export const SignIn: NextPage<{ providers: AppProvider }> = ({ providers }) => {
 export async function getServerSideProps(context: any) {
   const providers = await getProviders();
   return {
-    props: { providers },
+    props: {
+      providers,
+      previous: context.req.headers.referer
+        ? context.req.headers.referer
+        : null,
+    },
   };
 }
 

@@ -3,7 +3,7 @@
 import Layout from "@components/Layout";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import client from "@libs/server/client";
 import { Post, User } from "@prisma/client";
 import jsonSerialize from "@libs/server/jsonSerialize";
@@ -56,7 +56,9 @@ const PostDetail: NextPage<staticProps> = ({
   };
   const { user } = useUser();
   const { data, mutate } = useSWR<IsLikedResponse>(
-    userId && id ? `/api/post/fav?userId=${user?.id}&postId=${id}` : null
+    userId && id
+      ? `/api/post/fav?userId=${user?.id}&postId=${id}&postUserId=${userId}`
+      : null
   );
   const [like, { loading }] = useMutation(`/api/post/fav`, "POST");
   const likeClickHandle = () => {
@@ -86,6 +88,7 @@ const PostDetail: NextPage<staticProps> = ({
       });
     }
   };
+  useEffect(() => {}, []);
   if (router.isFallback) {
     return <PageLoading text="포스트 생성중" />;
   }

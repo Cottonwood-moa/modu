@@ -11,6 +11,9 @@ async function handler(
     where: {
       userId: query?.userId.toString(),
     },
+    orderBy: {
+      id: "desc",
+    },
   });
   if (!notification) return res.json({ ok: false, message: "no alert" });
   res.json({

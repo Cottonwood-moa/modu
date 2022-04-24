@@ -8,6 +8,7 @@ import Link from "next/link";
 import OutsideClickHandler from "react-outside-click-handler";
 import useSWR from "swr";
 import { Notification } from "@prisma/client";
+import ParsingCreatedAt from "@libs/client/parsingCreatedAt";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -20,8 +21,7 @@ interface NotificationResponse {
 export default function Layout({ children }: LayoutProps) {
   const { user, mutate } = useUser();
   const { data } = useSWR<NotificationResponse>(
-    user ? `/api/notification?userId=${user?.id}` : null,
-    { refreshInterval: 1000 }
+    user ? `/api/notification?userId=${user?.id}` : null
   );
   const [info, setInfo] = useState(false);
   const [alert, setAlert] = useState(false);
@@ -85,22 +85,23 @@ export default function Layout({ children }: LayoutProps) {
                     opacity: 0,
                     transition: { type: "tween" },
                   }}
-                  className="absolute top-20 right-20 flex w-96 flex-col space-y-6 overflow-hidden text-ellipsis whitespace-nowrap bg-white p-6 text-base font-medium shadow-lg"
+                  className="absolute top-20 right-20 z-20 flex max-h-[36rem] w-96 flex-col space-y-6 overflow-y-scroll bg-white p-6 text-base font-medium shadow-lg"
                 >
                   {data?.notification && data?.notification?.length > 0 ? (
                     data?.notification.map((noti) => {
+                      const createdAt = ParsingCreatedAt(noti?.createdAt);
                       return (
                         <div
                           onClick={() => router.push(`/post/${noti?.postId}`)}
                           key={noti?.id}
                           className="cursor-pointer text-base font-normal text-gray-800"
                         >
-                          <p>
+                          <p className="overflow-hidden text-ellipsis whitespace-nowrap">
                             {noti?.kind === "comment" ? `💬 ` : `💗 `}
                             {noti?.message}
                           </p>
                           <p className="text-sm font-light text-gray-400">
-                            {noti?.createdAt}
+                            {createdAt}
                           </p>
                         </div>
                       );
@@ -111,27 +112,55 @@ export default function Layout({ children }: LayoutProps) {
                 </motion.div>
               )}
             </AnimatePresence>
-            <motion.div
-              onClick={alertOpen}
-              className="flex cursor-pointer items-center text-gray-800 transition hover:text-blue-400"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
+            {user && user?.alert > 0 ? (
+              <motion.div
+                onClick={alertOpen}
+                animate={{ rotate: [0, 15, 0, -15, 0] }}
+                transition={{
+                  type: "spring",
+                  duration: 1,
+                  repeat: Infinity,
+                }}
+                className="flex cursor-pointer items-center text-red-500 transition "
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                />
-              </svg>
-              {user && user?.alert > 0 ? <div>있음</div> : <></>}
-              <span>알림</span>
-            </motion.div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#d63031"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  />
+                </svg>
+                <span>알림</span>
+              </motion.div>
+            ) : (
+              <motion.div
+                onClick={alertOpen}
+                className="flex cursor-pointer items-center text-gray-800 transition hover:text-blue-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  />
+                </svg>
+                <span>알림</span>
+              </motion.div>
+            )}
           </OutsideClickHandler>
 
           <div className="flex cursor-pointer items-center text-gray-800 transition ">

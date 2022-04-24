@@ -1,13 +1,15 @@
+import { pageAtom } from "@atom/atom";
 import { useEffect, useState } from "react";
-
+import { useRecoilState } from "recoil";
 export function useInfiniteScroll() {
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
   function handleScroll() {
     if (
       document.documentElement.scrollTop + window.innerHeight ===
       document.documentElement.scrollHeight
     ) {
-      setPage((p) => p + 1);
+      setCurrentPage((p) => p + 1);
     }
   }
   useEffect(() => {
@@ -16,5 +18,5 @@ export function useInfiniteScroll() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  return page;
+  return currentPage;
 }

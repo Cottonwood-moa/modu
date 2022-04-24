@@ -17,10 +17,9 @@ async function handler(
   });
   if (req.method === "POST") {
     const {
-      body: { title, content, thumbnailId },
+      body: { title, content, thumbnailId, tags },
     } = req;
-
-    const post = await client.post.create({
+    const TempPost = await client.post.create({
       data: {
         title,
         content,
@@ -31,6 +30,40 @@ async function handler(
             id: user?.id,
           },
         },
+      },
+    });
+    tags.map(async (tag: any) => {
+      // 전달 받은 태그를 돌려서 tag모델에 있는 지 확인하고 없으면 만듬
+      const alreayExists = await client.tag.findFirst({
+        where: {
+          name: tag,
+        },
+      });
+      if (!alreayExists) {
+        await client.tag.create({
+          data: {
+            name: tag,
+          },
+        });
+      }
+      await client.postTags.create({
+        data: {
+          post: {
+            connect: {
+              id: TempPost.id,
+            },
+          },
+          tag: {
+            connect: {
+              name: tag,
+            },
+          },
+        },
+      });
+    });
+    const post = await client.post.findUnique({
+      where: {
+        id: TempPost.id,
       },
     });
     return res.json({
@@ -45,11 +78,11 @@ async function handler(
     // post 전체 갯수
     const postsCount = await client.post.count();
     // 페이지 전체 갯수
-    const pages = Math.ceil(postsCount / 8);
+    const pages = Math.ceil(postsCount / 4);
 
     const posts = await client.post.findMany({
-      take: 8,
-      skip: 8 * (+page - 1),
+      take: 4,
+      skip: 4 * (+page - 1),
       orderBy: {
         id: "desc",
       },

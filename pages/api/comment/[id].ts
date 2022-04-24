@@ -10,7 +10,6 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const { query, body } = req;
-  console.log("이거", query, body);
   if (req.method === "POST") {
     // 로그인 된 유저
     const session: UserSession = await getSession({ req });

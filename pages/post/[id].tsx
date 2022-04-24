@@ -5,7 +5,7 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import client from "@libs/server/client";
-import { Post, User } from "@prisma/client";
+import { Post, Tag, User } from "@prisma/client";
 import jsonSerialize from "@libs/server/jsonSerialize";
 import PostComment from "@components/PostComment";
 // import ReactMarkdown from "react-markdown";
@@ -23,6 +23,7 @@ import { cls } from "@libs/client/utils";
 import useUser from "@libs/client/useUser";
 import useMutation from "@libs/client/useMutation";
 import Swal from "sweetalert2";
+import ParsingCreatedAt from "@libs/client/parsingCreatedAt";
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
 export interface PostWithUser extends Post {
   user: User;
@@ -30,6 +31,9 @@ export interface PostWithUser extends Post {
 interface IsLikedResponse {
   ok: boolean;
   liked: boolean;
+}
+interface ITags {
+  tag: Tag;
 }
 interface staticProps {
   id: number;
@@ -39,6 +43,7 @@ interface staticProps {
   name: string;
   avatar: string;
   createdAt: string;
+  tags: ITags[];
 }
 const PostDetail: NextPage<staticProps> = ({
   title,
@@ -48,6 +53,7 @@ const PostDetail: NextPage<staticProps> = ({
   createdAt,
   id,
   userId,
+  tags,
 }) => {
   const router = useRouter();
   const [pop, setPop] = useState(false);
@@ -88,7 +94,13 @@ const PostDetail: NextPage<staticProps> = ({
       });
     }
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!id) return;
+    if (user?.id === userId) return;
+    (async () => {
+      await fetch(`/api/post/views?postId=${id}`);
+    })();
+  }, [id]);
   if (router.isFallback) {
     return <PageLoading text="포스트 생성중" />;
   }
@@ -181,20 +193,21 @@ const PostDetail: NextPage<staticProps> = ({
               <span className="text-lg font-semibold xl:text-2xl ">{name}</span>
             </div>
             <div className="text-lg font-semibold text-slate-500 xl:text-2xl">
-              {createdAt}
+              {ParsingCreatedAt(createdAt)}
             </div>
           </div>
           {/* tag */}
           <div className="space-x-2 border-b-2 pb-8">
-            <div className="inline-block w-auto rounded-xl bg-slate-500 py-1 px-2 font-bold text-white">
-              React
-            </div>
-            <div className="inline-block w-auto rounded-xl bg-slate-500 py-1 px-2 font-bold text-white">
-              Next.js
-            </div>
-            <div className="inline-block w-auto rounded-xl bg-slate-500 py-1 px-2 font-bold text-white">
-              Typescript
-            </div>
+            {tags?.map((tag) => {
+              return (
+                <div
+                  key={tag?.tag?.id}
+                  className="inline-block w-auto rounded-xl bg-slate-500 py-1 px-2 font-bold text-white"
+                >
+                  {tag?.tag?.name}
+                </div>
+              );
+            })}
           </div>
         </div>
         {/* post content */}
@@ -347,9 +360,17 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
           image: true,
         },
       },
+      postTags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
     },
   });
-
   if (!post)
     return {
       redirect: {
@@ -357,6 +378,8 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
         destination: "/404",
       },
     };
+
+  console.log("fwefewfewfewewewwww", post);
   return {
     props: {
       id: post?.id,
@@ -365,6 +388,7 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
       userId: post?.user?.id,
       name: post?.user?.name,
       avatar: post?.user?.image,
+      tags: post?.postTags,
       createdAt: jsonSerialize(post?.createdAt),
     },
   };

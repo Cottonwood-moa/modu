@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { Post } from "@prisma/client";
 import Swal from "sweetalert2";
 import OutsideClickHandler from "react-outside-click-handler";
+import TagForm from "@components/tagForm";
 
 interface PostForm {
   title: string;
@@ -29,13 +30,25 @@ const Write: NextPage = () => {
   const [info, setInfo] = useState(false);
   const [uploadThumb, setUploadThumb] = useState(false);
   const [content, setContent] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const { register, handleSubmit, watch } = useForm<PostForm>();
   const [postSubmit, { data, loading }] = useMutation<PostCreateResponse>(
     `/api/post`,
     "POST"
   );
+
   const onValid = ({ title, thumbnail }: PostForm) => {
     if (loading) return;
+    if (tags.length < 1) {
+      Swal.fire({
+        icon: "error",
+        title: "최소 하나의 태그를 작성해주세요.",
+        confirmButtonColor: "#475569",
+        denyButtonColor: "#475569",
+        cancelButtonColor: "#475569",
+      });
+      return;
+    }
     Swal.fire({
       title: "게시글을 등록하시겠습니까?",
       icon: "question",
@@ -45,8 +58,6 @@ const Write: NextPage = () => {
       confirmButtonText: "확인",
       cancelButtonText: "취소",
     }).then(async (result) => {
-      // https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/46b90817-c0a8-4b58-c379-d981ce79f400/avatar
-      // https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/<image_id>/<variant_name>
       if (result.isConfirmed) {
         try {
           if (thumbnail && thumbnail.length > 0) {
@@ -65,6 +76,7 @@ const Write: NextPage = () => {
               title,
               content,
               thumbnailId: id,
+              tags: tags,
             });
           } else {
             const defaultThumbnailId = "46b90817-c0a8-4b58-c379-d981ce79f400";
@@ -72,6 +84,7 @@ const Write: NextPage = () => {
               title,
               content,
               thumbnailId: defaultThumbnailId,
+              tags: tags,
             });
           }
           let timerInterval: any;
@@ -94,7 +107,6 @@ const Write: NextPage = () => {
           }).then((result) => {
             /* Read more about handling dismissals below */
             if (result.dismiss === Swal.DismissReason.timer) {
-              console.log("I was closed by the timer");
             }
           });
         } catch (err: any) {
@@ -152,6 +164,11 @@ const Write: NextPage = () => {
                 minLength: 2,
                 maxLength: 50,
               })}
+              onKeyPress={(
+                e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
               placeholder="제목을 입력해주세요"
               minLength={2}
               maxLength={50}
@@ -159,36 +176,8 @@ const Write: NextPage = () => {
               className="w-full appearance-none border-b-2 p-2 text-4xl font-bold focus:outline-none"
             ></input>
             {/* tag */}
-            <div className="flex items-center space-x-2 pb-8">
-              <div className="w-auto rounded-xl bg-slate-500 py-1 px-2  font-bold text-white">
-                React
-              </div>
-              <div className="w-auto rounded-xl bg-slate-500 py-1 px-2  font-bold text-white">
-                Next.js
-              </div>
-              <div className="w-auto rounded-xl bg-slate-500 py-1 px-2  font-bold text-white">
-                Typescript
-              </div>
-              <div className="item-center flex cursor-pointer">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-slate-500 "
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                <span className="text-base font-semibold text-slate-500">
-                  태그추가
-                </span>
-              </div>
-            </div>
+
+            <TagForm setTags={setTags} tags={tags} />
           </div>
           <div className="text-editor">
             <WysiwygEditor onChange={(value) => setContent(value)} />
@@ -198,7 +187,7 @@ const Write: NextPage = () => {
               <motion.div
                 initial={{ x: -400, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                className=" fixed top-56 left-0 z-10 space-y-2 rounded-lg bg-blue-400 p-6 text-xl font-bold text-white shadow-lg lg:left-28"
+                className=" fixed top-56 left-0 z-10 space-y-2 rounded-lg bg-blue-400 p-6 text-xl font-bold text-white shadow-lg xl:left-28"
               >
                 <p>1. 코드 블럭을 넣을 땐</p>
                 <p className="my-4">
@@ -229,7 +218,7 @@ const Write: NextPage = () => {
               onClick={() => setInfo(true)}
               whileHover={{ scale: 1.2 }}
               className="fixed left-0
-              top-56 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-400 lg:left-12"
+              top-56 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-400 xl:left-12"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -254,7 +243,7 @@ const Write: NextPage = () => {
                   <motion.img
                     initial={{ x: -400, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    className="fixed top-72 left-0 flex h-[300px] w-[350px] cursor-pointer rounded-lg shadow-xl lg:left-12"
+                    className="fixed top-72 left-0 flex h-[300px] w-[350px] cursor-pointer rounded-lg shadow-xl xl:left-12"
                     src={thumbnailImagePreview}
                   ></motion.img>
                   <input
@@ -268,7 +257,7 @@ const Write: NextPage = () => {
                 <motion.label
                   initial={{ x: -400, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  className=" fixed top-72 left-0 flex h-60 w-60 cursor-pointer items-center justify-center space-y-2 rounded-lg bg-blue-400 p-6 text-xl font-bold text-white shadow-lg lg:left-12"
+                  className=" fixed top-72 left-0 flex h-60 w-60 cursor-pointer items-center justify-center space-y-2 rounded-lg bg-blue-400 p-6 text-xl font-bold text-white shadow-lg xl:left-12"
                 >
                   <svg
                     className="h-20 w-20"
@@ -299,7 +288,7 @@ const Write: NextPage = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               whileHover={{ scale: 1.2 }}
-              className="fixed left-0 top-72 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-400 lg:left-12"
+              className="fixed left-0 top-72 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-400 xl:left-12"
             >
               <svg
                 className="h-8 w-8"

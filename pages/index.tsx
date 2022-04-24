@@ -31,7 +31,6 @@ interface PostsResponse {
 const Home: NextPage = () => {
   const router = useRouter();
   const [category, setCategory] = useState("");
-  const [skeleton, setSkeleton] = useState(true);
   const onSetCategory = (category: string) => {
     setCategory(category);
   };
@@ -39,17 +38,22 @@ const Home: NextPage = () => {
     router.push(`/post/${id}`);
   };
   const getKey = (pageIndex: number, previousPageData: PostsResponse) => {
-    if (pageIndex === 0) return `/api/post?page=1`;
+    if (pageIndex === 0 && !previousPageData) return `/api/post?page=1`;
     if (pageIndex + 1 > previousPageData.pages) return null;
     return `/api/post?page=${pageIndex + 1}`;
   };
-  const { data, setSize, isValidating } = useSWRInfinite<PostsResponse>(getKey);
+  const { data, setSize, isValidating, mutate } =
+    useSWRInfinite<PostsResponse>(getKey);
   const posts = data ? data.map((post) => post?.posts).flat() : [];
   const page = useInfiniteScroll();
   useEffect(() => {
+    if (isValidating) return;
     setSize(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setSize, page]);
-
+  useEffect(() => {
+    mutate();
+  }, []);
   return (
     <Layout>
       {/* main */}
@@ -199,8 +203,8 @@ const Home: NextPage = () => {
                         />
                         <div>{post.user.name}</div>
                       </div>
-                      <div className="absolute right-0 flex items-center justify-end space-x-4">
-                        <div className="flex items-center space-x-2">
+                      <div className="absolute right-0 flex items-center justify-end space-x-2">
+                        <div className="flex items-center space-x-1">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-6"
@@ -218,7 +222,7 @@ const Home: NextPage = () => {
                           {/* ++++++++++++++++++++++++++++++변경필요 */}
                           <span>{post._count.favs}</span>
                         </div>
-                        <div className="flex items-center space-x-2 text-gray-800">
+                        <div className="flex items-center space-x-1 text-gray-800">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-6"
@@ -234,6 +238,28 @@ const Home: NextPage = () => {
                             />
                           </svg>
                           <span>{post._count.comments}</span>
+                        </div>
+                        <div className="flex items-center space-x-1 text-gray-800">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="#4B5563"
+                            strokeWidth="2"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                          </svg>
+                          <span>{post.views}</span>
                         </div>
                       </div>
                     </div>

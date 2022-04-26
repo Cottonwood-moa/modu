@@ -2,7 +2,7 @@
 import Layout from "@components/Layout";
 import type { NextPage } from "next";
 import { motion } from "framer-motion";
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@components/button";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
@@ -125,7 +125,8 @@ const Write: NextPage = () => {
   };
   useEffect(() => {
     if (data && data?.ok) {
-      router.push(`/post/${data.post.id}`);
+      router.push(`/post/${data.post.id}`).then(() => router.reload());
+      // window.location.href = `http://localhost:3000/post/${data.post.id}`;
     }
   }, [data, router]);
   const thumbnailImage = watch("thumbnail");

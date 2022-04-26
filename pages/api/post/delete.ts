@@ -44,4 +44,5 @@ async function handler(
 export default withHandler({
   method: ["GET"],
   handler,
+  isPrivate: true,
 });

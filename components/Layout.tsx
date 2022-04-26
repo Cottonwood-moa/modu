@@ -242,7 +242,7 @@ export default function Layout({ children }: LayoutProps) {
                             내가 쓴 댓글
                           </a>
                         </Link>
-                        <Link href="">
+                        <Link href={`/myPage/${user?.id}`}>
                           <a className="text-gray-800 hover:text-blue-400">
                             프로필
                           </a>

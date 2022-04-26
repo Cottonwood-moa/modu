@@ -57,6 +57,7 @@ model User {
   comments      Comment[]
   favs          Fav[]
   notification  Notification[]
+  replys        Reply[]
 }
 
 model VerificationToken {
@@ -82,12 +83,13 @@ model Post {
   favs          Fav[]
   notifications Notification[]
   postTags      PostTags[]
+  replys        Reply[]
 }
 
 model PostTags {
   id     Int   @id @default(autoincrement())
-  post   Post? @relation(fields: [postId], references: [id])
-  tag    Tag?  @relation(fields: [tagId], references: [id])
+  post   Post? @relation(fields: [postId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  tag    Tag?  @relation(fields: [tagId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   postId Int?
   tagId  Int?
 }
@@ -103,11 +105,24 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   content   String   @db.LongText
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  postId    Int
+  replys    Reply[]
+}
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  userId String
-  postId Int
+model Reply {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String   @db.LongText
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  commentId Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
 }
 
 model Fav {

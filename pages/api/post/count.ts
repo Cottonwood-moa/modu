@@ -10,7 +10,7 @@ async function handler(
   const {
     query: { postId },
   } = req;
-  const count = await client.post.findFirst({
+  const postCount = await client.post.findFirst({
     where: {
       id: +postId,
     },
@@ -23,6 +23,25 @@ async function handler(
       },
     },
   });
+  const favsCount = await client.fav.count({
+    where: {
+      postId: +postId,
+    },
+  });
+  const commentsCount = await client.comment.count({
+    where: {
+      postId: +postId,
+    },
+  });
+  const replysCount = await client.reply.count({
+    where: {
+      postId: +postId,
+    },
+  });
+  const count = {
+    favs: favsCount,
+    comments: commentsCount + replysCount,
+  };
   res.json({ ok: true, count });
 }
 

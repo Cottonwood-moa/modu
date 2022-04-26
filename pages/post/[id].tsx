@@ -46,10 +46,8 @@ interface staticProps {
 interface CountResponse {
   ok: boolean;
   count: {
-    _count: {
-      favs: number;
-      comments: number;
-    };
+    favs: number;
+    comments: number;
   };
 }
 const PostDetail: NextPage<staticProps> = ({
@@ -76,7 +74,6 @@ const PostDetail: NextPage<staticProps> = ({
   const { data: count, mutate: countMutate } = useSWR<CountResponse>(
     id ? `/api/post/count?postId=${id}` : null
   );
-
   const [like, { loading }] = useMutation(`/api/post/fav`, "POST");
   const likeClickHandle = () => {
     if (loading && !data) return;
@@ -158,6 +155,7 @@ const PostDetail: NextPage<staticProps> = ({
       await fetch(`/api/post/views?postId=${id}`);
     })();
   }, [id]);
+
   if (router.isFallback) {
     return <PageLoading text="포스트 생성중" />;
   }
@@ -209,7 +207,7 @@ const PostDetail: NextPage<staticProps> = ({
                   </svg>
                 </motion.div>
                 <div className="mx-2 text-3xl font-bold">
-                  {count ? count?.count?._count?.favs : 0}
+                  {count ? count?.count?.favs : 0}
                 </div>
               </div>
             ) : (
@@ -239,7 +237,7 @@ const PostDetail: NextPage<staticProps> = ({
                   </svg>
                 </motion.div>
                 <div className="mx-2 text-3xl font-bold">
-                  {count ? count?.count?._count?.favs : 0}
+                  {count ? count?.count?.favs : 0}
                 </div>
               </div>
             )}
@@ -329,7 +327,7 @@ const PostDetail: NextPage<staticProps> = ({
         <PostComment
           id={id}
           userId={userId}
-          count={count ? count?.count?._count?.comments : 0}
+          count={count ? count?.count?.comments : 0}
           countMutate={countMutate}
         />
         {/* 추천 글 */}
@@ -460,6 +458,7 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
         destination: "/404",
       },
     };
+
   return {
     props: {
       id: post?.id,

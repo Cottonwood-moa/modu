@@ -19,6 +19,7 @@ import OutsideClickHandler from "react-outside-click-handler";
 import TagForm from "@components/tagForm";
 import ImageDelivery from "@libs/client/imageDelivery";
 import jsonSerialize from "@libs/server/jsonSerialize";
+import useUser from "@libs/client/useUser";
 
 interface PostForm {
   title: string;
@@ -37,6 +38,7 @@ interface EditProps {
   prevContent: string;
   prevThumbnail: string;
   prevTags: ITags[];
+  userId: string;
 }
 const Write: NextPage<EditProps> = ({
   id,
@@ -44,8 +46,10 @@ const Write: NextPage<EditProps> = ({
   prevContent,
   prevThumbnail,
   prevTags,
+  userId,
 }) => {
   const router = useRouter();
+  const { user } = useUser();
   const [info, setInfo] = useState(false);
   const [uploadThumb, setUploadThumb] = useState(false);
   const [content, setContent] = useState(prevContent);
@@ -149,8 +153,11 @@ const Write: NextPage<EditProps> = ({
     });
   };
   useEffect(() => {
+    if (userId !== user?.id) router.replace("/404");
+  }, [router, user, userId]);
+  useEffect(() => {
     if (data && data?.ok) {
-      router.push(`/post/${id}`);
+      router.push(`/post/${id}`).then(() => router.reload());
     }
   }, [data, router]);
   const thumbnailImage = watch("thumbnail");
@@ -335,7 +342,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
     params: { id },
     query: { userId },
   } = ctx;
-
   if (!userId) {
     return {
       redirect: {
@@ -382,6 +388,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
       prevContent: post?.content,
       prevTags: post?.postTags,
       prevThumbnail: post?.thumnail,
+      userId,
     },
   };
 };

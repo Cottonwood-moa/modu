@@ -10,6 +10,10 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const { query, body } = req;
+  // query.postId : 포스트 아이디
+  // query.commentId : 코멘트 아이디
+  // body.commentUserId : 코멘트 주인
+  // body.reply : 대댓글 내용
   if (req.method === "POST") {
     // 로그인 된 유저
     const session: UserSession = await getSession({ req });
@@ -28,14 +32,14 @@ async function handler(
         ok: false,
         messgae: "Plz login",
       });
-    // 코멘트 만들기
-    const comment = await client.comment.create({
+    // 대댓글 만들기
+    const reply = await client.reply.create({
       data: {
-        content: body?.comment,
-        post: {
+        content: body?.reply,
+        comment: {
           connect: {
-            // 포스트 아이디
-            id: +query.id.toString(),
+            // 연결할 코멘트
+            id: +query.commentId,
           },
         },
         user: {
@@ -43,25 +47,28 @@ async function handler(
             id: user?.id.toString(),
           },
         },
+        post: {
+          connect: {
+            id: +query.postId,
+          },
+        },
       },
     });
-    if (body?.userId === user?.id)
-      return res.json({
-        ok: true,
-      });
-    const postUser = await client.user.findFirst({
+    // 코멘트 주인
+    const commentUser = await client.user.findFirst({
       where: {
-        id: body?.userId,
+        id: body?.commentUserId,
       },
     });
-    if (!postUser)
+    if (!commentUser)
       return res.json({ ok: false, message: "post user not defined" });
+    // 코멘트 주인에게 알림
     await client.user.update({
       where: {
-        id: body?.userId,
+        id: body?.commentUserId,
       },
       data: {
-        alert: postUser?.alert + 1,
+        alert: commentUser?.alert + 1,
       },
     });
     // 알림 디테일
@@ -69,52 +76,20 @@ async function handler(
       data: {
         user: {
           connect: {
-            id: body?.userId,
+            id: body?.commentUserId,
           },
         },
         post: {
           connect: {
-            id: +query.id.toString(),
+            id: +query.postId,
           },
         },
-        message: `${user?.name}님이 댓글을 남겼습니다. ${body?.comment}`,
-        kind: "comment",
+        message: `${user?.name}님이 대댓글을 남겼습니다. ${body?.reply}`,
+        kind: "reply",
       },
     });
-    res.json({
+    return res.json({
       ok: true,
-    });
-  }
-  // 포스트 코멘트 전체
-  if (req.method === "GET") {
-    const comments = await client.comment.findMany({
-      where: {
-        postId: +query?.id.toString(),
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-          },
-        },
-        replys: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                image: true,
-              },
-            },
-          },
-        },
-      },
-    });
-    res.json({
-      ok: true,
-      comments,
     });
   }
   // delete
@@ -125,7 +100,7 @@ async function handler(
         id: body,
       },
     });
-    res.json({
+    return res.json({
       ok: true,
     });
   }

@@ -1,8 +1,7 @@
-// useSWR Infinite loading
-// 최신순, 인기순
-//
 import Layout from "@components/Layout";
-import type { NextApiRequest, NextPage } from "next";
+import { useRecoilState } from "recoil";
+import { orderAtom, OrderBy } from "@atom/atom";
+import type { NextPage } from "next";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -14,8 +13,8 @@ import { useRouter } from "next/router";
 import useSWRInfinite from "swr/infinite";
 import { Post, User } from "@prisma/client";
 import { useInfiniteScroll } from "@libs/client/useInfiniteScroll";
-import useUser from "@libs/client/useUser";
 import SkeletonCard from "@components/skeletonCard";
+import { cls } from "@libs/client/utils";
 interface PostWithInclude extends Post {
   user: User;
   _count: {
@@ -31,19 +30,26 @@ interface PostsResponse {
 const Home: NextPage = () => {
   const router = useRouter();
   const [category, setCategory] = useState("");
+  const [orderBy, setOrderBy] = useRecoilState(orderAtom);
+  const getKey = (pageIndex: number, previousPageData: PostsResponse) => {
+    if (pageIndex === 0 && !previousPageData)
+      return `/api/post?page=1&order=${orderBy}`;
+    if (pageIndex + 1 > previousPageData.pages) return null;
+    return `/api/post?page=${pageIndex + 1}&order=${orderBy}`;
+  };
+  const { data, setSize, isValidating, mutate } =
+    useSWRInfinite<PostsResponse>(getKey);
+
+  const orderByHandle = (kind: OrderBy) => {
+    setOrderBy(kind);
+  };
   const onSetCategory = (category: string) => {
     setCategory(category);
   };
   const toPostDetail = (id: number) => {
     router.push(`/post/${id}`);
   };
-  const getKey = (pageIndex: number, previousPageData: PostsResponse) => {
-    if (pageIndex === 0 && !previousPageData) return `/api/post?page=1`;
-    if (pageIndex + 1 > previousPageData.pages) return null;
-    return `/api/post?page=${pageIndex + 1}`;
-  };
-  const { data, setSize, isValidating, mutate } =
-    useSWRInfinite<PostsResponse>(getKey);
+
   const posts = data ? data.map((post) => post?.posts).flat() : [];
   const page = useInfiniteScroll();
   useEffect(() => {
@@ -51,20 +57,16 @@ const Home: NextPage = () => {
     setSize(page);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setSize, page]);
+
   useEffect(() => {
     mutate();
-  }, []);
+  }, [orderBy]);
   return (
     <Layout>
       {/* main */}
       <div className="flex h-[30rem] w-full items-center  justify-start space-x-24 bg-white">
         <div className="space-y-8 p-4">
-          <div
-            onClick={() => router.push("post/8")}
-            className="text-6xl font-bold"
-          >
-            모두의 hook
-          </div>
+          <div className="text-6xl font-bold">모두의 hook</div>
           <div className="text-2xl font-bold">
             개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요.
           </div>
@@ -118,7 +120,14 @@ const Home: NextPage = () => {
             <></>
           )}
           <div className="flex space-x-4">
-            <div className="flex items-center text-2xl font-bold text-gray-800">
+            <div
+              onClick={() => orderByHandle(OrderBy.favs)}
+              className={cls(
+                "flex cursor-pointer items-center text-2xl font-bold ",
+                orderBy === OrderBy.favs ? "text-blue-400" : "text-gray-800"
+              )}
+            >
+              {/* orderBy */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-8 w-8"
@@ -140,7 +149,13 @@ const Home: NextPage = () => {
               </svg>
               <span>인기</span>
             </div>
-            <div className="flex items-center text-2xl font-bold text-gray-800">
+            <div
+              onClick={() => orderByHandle(OrderBy.latest)}
+              className={cls(
+                "flex cursor-pointer items-center text-2xl font-bold ",
+                orderBy === OrderBy.latest ? "text-blue-400" : "text-gray-800"
+              )}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-8 w-8"
@@ -167,7 +182,7 @@ const Home: NextPage = () => {
             : posts?.map((post, index) => {
                 return (
                   <motion.div
-                    key={index}
+                    key={post?.id}
                     whileHover={{
                       scale: 1.1,
                     }}

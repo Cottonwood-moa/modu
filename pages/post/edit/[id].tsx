@@ -1,8 +1,9 @@
 // SWR + SSR
 import Layout from "@components/Layout";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { motion } from "framer-motion";
-import React, { useEffect,useState } from "react";
+import client from "@libs/server/client";
+import React, { useEffect, useState } from "react";
 import Button from "@components/button";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
@@ -12,10 +13,12 @@ import WysiwygEditor from "@components/WysiwygEditor";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
 import { useRouter } from "next/router";
-import { Post } from "@prisma/client";
+import { Post, Tag } from "@prisma/client";
 import Swal from "sweetalert2";
 import OutsideClickHandler from "react-outside-click-handler";
 import TagForm from "@components/tagForm";
+import ImageDelivery from "@libs/client/imageDelivery";
+import jsonSerialize from "@libs/server/jsonSerialize";
 
 interface PostForm {
   title: string;
@@ -25,15 +28,38 @@ interface PostCreateResponse {
   ok: boolean;
   post: Post;
 }
-const Write: NextPage = () => {
+interface ITags {
+  tag: Tag;
+}
+interface EditProps {
+  id: number;
+  prevTitle: string;
+  prevContent: string;
+  prevThumbnail: string;
+  prevTags: ITags[];
+}
+const Write: NextPage<EditProps> = ({
+  id,
+  prevTitle,
+  prevContent,
+  prevThumbnail,
+  prevTags,
+}) => {
   const router = useRouter();
   const [info, setInfo] = useState(false);
   const [uploadThumb, setUploadThumb] = useState(false);
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
-  const { register, handleSubmit, watch } = useForm<PostForm>();
+  const [content, setContent] = useState(prevContent);
+  const prevTagsArray = prevTags.map((postTag) => {
+    return postTag?.tag?.name;
+  });
+  const [tags, setTags] = useState<string[]>(prevTagsArray);
+  const { register, handleSubmit, watch } = useForm<PostForm>({
+    defaultValues: {
+      title: prevTitle,
+    },
+  });
   const [postSubmit, { data, loading }] = useMutation<PostCreateResponse>(
-    `/api/post`,
+    `/api/post?postId=${id}`,
     "POST"
   );
 
@@ -79,11 +105,10 @@ const Write: NextPage = () => {
               tags: tags,
             });
           } else {
-            const defaultThumbnailId = "46b90817-c0a8-4b58-c379-d981ce79f400";
             postSubmit({
               title,
               content,
-              thumbnailId: defaultThumbnailId,
+              thumbnailId: prevThumbnail,
               tags: tags,
             });
           }
@@ -125,7 +150,7 @@ const Write: NextPage = () => {
   };
   useEffect(() => {
     if (data && data?.ok) {
-      router.push(`/post/${data.post.id}`);
+      router.push(`/post/${id}`);
     }
   }, [data, router]);
   const thumbnailImage = watch("thumbnail");
@@ -180,7 +205,10 @@ const Write: NextPage = () => {
             <TagForm setTags={setTags} tags={tags} />
           </div>
           <div className="text-editor">
-            <WysiwygEditor onChange={(value) => setContent(value)} />
+            <WysiwygEditor
+              onChange={(value) => setContent(value)}
+              initialValue={content}
+            />
           </div>
           {info ? (
             <OutsideClickHandler onOutsideClick={() => setInfo(false)}>
@@ -254,32 +282,20 @@ const Write: NextPage = () => {
                   />
                 </label>
               ) : (
-                <motion.label
-                  initial={{ x: -400, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  className=" fixed top-72 left-0 flex h-60 w-60 cursor-pointer items-center justify-center space-y-2 rounded-lg bg-blue-400 p-6 text-xl font-bold text-white shadow-lg xl:left-12"
-                >
-                  <svg
-                    className="h-20 w-20"
-                    stroke="white"
-                    fill="none"
-                    viewBox="0 0 48 48"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                <label>
+                  <motion.img
+                    initial={{ x: -400, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    className="fixed top-72 left-0 flex h-[300px] w-[350px] cursor-pointer rounded-lg bg-blue-400 shadow-xl xl:left-12"
+                    src={ImageDelivery(prevThumbnail)}
+                  ></motion.img>
                   <input
                     {...register("thumbnail")}
                     className="hidden"
                     type="file"
                     accept="image/*"
                   />
-                </motion.label>
+                </label>
               )}
             </OutsideClickHandler>
           ) : (
@@ -314,5 +330,59 @@ const Write: NextPage = () => {
     </Layout>
   );
 };
+export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
+  const {
+    params: { id },
+    query: { userId },
+  } = ctx;
 
+  if (!userId) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+    };
+  }
+  const post = await client.post.findUnique({
+    where: {
+      id: +id.toString(),
+    },
+    include: {
+      postTags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  if (post?.userId !== userId) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/404",
+      },
+    };
+  }
+  if (!post)
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/404",
+      },
+    };
+  return {
+    props: {
+      id: post?.id,
+      prevTitle: post?.title,
+      prevContent: post?.content,
+      prevTags: post?.postTags,
+      prevThumbnail: post?.thumnail,
+    },
+  };
+};
 export default Write;

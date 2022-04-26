@@ -9,6 +9,7 @@ import OutsideClickHandler from "react-outside-click-handler";
 import useSWR from "swr";
 import { Notification } from "@prisma/client";
 import ParsingCreatedAt from "@libs/client/parsingCreatedAt";
+import ParsingAgo from "@libs/client/parsingAgo";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -89,7 +90,7 @@ export default function Layout({ children }: LayoutProps) {
                 >
                   {data?.notification && data?.notification?.length > 0 ? (
                     data?.notification.map((noti) => {
-                      const createdAt = ParsingCreatedAt(noti?.createdAt);
+                      const createdAt = ParsingAgo(noti?.createdAt);
                       return (
                         <div
                           onClick={() => router.push(`/post/${noti?.postId}`)}

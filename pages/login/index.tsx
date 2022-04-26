@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import { AppProvider } from "next-auth/providers";
 import { getProviders, signIn, useSession } from "next-auth/react";
-import { getSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({

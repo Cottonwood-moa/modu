@@ -12,6 +12,8 @@ import { useRouter } from "next/router";
 interface CommentProps {
   id: number;
   userId: string;
+  count: number;
+  countMutate: () => void;
 }
 interface CommentWithUser extends Comment {
   user: {
@@ -30,7 +32,12 @@ interface FormData {
 interface CreateCommentResponse {
   ok: boolean;
 }
-export default function PostComment({ id, userId }: CommentProps) {
+export default function PostComment({
+  id,
+  userId,
+  count,
+  countMutate,
+}: CommentProps) {
   const { data, mutate } = useSWR<CommentResponse>(
     id ? `/api/comment/${id}` : null
   );
@@ -119,14 +126,20 @@ export default function PostComment({ id, userId }: CommentProps) {
     });
   };
   useEffect(() => {
-    if (commentData && commentData?.ok) mutate();
+    if (commentData && commentData?.ok) {
+      mutate();
+      countMutate();
+    }
   }, [mutate, commentData]);
   useEffect(() => {
-    if (deleteData && deleteData?.ok) mutate();
+    if (deleteData && deleteData?.ok) {
+      mutate();
+      countMutate();
+    }
   }, [mutate, deleteData]);
   return (
     <div className="mt-6 space-y-6">
-      <div className="text-2xl font-bold">0 개의 댓글이 있습니다.</div>
+      <div className="text-2xl font-bold">{count} 개의 댓글이 있습니다.</div>
       <form className="relative" onSubmit={handleSubmit(onValid)}>
         <TextArea register={register("comment", { required: true })}></TextArea>
         <div className=" mt-4 flex justify-end">
@@ -136,7 +149,7 @@ export default function PostComment({ id, userId }: CommentProps) {
       <div className="divide-y-[2px]">
         {data?.comments.map((comment, index) => {
           return (
-            <React.Fragment key={index}>
+            <React.Fragment key={comment?.id}>
               <div className="flex justify-between">
                 <div className="flex flex-col space-x-6 p-2">
                   {/* comment profile */}

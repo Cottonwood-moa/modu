@@ -18,7 +18,54 @@ async function handler(
   if (req.method === "POST") {
     const {
       body: { title, content, thumbnailId, tags },
+      query: { postId },
     } = req;
+    if (postId) {
+      await client.post.update({
+        where: {
+          id: +postId,
+        },
+        data: {
+          content,
+          thumnail: thumbnailId,
+          title,
+        },
+      });
+      await client.postTags.deleteMany({
+        where: {
+          postId: +postId,
+        },
+      });
+      tags.map(async (tag: any) => {
+        const alreayExistsTag = await client.tag.findFirst({
+          where: {
+            name: tag,
+          },
+        });
+        if (!alreayExistsTag) {
+          await client.tag.create({
+            data: {
+              name: tag,
+            },
+          });
+        }
+        await client.postTags.create({
+          data: {
+            post: {
+              connect: {
+                id: +postId,
+              },
+            },
+            tag: {
+              connect: {
+                name: tag,
+              },
+            },
+          },
+        });
+      });
+      return res.json({ ok: true });
+    }
     const TempPost = await client.post.create({
       data: {
         title,
@@ -73,47 +120,88 @@ async function handler(
   }
   if (req.method === "GET") {
     const {
-      query: { page, postId },
+      query: { page, order },
     } = req;
     // post 전체 갯수
     const postsCount = await client.post.count();
     // 페이지 전체 갯수
     const pages = Math.ceil(postsCount / 4);
-
-    const posts = await client.post.findMany({
-      take: 4,
-      skip: 4 * (+page - 1),
-      orderBy: {
-        id: "desc",
-      },
-      include: {
-        user: {
-          select: {
-            name: true,
-            image: true,
+    if (order === "favs") {
+      const posts = await client.post.findMany({
+        take: 4,
+        skip: 4 * (+page - 1),
+        orderBy: [
+          {
+            favs: {
+              _count: "desc",
+            },
+          },
+        ],
+        // orderBy: {
+        //   id: "desc",
+        // },
+        include: {
+          user: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+          favs: true,
+          _count: {
+            select: {
+              favs: true,
+              comments: true,
+            },
           },
         },
-        favs: true,
-        _count: {
-          select: {
-            favs: true,
-            comments: true,
+      });
+      if (!posts) {
+        return res.json({
+          ok: false,
+          message: "There is no Posts",
+        });
+      }
+      res.json({
+        posts: jsonSerialize(posts),
+        pages,
+        ok: true,
+      });
+    } else if (order === "latest") {
+      const posts = await client.post.findMany({
+        take: 4,
+        skip: 4 * (+page - 1),
+        orderBy: {
+          id: "desc",
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+          favs: true,
+          _count: {
+            select: {
+              favs: true,
+              comments: true,
+            },
           },
         },
-      },
-    });
-
-    if (!posts) {
-      return res.json({
-        ok: false,
-        message: "There is no Posts",
+      });
+      if (!posts) {
+        return res.json({
+          ok: false,
+          message: "There is no Posts",
+        });
+      }
+      res.json({
+        posts: jsonSerialize(posts),
+        pages,
+        ok: true,
       });
     }
-    res.json({
-      posts: jsonSerialize(posts),
-      pages,
-      ok: true,
-    });
   }
 }
 

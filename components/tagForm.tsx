@@ -1,4 +1,5 @@
 import { useState } from "react";
+import OutsideClickHandler from "react-outside-click-handler";
 import Swal from "sweetalert2";
 interface Props {
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
@@ -6,28 +7,34 @@ interface Props {
 }
 export default function TagForm({ setTags, tags }: Props) {
   const [tag, setTag] = useState("");
-  const onTagEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key == "Enter") {
-      if (tag.length < 1) return;
-      if (tags.length === 10) {
-        Swal.fire({
-          icon: "error",
-          text: "태그는 최대 10개 까지 넣을 수 있습니다!",
-          showConfirmButton: false,
-          timer: 1000,
-        });
-        return;
-      }
-      setTags((prev) => {
-        const newArray = [...prev, tag];
-        const set = new Set(newArray);
-        //@ts-ignore
-        const uniqueTags = [...set];
-        return uniqueTags;
+  const makeTagHandle = () => {
+    if (tag.length < 1) return;
+    if (tags.length === 10) {
+      Swal.fire({
+        icon: "error",
+        text: "태그는 최대 10개 까지 넣을 수 있습니다!",
+        showConfirmButton: false,
+        timer: 1000,
       });
-      setTag("");
       return;
     }
+    setTags((prev) => {
+      const newArray = [...prev, tag];
+      const set = new Set(newArray);
+      //@ts-ignore
+      const uniqueTags = [...set];
+      return uniqueTags;
+    });
+    setTag("");
+    return;
+  };
+  const onTagEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key == "Enter") {
+      makeTagHandle();
+    }
+  };
+  const onOutsideClick = () => {
+    makeTagHandle();
   };
   const onDelete = (index: number) => {
     setTags((prev) => {
@@ -64,22 +71,24 @@ export default function TagForm({ setTags, tags }: Props) {
       <div className="item-center flex cursor-pointer items-center">
         <div className="flex rounded-md shadow-sm">
           <div className="text-base font-normal text-gray-400">#</div>
-          <input
-            placeholder="태그입력"
-            value={tag}
-            maxLength={10}
-            spellCheck={false}
-            onKeyDown={(e) => {
-              onTagEnter(e);
-            }}
-            onChange={(e) => setTag(e.currentTarget.value)}
-            onKeyPress={(
-              e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => {
-              e.key === "Enter" && e.preventDefault();
-            }}
-            className="w-20 appearance-none border-b-2 outline-none "
-          />
+          <OutsideClickHandler onOutsideClick={onOutsideClick}>
+            <input
+              placeholder="태그입력"
+              value={tag}
+              maxLength={10}
+              spellCheck={false}
+              onKeyDown={(e) => {
+                onTagEnter(e);
+              }}
+              onChange={(e) => setTag(e.currentTarget.value)}
+              onKeyPress={(
+                e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
+              className="w-20 appearance-none border-b-2 outline-none "
+            />
+          </OutsideClickHandler>
         </div>
       </div>
     </div>

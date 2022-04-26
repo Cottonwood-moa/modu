@@ -3,6 +3,7 @@
 import Layout from "@components/Layout";
 import { User } from "@prisma/client";
 import type { GetServerSideProps, NextPage } from "next";
+import client from "@libs/server/client";
 interface Props {
   user: User;
   totalFavs: number;
@@ -82,7 +83,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
   const {
     query: { id },
   } = ctx;
-  const user = await client?.user.findFirst({
+  const user = await client.user.findFirst({
     where: {
       id,
     },
@@ -92,12 +93,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
       image: true,
     },
   });
-  const totalFavs = await client?.fav.count({
+  const totalFavs = await client.fav.count({
     where: {
       userId: id,
     },
   });
-  const totalPosts = await client?.post.count({
+  const totalPosts = await client.post.count({
     where: {
       userId: id,
     },

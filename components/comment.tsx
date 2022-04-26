@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import Button from "./button";
 import { Reply, User } from "@prisma/client";
 import { useSWRConfig } from "swr";
+import ParsingAgo from "@libs/client/parsingAgo";
 interface Props {
   id: number;
   userId: string;
@@ -207,7 +208,7 @@ export default function CommentCard({
                     {reply?.user?.name}
                   </div>
                   <div className="text-sm font-semibold text-gray-400 xl:text-base">
-                    {ParsingCreatedAt(reply?.createdAt)}
+                    {ParsingAgo(reply?.createdAt)}
                   </div>
                 </div>
               </div>

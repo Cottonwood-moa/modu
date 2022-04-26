@@ -98,8 +98,8 @@ export default function Layout({ children }: LayoutProps) {
                           className="cursor-pointer text-base font-normal text-gray-800"
                         >
                           <p className="overflow-hidden text-ellipsis whitespace-nowrap">
-                            {noti?.kind === "comment" && `💬 `}
-                            {noti?.kind === "reply" && `🔧 `}
+                            {noti?.kind === "comment" && `💬 ${noti?.message}`}
+                            {noti?.kind === "reply" && `🔧 ${noti?.message}`}
                           </p>
                           <p className="text-sm font-light text-gray-400">
                             {createdAt}

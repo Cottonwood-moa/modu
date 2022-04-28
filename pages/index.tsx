@@ -121,7 +121,8 @@ const Home: NextPage = () => {
               {...register("search")}
               type="text"
               autoComplete="off"
-              className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800  focus:border-b-2 focus:border-green-400 focus:outline-none focus:ring-0"
+              defaultValue={searchChar}
+              className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800  focus:border-b-2 focus:border-red-400 focus:outline-none focus:ring-0"
             />
             <button className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800">
               검색

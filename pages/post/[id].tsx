@@ -315,20 +315,28 @@ const PostDetail: NextPage<staticProps> = ({
                 const match = /language-(\w+)/.exec(className || "");
                 return !inline && match ? (
                   <SyntaxHighlighter
-                    children={String(children).replace(/\n$/, "")}
+                    children={String(children).replaceAll("\n&nbsp;\n", "")}
                     style={a11yDark}
                     language={match[1]}
-                    PreTag="div"
+                    PreTag="main"
                     {...props}
                   />
                 ) : (
                   <SyntaxHighlighter
-                    children={String(children).replace(/\n$/, "")}
+                    children={String(children).replaceAll("\n&nbsp;\n", "")}
                     style={a11yDark}
                     language="textile"
-                    PreTag="div"
+                    PreTag="main"
                     {...props}
                   />
+                );
+              },
+              main({ node, children, ...props }) {
+                return (
+                  // @ts-ignore
+                  <div className="code" {...props}>
+                    {children}
+                  </div>
                 );
               },
               // 인용문

@@ -201,7 +201,7 @@ export default function CommentCard({
                       type: "tween",
                     }}
                     {...register("reply", { required: true })}
-                    className="mx-2 h-12 w-full resize-none appearance-none border-0 border-b-2 border-gray-400 bg-transparent py-2 px-2 leading-tight text-gray-700 focus:border-blue-400 focus:outline-none focus:ring-0"
+                    className="mx-2 h-12 w-full resize-none appearance-none border-0 border-b-2 border-gray-400 bg-transparent py-2 px-2 leading-tight text-gray-700 focus:border-red-400 focus:outline-none focus:ring-0"
                   />
                   <Button
                     onClick={() => setReplyPop(false)}

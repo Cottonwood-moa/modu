@@ -338,7 +338,7 @@ const Profile: NextPage<Props> = () => {
                   autoComplete="off"
                   {...register("name")}
                   maxLength={10}
-                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent  text-2xl font-bold text-gray-800  focus:border-b-2 focus:border-blue-400 focus:outline-none focus:ring-0"
+                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent  text-2xl font-bold text-gray-800  focus:border-b-2 focus:border-red-400 focus:outline-none focus:ring-0"
                   defaultValue={data?.user?.name ? data?.user?.name : ""}
                 />
 
@@ -359,7 +359,7 @@ const Profile: NextPage<Props> = () => {
                   {...register("intro")}
                   autoComplete="off"
                   maxLength={100}
-                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800  focus:border-b-2 focus:border-blue-400 focus:outline-none focus:ring-0"
+                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800  focus:border-b-2 focus:border-red-400 focus:outline-none focus:ring-0"
                   defaultValue={
                     data?.user?.introduce ? data?.user?.introduce : ""
                   }

@@ -51,6 +51,7 @@ model User {
   emailVerified DateTime?
   image         String?
   alert         Int            @default(0)
+  introduce     String         @default("간단하게 자신을 소개해주세요!")
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
@@ -112,16 +113,17 @@ model Comment {
   replys    Reply[]
 }
 
+// https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/526c056b-b1a8-48af-7d39-3577ba0c0400/avatar
 model Reply {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   content   String   @db.LongText
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  comment   Comment  @relation(fields: [commentId], references: [id])
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId Int
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
 }
 

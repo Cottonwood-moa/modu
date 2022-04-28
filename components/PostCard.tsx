@@ -1,3 +1,4 @@
+import ImageDelivery from "@libs/client/imageDelivery";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -40,18 +41,35 @@ export default function PostCard({ post }: IProps) {
       <div className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-bold text-gray-800">
         {post.title}
       </div>
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium text-gray-600">
-        {post.content}
+      <div className="flex space-x-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm font-thin text-gray-800">
+        {post?.postTags?.map((postTag, index) => {
+          return <div key={index}>#{postTag?.tag?.name}</div>;
+        })}
       </div>
       <div className="relative flex w-full items-center text-gray-800">
         <div className="flex items-center space-x-2">
-          <Image
-            src={post?.user?.image ? post?.user?.image : "/images/react.png"}
-            width={48}
-            height={48}
-            className="h-12 w-12 rounded-full bg-slate-600"
-            alt=""
-          />
+          {post?.user?.image?.includes("https") ? (
+            <Image
+              src={post?.user?.image}
+              width={48}
+              height={48}
+              className="h-12 w-12 rounded-full bg-slate-600"
+              alt=""
+            />
+          ) : (
+            <Image
+              src={
+                post?.user?.image
+                  ? ImageDelivery(post?.user?.image)
+                  : "/images/modu.png"
+              }
+              width={48}
+              height={48}
+              className="h-12 w-12 rounded-full bg-slate-600"
+              alt=""
+            />
+          )}
+
           <div>{post.user.name}</div>
         </div>
         <div className="absolute right-0 flex items-center justify-end space-x-2">

@@ -62,6 +62,8 @@ async function handler(
     });
     if (!commentUser)
       return res.json({ ok: false, message: "post user not defined" });
+    // reply와 코멘트 주인이 같으면 알림이 가지 않음.
+    if (reply?.userId === commentUser?.id) return res.json({ ok: true });
     // 코멘트 주인에게 알림
     await client.user.update({
       where: {
@@ -94,10 +96,12 @@ async function handler(
   }
   // delete
   if (req.method === "DELETE") {
-    const { body } = req;
-    const deleteData = await client.comment.delete({
+    const {
+      body: { replyId },
+    } = req;
+    const deleteData = await client.reply.delete({
       where: {
-        id: body,
+        id: replyId,
       },
     });
     return res.json({

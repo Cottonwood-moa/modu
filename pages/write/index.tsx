@@ -79,7 +79,7 @@ const Write: NextPage = () => {
               tags: tags,
             });
           } else {
-            const defaultThumbnailId = "46b90817-c0a8-4b58-c379-d981ce79f400";
+            const defaultThumbnailId = "50983e58-4731-4f42-3a4a-570b1222f400";
             postSubmit({
               title,
               content,
@@ -125,7 +125,7 @@ const Write: NextPage = () => {
   };
   useEffect(() => {
     if (data && data?.ok) {
-      router.push(`/post/${data.post.id}`).then(() => router.reload());
+      router.push(`/post/${data.post.id}`);
       // window.location.href = `http://localhost:3000/post/${data.post.id}`;
     }
   }, [data, router]);

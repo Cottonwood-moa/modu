@@ -17,11 +17,14 @@ import { a11yDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import Image from "next/image";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import useUser from "@libs/client/useUser";
 import useMutation from "@libs/client/useMutation";
 import Swal from "sweetalert2";
 import ParsingCreatedAt from "@libs/client/parsingCreatedAt";
+import { orderAtom, pageAtom } from "@atom/atom";
+import { useRecoilState } from "recoil";
+import ImageDelivery from "@libs/client/imageDelivery";
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
 export interface PostWithUser extends Post {
   user: User;
@@ -62,6 +65,9 @@ const PostDetail: NextPage<staticProps> = ({
 }) => {
   const router = useRouter();
   const [pop, setPop] = useState(false);
+  const [orderBy, setOrderBy] = useRecoilState(orderAtom);
+  const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
+  const { mutate: speMutate } = useSWRConfig();
   const onPop = () => {
     setPop((prev) => !prev);
   };
@@ -126,6 +132,7 @@ const PostDetail: NextPage<staticProps> = ({
             cancelButtonColor: "#475569",
           });
         } finally {
+          speMutate(`/api/post?page=${currentPage}&order=${orderBy}`);
           router.push("/");
         }
       }
@@ -157,14 +164,14 @@ const PostDetail: NextPage<staticProps> = ({
   }, [id]);
 
   if (router.isFallback) {
-    return <PageLoading text="포스트 생성중" />;
+    return <PageLoading />;
   }
   return (
     <Layout>
       <div className="right-0 left-0 m-auto mt-32 w-[60%] min-w-[800px] bg-white p-12 text-gray-800 ">
         {/* post header */}
         <div className="space-y-12">
-          <div className="flex w-full items-center justify-between">
+          <div className="flex w-full cursor-pointer items-center justify-between">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-12 w-12"
@@ -172,6 +179,7 @@ const PostDetail: NextPage<staticProps> = ({
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth="2"
+              onClick={() => router.back()}
             >
               <path
                 strokeLinecap="round"
@@ -258,13 +266,24 @@ const PostDetail: NextPage<staticProps> = ({
           {/* user & date */}
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Image
-                src={avatar ? avatar : "/images/react.png"}
-                width={48}
-                height={48}
-                className="h-12 w-12 rounded-full bg-slate-600"
-                alt=""
-              />
+              {console.log("avatar", avatar)}
+              {avatar.includes("https") ? (
+                <Image
+                  src={avatar}
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 rounded-full bg-slate-600"
+                  alt=""
+                />
+              ) : (
+                <Image
+                  src={ImageDelivery(avatar, "avatar")}
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 rounded-full bg-slate-600"
+                  alt=""
+                />
+              )}
               <span className="text-lg font-semibold xl:text-2xl ">{name}</span>
             </div>
             <div className="text-lg font-semibold text-slate-500 xl:text-2xl">
@@ -277,7 +296,7 @@ const PostDetail: NextPage<staticProps> = ({
               return (
                 <div
                   key={index}
-                  className="inline-block w-auto rounded-xl bg-slate-500 py-1 px-2 font-bold text-white"
+                  className="m-1 inline-block w-auto rounded-xl bg-slate-500 py-1 px-2 font-bold text-white"
                 >
                   # {tag?.tag?.name}
                 </div>

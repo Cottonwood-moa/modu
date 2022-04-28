@@ -12,6 +12,7 @@ import Button from "./button";
 import { Reply, User } from "@prisma/client";
 import { useSWRConfig } from "swr";
 import ParsingAgo from "@libs/client/parsingAgo";
+import ImageDelivery from "@libs/client/imageDelivery";
 interface Props {
   id: number;
   userId: string;
@@ -77,12 +78,46 @@ export default function CommentCard({
       }
     });
   };
+  const [deleteReply, { data: replyData, loading: deleteReplyLoading }] =
+    useMutation<CreateCommentResponse>(`/api/comment/reply`, "DELETE");
+  const deleteReplyHandle = (replyId: number) => {
+    if (deleteReplyLoading) return;
+    Swal.fire({
+      title: "댓글을 삭제하시겠습니까?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#475569",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "확인",
+      cancelButtonText: "취소",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          deleteReply({ replyId });
+        } catch (err: any) {
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "댓글 삭제를 실패하였습니다.",
+            footer: `Error : ${err?.message}`,
+            confirmButtonColor: "#475569",
+            denyButtonColor: "#475569",
+            cancelButtonColor: "#475569",
+          });
+        }
+      }
+    });
+  };
   useEffect(() => {
     if (deleteData && deleteData?.ok) {
       mutate(`/api/comment/${id}`);
       countMutate();
     }
-  }, [mutate, deleteData]);
+    if (replyData && replyData?.ok) {
+      mutate(`/api/comment/${id}`);
+      countMutate();
+    }
+  }, [mutate, countMutate, deleteData, replyData, id]);
   useEffect(() => {
     if (data && data.ok) {
       mutate(`/api/comment/${id}`);
@@ -93,15 +128,29 @@ export default function CommentCard({
       <div className="flex flex-col space-x-6 rounded-xl bg-gray-50 p-2">
         {/* comment profile */}
         <div className="flex items-center space-x-6">
-          <Image
-            src={
-              comment?.user?.image ? comment?.user?.image : "/images/react.png"
-            }
-            width={48}
-            height={48}
-            className="rounded-full"
-            alt=""
-          />
+          {comment?.user?.image?.includes("https") ? (
+            <Image
+              src={
+                comment?.user?.image ? comment?.user?.image : "/images/modu.png"
+              }
+              width={48}
+              height={48}
+              className="rounded-full"
+              alt=""
+            />
+          ) : (
+            <Image
+              src={
+                comment?.user?.image
+                  ? ImageDelivery(comment?.user?.image)
+                  : "/images/modu.png"
+              }
+              width={48}
+              height={48}
+              className="h-12 w-12 rounded-full bg-slate-600"
+              alt=""
+            />
+          )}
           <div>
             <div className="text-lg font-bold text-gray-700 xl:text-xl ">
               {userId === comment?.user?.id ? (
@@ -187,17 +236,31 @@ export default function CommentCard({
             <div className="flex flex-col space-x-6 p-2 ">
               {/* recomment profile */}
               <div className="flex items-center space-x-6">
-                <Image
-                  src={
-                    reply?.user?.image
-                      ? reply?.user?.image
-                      : "/images/react.png"
-                  }
-                  width={48}
-                  height={48}
-                  className="rounded-full"
-                  alt=""
-                />
+                {reply?.user?.image?.includes("https") ? (
+                  <Image
+                    src={
+                      reply?.user?.image
+                        ? reply?.user?.image
+                        : "/images/react.png"
+                    }
+                    width={48}
+                    height={48}
+                    className="rounded-full"
+                    alt=""
+                  />
+                ) : (
+                  <Image
+                    src={
+                      reply?.user?.image
+                        ? ImageDelivery(reply?.user?.image)
+                        : "/images/react.png"
+                    }
+                    width={48}
+                    height={48}
+                    className="h-12 w-12 rounded-full bg-slate-600"
+                    alt=""
+                  />
+                )}
                 <div>
                   <div className="text-lg font-bold text-gray-700 xl:text-xl ">
                     {userId === reply?.user?.id ? (
@@ -207,8 +270,18 @@ export default function CommentCard({
                     ) : null}
                     {reply?.user?.name}
                   </div>
-                  <div className="text-sm font-semibold text-gray-400 xl:text-base">
-                    {ParsingAgo(reply?.createdAt)}
+                  <div className="flex items-center space-x-4 text-sm font-semibold text-gray-400 xl:text-base">
+                    <div>{ParsingAgo(reply?.createdAt)}</div>
+                    {user?.id === reply?.user?.id ? (
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => deleteReplyHandle(reply?.id)}
+                      >
+                        삭제
+                      </div>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
               </div>

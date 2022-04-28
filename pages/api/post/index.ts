@@ -131,13 +131,81 @@ async function handler(
   }
   if (req.method === "GET") {
     const {
-      query: { page, order },
+      query: { page, order, search },
     } = req;
     // post 전체 갯수
     const postsCount = await client.post.count();
     // 페이지 전체 갯수
     const pages = Math.ceil(postsCount / 4);
     if (order === "favs") {
+      // 검색어 o
+      if (search) {
+        const posts = await client.post.findMany({
+          take: 4,
+          skip: 4 * (+page - 1),
+          where: {
+            OR: [
+              {
+                title: {
+                  contains: search.toString(),
+                },
+              },
+              {
+                postTags: {
+                  some: {
+                    tag: {
+                      name: {
+                        contains: search.toString(),
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          orderBy: [
+            {
+              favs: {
+                _count: "desc",
+              },
+            },
+          ],
+          select: {
+            id: true,
+            thumnail: true,
+            userId: true,
+            views: true,
+            title: true,
+            user: {
+              select: {
+                name: true,
+                image: true,
+              },
+            },
+            postTags: {
+              select: {
+                tag: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!posts) {
+          return res.json({
+            ok: false,
+            message: "There is no Posts",
+          });
+        }
+        return res.json({
+          posts: jsonSerialize(posts),
+          pages,
+          ok: true,
+        });
+      }
+      // 검색어 x
       const posts = await client.post.findMany({
         take: 4,
         skip: 4 * (+page - 1),
@@ -148,21 +216,25 @@ async function handler(
             },
           },
         ],
-        // orderBy: {
-        //   id: "desc",
-        // },
-        include: {
+        select: {
+          id: true,
+          thumnail: true,
+          userId: true,
+          views: true,
+          title: true,
           user: {
             select: {
               name: true,
               image: true,
             },
           },
-          favs: true,
-          _count: {
+          postTags: {
             select: {
-              favs: true,
-              comments: true,
+              tag: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -179,24 +251,96 @@ async function handler(
         ok: true,
       });
     } else if (order === "latest") {
+      // 검색어 o
+      if (search) {
+        const posts = await client.post.findMany({
+          take: 4,
+          skip: 4 * (+page - 1),
+          where: {
+            OR: [
+              {
+                title: {
+                  contains: search.toString(),
+                },
+              },
+              {
+                postTags: {
+                  some: {
+                    tag: {
+                      name: {
+                        contains: search.toString(),
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          orderBy: {
+            id: "desc",
+          },
+          select: {
+            id: true,
+            thumnail: true,
+            userId: true,
+            views: true,
+            title: true,
+            user: {
+              select: {
+                name: true,
+                image: true,
+              },
+            },
+            postTags: {
+              select: {
+                tag: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!posts) {
+          return res.json({
+            ok: false,
+            message: "There is no Posts",
+          });
+        }
+        return res.json({
+          posts: jsonSerialize(posts),
+          pages,
+          ok: true,
+        });
+      }
+      // 검색어 x
       const posts = await client.post.findMany({
         take: 4,
         skip: 4 * (+page - 1),
         orderBy: {
           id: "desc",
         },
-        include: {
+        select: {
+          id: true,
+          thumnail: true,
+          userId: true,
+          views: true,
+          title: true,
           user: {
             select: {
               name: true,
               image: true,
             },
           },
-          favs: true,
-          _count: {
+          postTags: {
             select: {
-              favs: true,
-              comments: true,
+              tag: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
         },

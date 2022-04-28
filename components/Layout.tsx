@@ -10,6 +10,7 @@ import useSWR from "swr";
 import { Notification } from "@prisma/client";
 import ParsingCreatedAt from "@libs/client/parsingCreatedAt";
 import ParsingAgo from "@libs/client/parsingAgo";
+import ImageDelivery from "@libs/client/imageDelivery";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -59,7 +60,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
 
         <div className="flex items-center space-x-6 text-xl font-bold text-gray-900">
-          <div className="flex cursor-pointer items-center text-gray-800 transition hover:text-blue-400">
+          <div className="flex cursor-pointer items-center text-gray-800 transition hover:text-red-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-8 w-8"
@@ -143,7 +144,7 @@ export default function Layout({ children }: LayoutProps) {
             ) : (
               <motion.div
                 onClick={alertOpen}
-                className="flex cursor-pointer items-center text-gray-800 transition hover:text-blue-400"
+                className="flex cursor-pointer items-center text-gray-800 transition hover:text-red-400"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +168,7 @@ export default function Layout({ children }: LayoutProps) {
           <div className="flex cursor-pointer items-center text-gray-800 transition ">
             {!user ? (
               <div
-                className="flex items-center hover:text-blue-400"
+                className="flex items-center hover:text-red-400"
                 onClick={onLogin}
               >
                 <svg
@@ -192,14 +193,29 @@ export default function Layout({ children }: LayoutProps) {
                   className="relative z-10 flex items-center"
                   onClick={onInfo}
                 >
-                  <div className="flex items-center hover:text-blue-400">
-                    <Image
-                      src={user?.image ? user?.image : "/images/react.png"}
-                      width={48}
-                      height={48}
-                      className="h-12 w-12 rounded-full bg-slate-600"
-                      alt=""
-                    />
+                  <div className="flex items-center hover:text-red-400">
+                    {user?.image?.includes("https") ? (
+                      <Image
+                        src={user?.image}
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 rounded-full bg-slate-600"
+                        alt=""
+                      />
+                    ) : (
+                      <Image
+                        src={
+                          user?.image
+                            ? ImageDelivery(user?.image)
+                            : "/images/modu.png"
+                        }
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 rounded-full bg-slate-600"
+                        alt=""
+                      />
+                    )}
+
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-8 w-8"
@@ -228,27 +244,27 @@ export default function Layout({ children }: LayoutProps) {
                         className="absolute top-20  right-0 flex w-52 flex-col space-y-6 bg-white p-6 shadow-lg"
                       >
                         <Link href="post/1">
-                          <a className="text-gray-800 hover:text-blue-400">
+                          <a className="text-gray-800 hover:text-red-400">
                             내가 쓴 글
                           </a>
                         </Link>
                         <Link href="">
-                          <a className="text-gray-800 hover:text-blue-400">
+                          <a className="text-gray-800 hover:text-red-400">
                             좋아요
                           </a>
                         </Link>
                         <Link href="">
-                          <a className="text-gray-800 hover:text-blue-400">
+                          <a className="text-gray-800 hover:text-red-400">
                             내가 쓴 댓글
                           </a>
                         </Link>
                         <Link href={`/myPage/${user?.id}`}>
-                          <a className="text-gray-800 hover:text-blue-400">
+                          <a className="text-gray-800 hover:text-red-400">
                             프로필
                           </a>
                         </Link>
                         <div
-                          className="text-gray-800 hover:text-blue-400"
+                          className="text-gray-800 hover:text-red-400"
                           onClick={onSignOut}
                         >
                           로그아웃

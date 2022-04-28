@@ -69,27 +69,31 @@ export default function TagForm({ setTags, tags }: Props) {
         );
       })}
       <div className="item-center flex cursor-pointer items-center">
-        <div className="flex rounded-md shadow-sm">
-          <div className="text-base font-normal text-gray-400">#</div>
-          <OutsideClickHandler onOutsideClick={onOutsideClick}>
-            <input
-              placeholder="태그입력"
-              value={tag}
-              maxLength={10}
-              spellCheck={false}
-              onKeyDown={(e) => {
-                onTagEnter(e);
-              }}
-              onChange={(e) => setTag(e.currentTarget.value)}
-              onKeyPress={(
-                e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                e.key === "Enter" && e.preventDefault();
-              }}
-              className="w-20 appearance-none border-b-2 outline-none "
-            />
-          </OutsideClickHandler>
-        </div>
+        {tags.length === 10 ? (
+          <></>
+        ) : (
+          <div className="flex rounded-md shadow-sm">
+            <div className="text-base font-normal text-gray-400">#</div>
+            <OutsideClickHandler onOutsideClick={onOutsideClick}>
+              <input
+                placeholder="태그입력"
+                value={tag}
+                maxLength={10}
+                spellCheck={false}
+                onKeyDown={(e) => {
+                  onTagEnter(e);
+                }}
+                onChange={(e) => setTag(e.currentTarget.value)}
+                onKeyPress={(
+                  e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+                ) => {
+                  e.key === "Enter" && e.preventDefault();
+                }}
+                className="w-20 appearance-none border-b-2 outline-none "
+              />
+            </OutsideClickHandler>
+          </div>
+        )}
       </div>
     </div>
   );

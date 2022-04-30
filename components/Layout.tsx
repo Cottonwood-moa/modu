@@ -60,7 +60,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
 
         <div className="flex items-center space-x-6 text-xl font-bold text-gray-900">
-          <div className="flex cursor-pointer items-center text-gray-800 transition hover:text-red-400">
+          <div className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#0fb9b1]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-8 w-8"
@@ -146,7 +146,7 @@ export default function Layout({ children }: LayoutProps) {
               ) : (
                 <motion.div
                   onClick={alertOpen}
-                  className="flex cursor-pointer items-center text-gray-800 transition hover:text-red-400"
+                  className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#0fb9b1]"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -173,7 +173,7 @@ export default function Layout({ children }: LayoutProps) {
           <div className="flex cursor-pointer items-center text-gray-800 transition ">
             {!user ? (
               <div
-                className="flex items-center hover:text-red-400"
+                className="flex items-center hover:text-[#0fb9b1]"
                 onClick={onLogin}
               >
                 <svg
@@ -198,7 +198,7 @@ export default function Layout({ children }: LayoutProps) {
                   className="relative z-10 flex items-center"
                   onClick={onInfo}
                 >
-                  <div className="flex items-center hover:text-red-400">
+                  <div className="flex items-center hover:text-[#0fb9b1]">
                     {user?.image?.includes("https") ? (
                       <Image
                         src={user?.image}
@@ -249,27 +249,27 @@ export default function Layout({ children }: LayoutProps) {
                         className="absolute top-20  right-0 flex w-52 flex-col space-y-6 bg-white p-6 shadow-lg"
                       >
                         <Link href="post/1">
-                          <a className="text-gray-800 hover:text-red-400">
+                          <a className="text-gray-800 hover:text-[#0fb9b1]">
                             내가 쓴 글
                           </a>
                         </Link>
                         <Link href="">
-                          <a className="text-gray-800 hover:text-red-400">
+                          <a className="text-gray-800 hover:text-[#0fb9b1]">
                             좋아요
                           </a>
                         </Link>
                         <Link href="">
-                          <a className="text-gray-800 hover:text-red-400">
+                          <a className="text-gray-800 hover:text-[#0fb9b1]">
                             내가 쓴 댓글
                           </a>
                         </Link>
                         <Link href={`/myPage/${user?.id}`}>
-                          <a className="text-gray-800 hover:text-red-400">
+                          <a className="text-gray-800 hover:text-[#0fb9b1]">
                             프로필
                           </a>
                         </Link>
                         <div
-                          className="text-gray-800 hover:text-red-400"
+                          className="text-gray-800 hover:text-[#0fb9b1]"
                           onClick={onSignOut}
                         >
                           로그아웃

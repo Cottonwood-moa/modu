@@ -59,6 +59,7 @@ model User {
   favs          Fav[]
   notification  Notification[]
   replys        Reply[]
+  links         Link[]
 }
 
 model VerificationToken {
@@ -149,9 +150,12 @@ model Notification {
   postId    Int
 }
 
-model Test {
+model Link {
   id        Int      @id @default(autoincrement())
+  url       String
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  count     Int      @default(0)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
 }

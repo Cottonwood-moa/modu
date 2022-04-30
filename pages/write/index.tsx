@@ -125,7 +125,7 @@ const Write: NextPage = () => {
   };
   useEffect(() => {
     if (data && data?.ok) {
-      router.push(`/post/${data.post.id}`);
+      router.replace(`/post/${data.post.id}`);
       // window.location.href = `http://localhost:3000/post/${data.post.id}`;
     }
   }, [data, router]);
@@ -144,6 +144,7 @@ const Write: NextPage = () => {
           <div className="space-y-12">
             <div className="w-full ">
               <svg
+              onClick={()=> router.back()}
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-12 w-12"
                 fill="none"

@@ -176,7 +176,7 @@ export default function CommentCard({
           </div>
         </div>
         {/* detail  */}
-        <div className="m-6 text-base  font-semibold xl:text-lg">
+        <div className="m-6 whitespace-pre-wrap text-base font-semibold xl:text-lg">
           {comment?.content}
         </div>
         <OutsideClickHandler onOutsideClick={() => setReplyPop(false)}>
@@ -201,7 +201,7 @@ export default function CommentCard({
                       type: "tween",
                     }}
                     {...register("reply", { required: true })}
-                    className="mx-2 h-12 w-full resize-none appearance-none border-0 border-b-2 border-gray-400 bg-transparent py-2 px-2 leading-tight text-gray-700 focus:border-red-400 focus:outline-none focus:ring-0"
+                    className="mx-2 h-12 w-full resize-none appearance-none border-0 border-b-2 border-gray-400 bg-transparent py-2 px-2 leading-tight text-gray-700 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
                   />
                   <Button
                     onClick={() => setReplyPop(false)}
@@ -262,9 +262,9 @@ export default function CommentCard({
                   />
                 )}
                 <div>
-                  <div className="text-lg font-bold text-gray-700 xl:text-xl ">
+                  <div className="flex items-center text-lg font-bold text-gray-700 xl:text-xl ">
                     {userId === reply?.user?.id ? (
-                      <span className="mr-6 rounded-2xl bg-orange-300 py-1 px-2 text-xs font-bold text-white">
+                      <span className="mr-2 rounded-2xl bg-orange-300 py-1 px-2 text-xs font-bold text-white">
                         작성자
                       </span>
                     ) : null}
@@ -286,7 +286,7 @@ export default function CommentCard({
                 </div>
               </div>
               {/* detail  */}
-              <div className="m-6 text-base  font-semibold xl:text-lg">
+              <div className="m-6 whitespace-pre-wrap text-base font-semibold xl:text-lg">
                 {reply?.content}
               </div>
             </div>

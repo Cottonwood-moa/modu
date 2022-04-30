@@ -254,15 +254,19 @@ const PostDetail: NextPage<staticProps> = ({
           <div className="w-full text-3xl font-bold xl:text-4xl 2xl:text-5xl">
             {title}
           </div>
-          <div className="flex items-center space-x-2 text-xl font-bold text-gray-400">
-            <div className="cursor-pointer " onClick={goToEdit}>
-              수정
+          {userId === user?.id ? (
+            <div className="flex items-center space-x-2 text-xl font-bold text-gray-400">
+              <div className="cursor-pointer " onClick={goToEdit}>
+                수정
+              </div>
+              <span>/</span>
+              <div onClick={postDeleteHandle} className="cursor-pointer ">
+                삭제
+              </div>
             </div>
-            <span>/</span>
-            <div onClick={postDeleteHandle} className="cursor-pointer ">
-              삭제
-            </div>
-          </div>
+          ) : (
+            <></>
+          )}
           {/* user & date */}
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center space-x-2">
@@ -307,15 +311,16 @@ const PostDetail: NextPage<staticProps> = ({
         {/* post content */}
         <div className="post-content py-12">
           <ReactMarkdown
+            className="react-markdown"
             rehypePlugins={[rehypeRaw]}
             remarkPlugins={[remarkGfm]}
-            children={content?.replace(/\n/gi, "\n\n&nbsp;\n\n")}
+            children={content?.replace(/\n/gi, "&nbsp;\n\n")}
             components={{
               code({ node, inline, className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || "");
                 return !inline && match ? (
                   <SyntaxHighlighter
-                    children={String(children).replaceAll("\n&nbsp;\n", "")}
+                    children={String(children).replaceAll("&nbsp;\n\n", "\n")}
                     style={a11yDark}
                     language={match[1]}
                     PreTag="main"
@@ -323,7 +328,7 @@ const PostDetail: NextPage<staticProps> = ({
                   />
                 ) : (
                   <SyntaxHighlighter
-                    children={String(children).replaceAll("\n&nbsp;\n", "")}
+                    children={String(children).replaceAll("&nbsp;\n\n", "\n")}
                     style={a11yDark}
                     language="textile"
                     PreTag="main"
@@ -455,48 +460,57 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
   const {
     params: { id },
   } = ctx;
-  const post = await client.post.findUnique({
-    where: {
-      id: +id.toString(),
-    },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-        },
+  try {
+    const post = await client.post.findUnique({
+      where: {
+        id: +id.toString(),
       },
-      postTags: {
-        select: {
-          tag: {
-            select: {
-              name: true,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        postTags: {
+          select: {
+            tag: {
+              select: {
+                name: true,
+              },
             },
           },
         },
       },
-    },
-  });
-  if (!post)
+    });
+    if (!post)
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/404",
+        },
+      };
+
+    return {
+      props: {
+        id: post?.id,
+        title: post?.title,
+        content: post?.content,
+        userId: post?.user?.id,
+        name: post?.user?.name,
+        avatar: post?.user?.image,
+        tags: post?.postTags,
+        createdAt: jsonSerialize(post?.createdAt),
+      },
+    };
+  } catch {
     return {
       redirect: {
         permanent: false,
-        destination: "/404",
+        destination: "/500",
       },
     };
-
-  return {
-    props: {
-      id: post?.id,
-      title: post?.title,
-      content: post?.content,
-      userId: post?.user?.id,
-      name: post?.user?.name,
-      avatar: post?.user?.image,
-      tags: post?.postTags,
-      createdAt: jsonSerialize(post?.createdAt),
-    },
-  };
+  }
 };
 export default PostDetail;

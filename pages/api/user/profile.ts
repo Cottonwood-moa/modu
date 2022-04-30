@@ -11,7 +11,7 @@ async function handler(
 ) {
   const session: UserSession = await getSession({ req });
   const {
-    query: { id },
+    query: { id, page },
   } = req;
   const user = await client.user.findFirst({
     where: {
@@ -22,13 +22,29 @@ async function handler(
       name: true,
       image: true,
       introduce: true,
+      links: true,
     },
   });
-  const posts = await client.post.findMany({
+  const totalPosts = await client.post.count({
     where: {
       userId: id.toString(),
     },
-    include: {
+  });
+  const pages = Math.ceil(totalPosts / 9);
+  const posts = await client.post.findMany({
+    take: 9,
+    skip: 9 * (+page - 1),
+    where: {
+      userId: id.toString(),
+    },
+    orderBy: {
+      id: "desc",
+    },
+    select: {
+      id: true,
+      title: true,
+      thumnail: true,
+      views: true,
       postTags: {
         select: {
           tag: {
@@ -51,17 +67,14 @@ async function handler(
       userId: id.toString(),
     },
   });
-  const totalPosts = await client.post.count({
-    where: {
-      userId: id.toString(),
-    },
-  });
+
   return res.json({
     ok: true,
     posts: jsonSerialize(posts),
     user,
     totalFavs,
     totalPosts,
+    pages,
   });
 }
 

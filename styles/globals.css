@@ -6,7 +6,9 @@ body {
   overflow-x: hidden;
   @apply min-w-[750px] bg-white;
 }
-
+.react-markdown a {
+  color: royalblue;
+}
 .post-content p {
   @apply text-xl font-medium;
 }
@@ -14,28 +16,28 @@ body {
   @apply border-l-4 pl-4 text-2xl font-bold text-gray-400;
 }
 .post-content h6 {
-  @apply text-2xl font-medium;
+  @apply text-lg font-medium;
 }
 .post-content h5 {
-  @apply text-3xl font-medium;
+  @apply text-xl font-medium;
 }
 .post-content h4 {
-  @apply text-4xl font-medium;
+  @apply text-2xl font-medium;
 }
 .post-content h3 {
-  @apply text-5xl font-medium;
+  @apply text-3xl font-medium;
 }
 .post-content h2 {
-  @apply text-6xl font-medium;
+  @apply text-4xl font-medium;
 }
 .post-content h1 {
-  @apply text-7xl font-medium;
+  @apply text-5xl font-medium;
 }
 .post-content ul {
-  @apply list-disc;
+  @apply list-disc text-xl font-semibold;
 }
 .post-content ol {
-  @apply list-decimal;
+  @apply list-decimal text-xl font-semibold;
 }
 
 /* .text-editor p {

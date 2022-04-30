@@ -4,6 +4,7 @@ export const pageAtom = atom({
   key: "currentPage",
   default: 1,
 });
+
 export const searchAtom = atom({
   key: "searchAtom",
   default: "",

@@ -1,9 +1,9 @@
 import Layout from "@components/Layout";
 import { useRecoilState } from "recoil";
-import { orderAtom, OrderBy, searchAtom } from "@atom/atom";
+import { orderAtom, OrderBy, pageAtom, searchAtom } from "@atom/atom";
 import type { NextPage } from "next";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useCycle } from "framer-motion";
 import { useEffect, useState } from "react";
 import CategoryIcon from "@components/categoryIcon";
 import client from "@libs/server/client";
@@ -32,11 +32,15 @@ interface PostsResponse {
 interface SearchForm {
   search: string;
 }
+
 const Home: NextPage = () => {
   const [orderBy, setOrderBy] = useRecoilState(orderAtom);
   const [searchChar, setSearchChar] = useRecoilState(searchAtom);
+  const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
   const { register, handleSubmit, reset } = useForm<SearchForm>();
+  const [moreLoading, setMoreLoading] = useState(false);
   const onValid = ({ search }: SearchForm) => {
+    setCurrentPage(1);
     setSearchChar(search);
     mutate();
   };
@@ -51,7 +55,6 @@ const Home: NextPage = () => {
 
   const { data, setSize, isValidating, mutate } =
     useSWRInfinite<PostsResponse>(getKey);
-
   const orderByHandle = (kind: OrderBy) => {
     setOrderBy(kind);
   };
@@ -60,22 +63,25 @@ const Home: NextPage = () => {
     mutate();
     reset();
   };
-
   const posts = data ? data.map((post) => post?.posts).flat() : [];
-  const page = useInfiniteScroll();
+  // const page = useInfiniteScroll();
   useEffect(() => {
     if (isValidating) return;
-    setSize(page);
+    setSize(currentPage).then(() => mutate());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setSize, page]);
-
+  }, [setSize, currentPage]);
   useEffect(() => {
+    setSize(currentPage);
     mutate();
-  }, [orderBy]);
+  }, [searchChar, orderBy, mutate]);
   useEffect(() => {
-    mutate();
-  }, [searchChar, mutate]);
-
+    if (data) {
+      setMoreLoading(false);
+    }
+  }, [setMoreLoading, data]);
+  useEffect(() => {
+    setSize(currentPage);
+  }, []);
   return (
     <Layout>
       {/* main */}
@@ -107,7 +113,7 @@ const Home: NextPage = () => {
                 className="h-20 w-20"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
+                stroke="#0fb9b1"
                 strokeWidth="3"
               >
                 <path
@@ -122,7 +128,7 @@ const Home: NextPage = () => {
               type="text"
               autoComplete="off"
               defaultValue={searchChar}
-              className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800  focus:border-b-2 focus:border-red-400 focus:outline-none focus:ring-0"
+              className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800  focus:border-b-2 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
             />
             <button className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800">
               검색
@@ -140,7 +146,7 @@ const Home: NextPage = () => {
               onClick={() => orderByHandle(OrderBy.favs)}
               className={cls(
                 "flex cursor-pointer items-center text-2xl font-bold ",
-                orderBy === OrderBy.favs ? "text-red-400" : "text-gray-800"
+                orderBy === OrderBy.favs ? "text-[#0fb9b1]" : "text-gray-800"
               )}
             >
               {/* orderBy */}
@@ -169,7 +175,7 @@ const Home: NextPage = () => {
               onClick={() => orderByHandle(OrderBy.latest)}
               className={cls(
                 "flex cursor-pointer items-center text-2xl font-bold ",
-                orderBy === OrderBy.latest ? "text-red-400" : "text-gray-800"
+                orderBy === OrderBy.latest ? "text-[#0fb9b1]" : "text-gray-800"
               )}
             >
               <svg
@@ -191,7 +197,7 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="space-x-2 px-8 text-lg font-medium text-gray-600">
-          <span className="text-red-400">✔</span>
+          <span className="text-[#0fb9b1]">✔</span>
           <span>제목과 태그를 기반으로 검색합니다.</span>
         </div>
 
@@ -203,6 +209,46 @@ const Home: NextPage = () => {
             : posts?.map((post, index) => {
                 return <PostCard post={post} key={index} />;
               })}
+        </div>
+        <div
+          className="flex justify-center p-12"
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+        >
+          {!moreLoading ? (
+            !(data && data[0]?.pages <= currentPage) ? (
+              <motion.div
+                layoutId="moreButton"
+                onClick={() => setMoreLoading(true)}
+                className="cursor-pointer text-2xl font-bold text-gray-800"
+              >
+                더보기
+              </motion.div>
+            ) : (
+              <motion.div
+                layoutId="moreButton"
+                animate={{ rotate: 360 }}
+                transition={{
+                  type: "spring",
+                  damping: 15,
+                }}
+                className=" text-2xl font-bold text-gray-800"
+              >
+                게시글이 없습니다.
+              </motion.div>
+            )
+          ) : (
+            <motion.div
+              layoutId="moreButton"
+              animate={{ rotate: 360 }}
+              transition={{
+                type: "spring",
+                damping: 15,
+              }}
+              className=" text-2xl font-bold text-gray-800"
+            >
+              로딩중
+            </motion.div>
+          )}
         </div>
       </div>
     </Layout>

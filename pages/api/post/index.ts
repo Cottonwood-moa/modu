@@ -66,11 +66,6 @@ async function handler(
           });
         })
       );
-      const test = await client.postTags.findMany({
-        where: {
-          postId: +postId,
-        },
-      });
       await res.unstable_revalidate(`/post/${postId}`);
       return res.json({ ok: true });
     }
@@ -133,16 +128,36 @@ async function handler(
     const {
       query: { page, order, search },
     } = req;
-    // post 전체 갯수
-    const postsCount = await client.post.count();
-    // 페이지 전체 갯수
-    const pages = Math.ceil(postsCount / 4);
+
     if (order === "favs") {
       // 검색어 o
       if (search) {
+        const postsCountWithSearch = await client.post.count({
+          where: {
+            OR: [
+              {
+                title: {
+                  contains: search.toString(),
+                },
+              },
+              {
+                postTags: {
+                  some: {
+                    tag: {
+                      name: {
+                        contains: search.toString(),
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        });
+        const pagesWithSearch = Math.ceil(postsCountWithSearch / 8);
         const posts = await client.post.findMany({
-          take: 4,
-          skip: 4 * (+page - 1),
+          take: 8,
+          skip: 8 * (+page - 1),
           where: {
             OR: [
               {
@@ -201,61 +216,90 @@ async function handler(
         }
         return res.json({
           posts: jsonSerialize(posts),
-          pages,
+          pages: pagesWithSearch,
           ok: true,
         });
-      }
-      // 검색어 x
-      const posts = await client.post.findMany({
-        take: 4,
-        skip: 4 * (+page - 1),
-        orderBy: [
-          {
-            favs: {
-              _count: "desc",
+      } else {
+        // 검색어 x
+        // post 전체 갯수
+        const postsCount = await client.post.count();
+        // 페이지 전체 갯수
+        const pages = Math.ceil(postsCount / 8);
+        const posts = await client.post.findMany({
+          take: 8,
+          skip: 8 * (+page - 1),
+          orderBy: [
+            {
+              favs: {
+                _count: "desc",
+              },
             },
-          },
-        ],
-        select: {
-          id: true,
-          thumnail: true,
-          userId: true,
-          views: true,
-          title: true,
-          user: {
-            select: {
-              name: true,
-              image: true,
+          ],
+          select: {
+            id: true,
+            thumnail: true,
+            userId: true,
+            views: true,
+            title: true,
+            user: {
+              select: {
+                name: true,
+                image: true,
+              },
             },
-          },
-          postTags: {
-            select: {
-              tag: {
-                select: {
-                  name: true,
+            postTags: {
+              select: {
+                tag: {
+                  select: {
+                    name: true,
+                  },
                 },
               },
             },
           },
-        },
-      });
-      if (!posts) {
+        });
+        if (!posts) {
+          return res.json({
+            ok: false,
+            message: "There is no Posts",
+          });
+        }
         return res.json({
-          ok: false,
-          message: "There is no Posts",
+          posts: jsonSerialize(posts),
+          pages,
+          ok: true,
         });
       }
-      res.json({
-        posts: jsonSerialize(posts),
-        pages,
-        ok: true,
-      });
     } else if (order === "latest") {
       // 검색어 o
       if (search) {
+        const postsCountWithSearch = await client.post.count({
+          where: {
+            OR: [
+              {
+                title: {
+                  contains: search.toString(),
+                },
+              },
+              {
+                postTags: {
+                  some: {
+                    tag: {
+                      name: {
+                        contains: search.toString(),
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        });
+        const pagesWithSearch = Math.ceil(postsCountWithSearch / 8);
+        console.log("검색어 있는 전체 페이지", pagesWithSearch);
         const posts = await client.post.findMany({
-          take: 4,
-          skip: 4 * (+page - 1),
+          take: 8,
+          skip: 8 * (+page - 1),
           where: {
             OR: [
               {
@@ -311,51 +355,56 @@ async function handler(
         }
         return res.json({
           posts: jsonSerialize(posts),
-          pages,
+          pages: pagesWithSearch,
           ok: true,
         });
-      }
-      // 검색어 x
-      const posts = await client.post.findMany({
-        take: 4,
-        skip: 4 * (+page - 1),
-        orderBy: {
-          id: "desc",
-        },
-        select: {
-          id: true,
-          thumnail: true,
-          userId: true,
-          views: true,
-          title: true,
-          user: {
-            select: {
-              name: true,
-              image: true,
-            },
+      } else {
+        // 검색어 x
+        // post 전체 갯수
+        const postsCount = await client.post.count();
+        // 페이지 전체 갯수
+        const pages = Math.ceil(postsCount / 8);
+        const posts = await client.post.findMany({
+          take: 8,
+          skip: 8 * (+page - 1),
+          orderBy: {
+            id: "desc",
           },
-          postTags: {
-            select: {
-              tag: {
-                select: {
-                  name: true,
+          select: {
+            id: true,
+            thumnail: true,
+            userId: true,
+            views: true,
+            title: true,
+            user: {
+              select: {
+                name: true,
+                image: true,
+              },
+            },
+            postTags: {
+              select: {
+                tag: {
+                  select: {
+                    name: true,
+                  },
                 },
               },
             },
           },
-        },
-      });
-      if (!posts) {
+        });
+        if (!posts) {
+          return res.json({
+            ok: false,
+            message: "There is no Posts",
+          });
+        }
         return res.json({
-          ok: false,
-          message: "There is no Posts",
+          posts: jsonSerialize(posts),
+          pages,
+          ok: true,
         });
       }
-      res.json({
-        posts: jsonSerialize(posts),
-        pages,
-        ok: true,
-      });
     }
   }
 }

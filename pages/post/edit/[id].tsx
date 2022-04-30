@@ -157,7 +157,7 @@ const Write: NextPage<EditProps> = ({
   }, [router, user, userId]);
   useEffect(() => {
     if (data && data?.ok) {
-      router.push(`/post/${id}`).then(() => router.reload());
+      router.replace(`/post/${id}`).then(() => router.reload());
     }
   }, [data, router]);
   const thumbnailImage = watch("thumbnail");
@@ -175,6 +175,7 @@ const Write: NextPage<EditProps> = ({
           <div className="space-y-12">
             <div className="w-full ">
               <svg
+                onClick={() => router.back()}
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-12 w-12"
                 fill="none"

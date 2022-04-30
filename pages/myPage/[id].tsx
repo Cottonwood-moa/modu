@@ -1,7 +1,7 @@
 // Post detail
 
 import Layout from "@components/Layout";
-import { Post, Tag, User } from "@prisma/client";
+import { Link, Post, Tag, User } from "@prisma/client";
 import type { GetServerSideProps, NextPage } from "next";
 import client from "@libs/server/client";
 import Image from "next/image";
@@ -18,6 +18,7 @@ import PageLoading from "@components/pageLoading";
 import ProfileSkeleton from "@components/profileSkeleton";
 import Swal from "sweetalert2";
 import { cls } from "@libs/client/utils";
+import { signOut } from "next-auth/react";
 interface TagOnlyName {
   tag: {
     name: string;
@@ -30,16 +31,22 @@ interface PostWithTag extends Post {
     comments: number;
   };
 }
+interface UserWithLinks extends User {
+  links: Link[];
+}
 interface Props {
-  user: User;
+  user: UserWithLinks;
   totalFavs: number;
   totalPosts: number;
   posts: PostWithTag[];
+  pages: number;
 }
 interface IForm {
   avatar?: string;
   name?: string;
   intro?: string;
+  url?: string;
+  linkName?: string;
 }
 interface AvatarResponse {
   ok: boolean;
@@ -47,14 +54,20 @@ interface AvatarResponse {
 interface ProfileResponse extends Props {
   ok: boolean;
 }
+interface DeleteUserResponse {
+  ok: boolean;
+}
 const Profile: NextPage<Props> = () => {
   const router = useRouter();
   const { user: loggedUser } = useUser();
   const [editMode, setEditMode] = useState(false);
+  const [page, setPage] = useState(1);
   const { data, mutate } = useSWR<ProfileResponse>(
-    router?.query?.id ? `/api/user/profile?id=${router?.query?.id}` : null
+    router?.query?.id
+      ? `/api/user/profile?id=${router?.query?.id}&page=${page}`
+      : null
   );
-  const { register, watch } = useForm<IForm>();
+  const { register, watch, setValue } = useForm<IForm>();
   const [avatarMutation, { data: avatarResponse }] =
     useMutation<AvatarResponse>(`/api/user/avatar`, "POST");
   const [nameMutation, { data: nameResponse, loading: nameLoading }] =
@@ -63,10 +76,18 @@ const Profile: NextPage<Props> = () => {
     `/api/user/updateIntro`,
     "POST"
   );
+  const [linkMutation, { data: linkResponse }] = useMutation<{ ok: boolean }>(
+    `/api/user/link`,
+    "POST"
+  );
+  const [deleteUserMutation, { data: deleteUserResponse }] =
+    useMutation<DeleteUserResponse>(`/api/user/session`, "DELETE");
   const [loadingState, setLoadingState] = useState(false);
   const avatar = watch("avatar");
   const watchName = watch("name");
   const watchIntro = watch("intro");
+  const watchLinkName = watch("linkName");
+  const watchUrl = watch("url");
 
   const onAvatarValid = async ({ avatar }: IForm) => {
     if (loggedUser?.id !== data?.user?.id) return;
@@ -191,6 +212,74 @@ const Profile: NextPage<Props> = () => {
     });
     return;
   };
+  const onLinkValid = async ({ linkName, url }: IForm) => {
+    if (data?.user?.links?.length === 3) {
+      Swal.fire({
+        icon: "error",
+        title: "링크 수는 최대 3개입니다.",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return;
+    }
+    if (!linkName) {
+      Swal.fire({
+        icon: "error",
+        title: "링크 이름을 작성해주세요",
+        text: "ex) GitHub, Notion, Blog ...",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return;
+    }
+    if (!url) {
+      Swal.fire({
+        icon: "error",
+        title: "URL을 작성해주세요",
+        text: "ex) https://github.com/Cottonwood-moa",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return;
+    }
+    linkMutation({ name: linkName, url, userId: router?.query?.id });
+    Swal.fire({
+      icon: "success",
+      title: "링크가 추가되었습니다.",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+    setValue("linkName", "");
+    setValue("url", "");
+  };
+  const onLinkDelete = (linkId: number) => {
+    fetch(`/api/user/link?linkId=${linkId}`).then(() => mutate());
+    Swal.fire({
+      icon: "success",
+      title: "링크가 삭제되었습니다.",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+  };
+  const deleteUser = () => {
+    Swal.fire({
+      title: "정말 탈퇴하시겠습니까?",
+      text: "회원님과 관련된 모든 데이터가 삭제됩니다.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#475569",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "확인",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteUserMutation({ id: router?.query?.id });
+        router.replace("/").then(() => signOut());
+      } else {
+        return;
+      }
+    });
+  };
   useEffect(() => {
     if (avatar && avatar.length > 0) onAvatarValid({ avatar });
   }, [avatar]);
@@ -203,14 +292,16 @@ const Profile: NextPage<Props> = () => {
   useEffect(() => {
     if (introResponse && introResponse?.ok) mutate();
   }, [introResponse, mutate]);
+  useEffect(() => {
+    if (linkResponse && linkResponse?.ok) mutate();
+  }, [linkResponse, mutate]);
   return (
     <Layout>
       {!data ? (
         <ProfileSkeleton></ProfileSkeleton>
       ) : (
-        <div className=" flex  w-full flex-col items-center space-y-12">
+        <div className=" flex  h-[100vh] w-full flex-col items-center space-y-12">
           {loadingState ? <PageLoading /> : null}
-
           {/* 프로필 사진 */}
           {editMode ? (
             <div className="mt-12 flex w-[50rem]  items-center justify-between text-4xl font-bold text-gray-800">
@@ -221,7 +312,7 @@ const Profile: NextPage<Props> = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 className={cls(
                   `h-8 w-8 cursor-pointer`,
-                  editMode ? "text-red-400" : ""
+                  editMode ? "text-[#0fb9b1]" : ""
                 )}
                 fill="none"
                 viewBox="0 0 24 24"
@@ -246,7 +337,7 @@ const Profile: NextPage<Props> = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   className={cls(
                     `h-8 w-8 cursor-pointer`,
-                    editMode ? "text-red-400" : ""
+                    editMode ? "text-[#0fb9b1]" : ""
                   )}
                   fill="none"
                   viewBox="0 0 24 24"
@@ -265,7 +356,6 @@ const Profile: NextPage<Props> = () => {
               )}
             </div>
           )}
-
           {editMode ? (
             <div className="flex w-[50rem] flex-col items-center  space-y-12 ">
               <motion.div
@@ -330,7 +420,9 @@ const Profile: NextPage<Props> = () => {
                 </label>
               </motion.div>
               <motion.div
-                layoutId="userForm"
+                initial={{ opacity: 0, translateY: -200 }}
+                animate={{ opacity: 1, translateY: 0 }}
+                transition={{ delay: 0.1 }}
                 className=" flex flex-col space-y-2"
               >
                 <input
@@ -338,18 +430,18 @@ const Profile: NextPage<Props> = () => {
                   autoComplete="off"
                   {...register("name")}
                   maxLength={10}
-                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent  text-2xl font-bold text-gray-800  focus:border-b-2 focus:border-red-400 focus:outline-none focus:ring-0"
+                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent  text-2xl font-bold text-gray-800  focus:border-b-2 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
                   defaultValue={data?.user?.name ? data?.user?.name : ""}
                 />
 
                 <div className="flex justify-between p-1 text-xl font-medium text-gray-800">
                   <span className="text-base font-medium text-gray-400">
-                    <span className="text-red-400">*</span> modu에서 사용할
+                    <span className="text-[#0fb9b1]">*</span> modu에서 사용할
                     이름입니다.
                   </span>
                   <span
                     onClick={() => onNameValid({ name: watchName })}
-                    className="cursor-pointer"
+                    className="cursor-pointer text-[#0fb9b1]"
                   >
                     확인
                   </span>
@@ -359,24 +451,93 @@ const Profile: NextPage<Props> = () => {
                   {...register("intro")}
                   autoComplete="off"
                   maxLength={100}
-                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800  focus:border-b-2 focus:border-red-400 focus:outline-none focus:ring-0"
+                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800  focus:border-b-2 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
                   defaultValue={
                     data?.user?.introduce ? data?.user?.introduce : ""
                   }
                 />
                 <div className="flex justify-between p-1 text-right text-xl font-medium text-gray-800">
                   <span className="text-base font-medium text-gray-400">
-                    <span className="text-red-400">*</span> 프로필에 표시될 간단
-                    소개글 입니다.
+                    <span className="text-[#0fb9b1]">*</span> 프로필에 표시될
+                    간단 소개글 입니다.
                   </span>
                   <span
-                    onClick={() => onNameValid({ name: watchName })}
-                    className="cursor-pointer"
+                    onClick={() => onIntroValid({ intro: watchIntro })}
+                    className="cursor-pointer text-[#0fb9b1]"
                   >
                     확인
                   </span>
                 </div>
+                <div className="space-y-2">
+                  <div className="space-x-6">
+                    <input
+                      {...register("linkName")}
+                      type="text"
+                      autoComplete="off"
+                      maxLength={10}
+                      placeholder="이름"
+                      className="w-32 appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800  focus:border-b-2 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
+                    />
+                    <span>:</span>
+                    <input
+                      {...register("url")}
+                      type="text"
+                      autoComplete="off"
+                      placeholder="URL"
+                      className="w-64 appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800  focus:border-b-2 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
+                    />
+                  </div>
+                  <div className="flex justify-between p-1 text-xl font-medium text-gray-400">
+                    <div className="flex flex-col">
+                      <span className="flex text-base font-medium">
+                        <span className="text-[#0fb9b1]">*</span>
+                        <span> 프로필에 삽입 될 링크입니다.</span>
+                      </span>
+                      <span className="flex text-base font-medium">
+                        <span className="text-[#0fb9b1]">*</span>
+                        <span> 링크는 최대 3개 까지 추가할 수 있습니다.</span>
+                      </span>
+                    </div>
+
+                    <span
+                      onClick={() =>
+                        onLinkValid({ linkName: watchLinkName, url: watchUrl })
+                      }
+                      className="cursor-pointer text-[#0fb9b1]"
+                    >
+                      추가
+                    </span>
+                  </div>
+                </div>
+                <div className="pt-4">
+                  {data?.user?.links?.map((link) => {
+                    return (
+                      <div key={link?.id} className="flex flex-col p-1">
+                        <div className="flex justify-between text-base font-medium text-gray-800">
+                          <span className="w-32 overflow-hidden text-ellipsis whitespace-nowrap">
+                            {link?.name}
+                          </span>
+                          <span className="w-64 overflow-hidden text-ellipsis whitespace-nowrap ">
+                            {link?.url}
+                          </span>
+                          <span
+                            className="cursor-pointer text-base  font-medium text-[#0fb9b1]"
+                            onClick={() => onLinkDelete(link?.id)}
+                          >
+                            삭제
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </motion.div>
+              <div
+                onClick={deleteUser}
+                className="cursor-pointer text-2xl font-bold text-red-600"
+              >
+                회원탈퇴
+              </div>
             </div>
           ) : (
             <div className="flex w-[50rem] items-center  space-x-12 ">
@@ -406,28 +567,36 @@ const Profile: NextPage<Props> = () => {
                   />
                 )}
               </motion.div>
-              <motion.div layoutId="userForm" className="space-y-2">
-                <div className="text-2xl font-bold text-gray-800">
-                  {data?.user?.name}
+              <div className="w-full space-y-2 ">
+                <div className="flex items-center justify-between  text-2xl font-bold text-gray-800">
+                  <span>{data?.user?.name}</span>
+                  <div className="flex space-x-2">
+                    {data?.user?.links?.map((link) => {
+                      return (
+                        <div key={link?.id}>
+                          <span
+                            className="cursor-pointer text-lg text-[#0fb9b1]"
+                            onClick={() => router.push(`${link?.url}`)}
+                          >
+                            {link?.name}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
                 <div className="flex space-x-4 text-lg font-medium">
                   <div>포스트 {data?.totalPosts}개</div>
                   <div>좋아요 {data?.totalFavs}개</div>
                 </div>
+
                 <div className="text-lg font-bold text-gray-800">
                   {data?.user?.introduce}
                 </div>
-              </motion.div>
+              </div>
             </div>
           )}
           {/* 게시글 */}
-          {editMode ? (
-            <></>
-          ) : (
-            <div className="flex w-[50rem] items-center text-4xl font-bold text-gray-800">
-              게시글
-            </div>
-          )}
           {editMode ? (
             <></>
           ) : data?.posts?.length === 0 ? (
@@ -435,20 +604,23 @@ const Profile: NextPage<Props> = () => {
               게시글이 없습니다.
             </div>
           ) : (
-            <div className="grid grid-cols-3 ">
+            <div className="grid min-w-[850px] grid-cols-3 gap-2">
               {data?.posts.map((item, index) => {
                 return (
                   <motion.div
                     key={index}
                     onClick={() => router.push(`/post/${item?.id}`)}
-                    className="group relative flex h-[17rem] w-[17rem] cursor-pointer items-center justify-center rounded-md border-2 p-4 filter transition hover:bg-black hover:bg-opacity-50"
+                    className="group relative flex h-[17rem] w-[17rem] cursor-pointer flex-col items-center justify-center rounded-md p-4 shadow-md filter transition hover:bg-black hover:bg-opacity-50"
                   >
                     <Image
                       src={ImageDelivery(item?.thumnail)}
-                      className="absolute z-[-1] h-full w-full bg-slate-600 "
+                      className="absolute z-[-1] h-full w-full rounded-md bg-slate-600 "
                       layout="fill"
                       alt=""
                     />
+                    <div className="hidden w-full items-center justify-center space-x-2  text-2xl font-bold text-white  transition group-hover:flex">
+                      {item?.title}
+                    </div>
                     <div className="hidden w-full items-center justify-center space-x-2 whitespace-nowrap text-xl text-white  transition group-hover:flex">
                       <div className="flex items-center space-x-1">
                         <svg
@@ -498,6 +670,43 @@ const Profile: NextPage<Props> = () => {
                 );
               })}
             </div>
+          )}
+          {editMode || data?.posts?.length === 0 ? (
+            <></>
+          ) : (
+            <>
+              <div className="flex w-96 items-center justify-between  p-6 text-2xl font-bold">
+                <div
+                  className="cursor-pointer"
+                  onClick={() =>
+                    setPage((prev) => {
+                      if (prev === 1) {
+                        return data?.pages;
+                      }
+                      return prev - 1;
+                    })
+                  }
+                >
+                  이전
+                </div>
+                <div>
+                  {page} of {data?.pages}
+                </div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() =>
+                    setPage((prev) => {
+                      if (prev === data?.pages) {
+                        return 1;
+                      }
+                      return prev + 1;
+                    })
+                  }
+                >
+                  다음
+                </div>
+              </div>
+            </>
           )}
         </div>
       )}

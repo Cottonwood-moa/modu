@@ -82,7 +82,7 @@ export default function Layout({ children }: LayoutProps) {
               />
             )}
 
-            <div className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#9c88ff] dark:text-white dark:hover:text-[#9c88ff]">
+            <div className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#7ed6df] dark:text-white dark:hover:text-[#7ed6df]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-8 w-8"
@@ -173,7 +173,7 @@ export default function Layout({ children }: LayoutProps) {
                 ) : (
                   <motion.div
                     onClick={alertOpen}
-                    className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#9c88ff] dark:text-white dark:hover:text-[#9c88ff]"
+                    className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#7ed6df] dark:text-white dark:hover:text-[#7ed6df]"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +200,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="flex cursor-pointer items-center text-gray-800 transition dark:text-white">
               {!user ? (
                 <div
-                  className="flex items-center hover:text-[#9c88ff]"
+                  className="flex items-center hover:text-[#7ed6df]"
                   onClick={onLogin}
                 >
                   <svg
@@ -225,7 +225,7 @@ export default function Layout({ children }: LayoutProps) {
                     className="relative z-10 flex items-center"
                     onClick={onInfo}
                   >
-                    <div className="flex items-center hover:text-[#9c88ff]">
+                    <div className="flex items-center hover:text-[#7ed6df]">
                       {user?.image?.includes("https") ? (
                         <Image
                           src={user?.image}
@@ -276,17 +276,17 @@ export default function Layout({ children }: LayoutProps) {
                           className="absolute top-20  right-0 flex w-52 flex-col space-y-6 bg-white p-6 shadow-lg"
                         >
                           <Link href="/myPage/favs">
-                            <a className="text-gray-800 hover:text-[#9c88ff]">
+                            <a className="text-gray-800 hover:text-[#7ed6df]">
                               좋아요 목록
                             </a>
                           </Link>
                           <Link href={`/myPage/${user?.id}`}>
-                            <a className="text-gray-800 hover:text-[#9c88ff]">
+                            <a className="text-gray-800 hover:text-[#7ed6df]">
                               프로필
                             </a>
                           </Link>
                           <div
-                            className="text-gray-800 hover:text-[#9c88ff]"
+                            className="text-gray-800 hover:text-[#7ed6df]"
                             onClick={onSignOut}
                           >
                             로그아웃

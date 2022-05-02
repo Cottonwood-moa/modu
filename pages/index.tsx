@@ -85,18 +85,26 @@ const Home: NextPage = () => {
   return (
     <Layout>
       {/* main */}
-      <div className="flex h-[30rem] w-full items-center justify-start space-x-24 bg-white dark:bg-slate-800">
-        <div className="space-y-8 p-4">
+      <div className="flex h-[30rem] w-full items-center justify-start bg-white dark:bg-slate-800">
+        <div className="z-[1] space-y-8 p-4">
           <div className="text-6xl font-bold dark:text-white">모두의 HOOK</div>
-          <div className="text-2xl font-bold dark:text-white">
+          <div className="whitespace-nowrap text-2xl font-bold dark:text-white">
             개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요.
           </div>
         </div>
-        <div className="flex space-x-24">
-          <div className="hidden lg:block ">
-            <Image width={360} height={360} src="/images/main.svg" alt="" />
-          </div>
-        </div>
+        <motion.div
+          animate={{ translateY: [50, 40, 50] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+          className="hidden lg:block"
+        >
+          <Image
+            width={1000}
+            height={550}
+            src="/images/main4.svg"
+            draggable="false"
+            alt=""
+          />
+        </motion.div>
       </div>
       {/* search */}
 
@@ -113,7 +121,7 @@ const Home: NextPage = () => {
                 className="h-20 w-20"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="#9c88ff"
+                stroke="#7ed6df"
                 strokeWidth="3"
               >
                 <path
@@ -128,7 +136,7 @@ const Home: NextPage = () => {
               type="text"
               autoComplete="off"
               defaultValue={searchChar}
-              className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800 focus:border-b-2 focus:border-[#9c88ff]  focus:outline-none focus:ring-0 dark:border-white dark:bg-slate-800 dark:text-white"
+              className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800 focus:border-b-2 focus:border-blue-300  focus:outline-none focus:ring-0 dark:border-white dark:bg-slate-800 dark:text-white"
             />
             <button className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white">
               검색
@@ -147,7 +155,7 @@ const Home: NextPage = () => {
               className={cls(
                 "flex cursor-pointer items-center text-2xl font-bold ",
                 orderBy === OrderBy.favs
-                  ? "text-[#9c88ff]"
+                  ? "text-[#7ed6df]"
                   : "text-gray-800 dark:text-white"
               )}
             >
@@ -178,7 +186,7 @@ const Home: NextPage = () => {
               className={cls(
                 "flex cursor-pointer items-center text-2xl font-bold ",
                 orderBy === OrderBy.latest
-                  ? "text-[#9c88ff]"
+                  ? "text-[#7ed6df]"
                   : "text-gray-800 dark:text-white"
               )}
             >
@@ -201,7 +209,7 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="space-x-2 px-8 text-lg font-medium text-gray-600 dark:text-white">
-          <span className="text-[#9c88ff]">✔</span>
+          <span className="text-[#7ed6df]">✔</span>
           <span>제목과 태그를 기반으로 검색합니다.</span>
         </div>
 

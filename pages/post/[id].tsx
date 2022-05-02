@@ -27,6 +27,7 @@ import { useRecoilState } from "recoil";
 import ImageDelivery from "@libs/client/imageDelivery";
 import OutsideClickHandler from "react-outside-click-handler";
 import replaceMultiple from "@libs/client/replaceAllMultiple";
+import numberWithCommas from "@libs/client/numberWithComma";
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
 export interface PostWithUser extends Post {
   user: User;
@@ -46,6 +47,7 @@ interface staticProps {
   name: string;
   avatar: string;
   createdAt: string;
+  views: number;
   tags: ITags[];
 }
 interface CountResponse {
@@ -77,6 +79,7 @@ const PostDetail: NextPage<staticProps> = ({
   id,
   userId,
   tags,
+  views,
 }) => {
   const router = useRouter();
   const [orderBy, setOrderBy] = useRecoilState(orderAtom);
@@ -189,7 +192,7 @@ const PostDetail: NextPage<staticProps> = ({
       <div className="right-0 left-0 m-auto mt-32 w-[60%] min-w-[800px] bg-white p-12 text-gray-800 dark:bg-slate-800 dark:text-white ">
         {/* post header */}
         <div className="space-y-12">
-          <div className="flex w-full items-center justify-between">
+          <div className="flex  w-full items-center justify-between">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-12 w-12 cursor-pointer"
@@ -205,7 +208,32 @@ const PostDetail: NextPage<staticProps> = ({
                 d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z"
               />
             </svg>
-            <div className="flex flex-col items-center space-x-1 space-y-4">
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 text-gray-800 dark:text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentcolor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                <span className="text-xl font-bold">
+                  {numberWithCommas(views)}
+                </span>
+              </div>
+
               {data?.liked ? (
                 <div className="flex items-center">
                   <motion.div
@@ -267,69 +295,6 @@ const PostDetail: NextPage<staticProps> = ({
                   </div>
                 </div>
               )}
-              {/* 좋아요 목록 보류 */}
-              {/* <div className="flex items-center">
-                <div
-                  className="pr-1 text-2xl font-bold"
-                  onClick={() => setFavsListDetail(true)}
-                >
-                  +
-                </div>
-                <OutsideClickHandler
-                  onOutsideClick={() => setFavsListDetail(false)}
-                >
-                  <AnimatePresence>
-                    {favsListDetail ? (
-                      <motion.div
-                        initial={{
-                          opacity: 0,
-                          translateY: -20,
-                          translateX: -30,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          translateY: 30,
-                          translateX: -30,
-                        }}
-                        exit={{ opacity: 0, translateY: -20, translateX: -30 }}
-                        className="absolute h-[24rem] w-[20rem] rounded-lg bg-red-400"
-                      ></motion.div>
-                    ) : null}
-                  </AnimatePresence>
-                </OutsideClickHandler>
-
-                {favsList?.favsList?.favs?.map((fav, index) => {
-                  return (
-                    <div key={index}>
-                      {fav?.user?.image?.includes("https") ? (
-                        <Image
-                          src={
-                            fav?.user?.image
-                              ? fav?.user?.image
-                              : "/images/modu.png"
-                          }
-                          width={32}
-                          height={32}
-                          className="h-8 w-8 rounded-full bg-slate-600"
-                          alt=""
-                        />
-                      ) : (
-                        <Image
-                          src={
-                            fav?.user?.image
-                              ? ImageDelivery(fav?.user?.image)
-                              : "/images/modu.png"
-                          }
-                          width={32}
-                          height={32}
-                          className="h-8 w-8 rounded-full bg-slate-600"
-                          alt=""
-                        />
-                      )}
-                    </div>
-                  );
-                })}
-              </div> */}
             </div>
           </div>
           {/* title */}
@@ -485,17 +450,6 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
             },
           },
         },
-        // favs:{
-        //   select:{
-        //     user:{
-        //       select:{
-        //         id:true,
-        //         image:true,
-        //         name:true
-        //       }
-        //     }
-        //   }
-        // }
       },
     });
     if (!post)
@@ -515,6 +469,7 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
         name: post?.user?.name,
         avatar: post?.user?.image,
         tags: post?.postTags,
+        views: post?.views,
         createdAt: jsonSerialize(post?.createdAt),
       },
     };

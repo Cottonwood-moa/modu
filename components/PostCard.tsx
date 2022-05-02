@@ -1,4 +1,5 @@
 import ImageDelivery from "@libs/client/imageDelivery";
+import numberWithCommas from "@libs/client/numberWithComma";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -22,12 +23,13 @@ export default function PostCard({ post }: IProps) {
   const toPostDetail = (id: number) => {
     router.push(`/post/${id}`);
   };
+
   return (
     <motion.div
       whileHover={{
         scale: 1.1,
       }}
-      className="aspect-square w-full min-w-[300px] max-w-md cursor-pointer space-y-2 rounded-md bg-white p-4 shadow-lg dark:border-2 dark:border-white dark:bg-slate-800"
+      className="aspect-square w-full min-w-[300px] max-w-md cursor-pointer space-y-2 rounded-md bg-white p-4 shadow-lg dark:border-2 dark:border-blue-300 dark:bg-slate-800"
       onClick={() => toPostDetail(post.id)}
     >
       <div className="relative h-[80%] w-full">
@@ -72,7 +74,7 @@ export default function PostCard({ post }: IProps) {
 
           <div>{post?.user?.name}</div>
         </div>
-        <div className="absolute right-0 flex items-center justify-end space-x-2  dark:text-white">
+        <div className="absolute right-0 flex items-center justify-end space-x-1  dark:text-white">
           <div className="flex items-center space-x-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +129,7 @@ export default function PostCard({ post }: IProps) {
                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
               />
             </svg>
-            <span>{post.views}</span>
+            <span>{numberWithCommas(post.views)}</span>
           </div>
         </div>
       </div>

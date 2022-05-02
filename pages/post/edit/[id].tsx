@@ -223,7 +223,7 @@ const Write: NextPage<EditProps> = ({
               <motion.div
                 initial={{ x: -400, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                className=" fixed top-56 left-0 z-10 space-y-2 rounded-lg bg-[#9c88ff] p-6 text-xl font-bold text-white shadow-lg xl:left-28"
+                className=" fixed top-56 left-0 z-10 space-y-2 rounded-lg bg-blue-300 p-6 text-xl font-bold text-white shadow-lg xl:left-28"
               >
                 <p>1. 코드 블럭을 넣을 땐</p>
                 <p className="my-4">
@@ -255,7 +255,7 @@ const Write: NextPage<EditProps> = ({
               onClick={() => setInfo(true)}
               whileHover={{ scale: 1.2 }}
               className="fixed left-0
-              top-56 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[#9c88ff] xl:left-12"
+              top-56 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-300 xl:left-12"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -295,7 +295,7 @@ const Write: NextPage<EditProps> = ({
                   <motion.img
                     initial={{ x: -400, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    className="fixed top-72 left-0 flex h-[300px] w-[350px] cursor-pointer rounded-lg bg-[#9c88ff] shadow-xl xl:left-12"
+                    className="fixed top-72 left-0 flex h-[300px] w-[350px] cursor-pointer rounded-lg bg-blue-300 shadow-xl xl:left-12"
                     src={ImageDelivery(prevThumbnail)}
                   ></motion.img>
                   <input
@@ -313,7 +313,7 @@ const Write: NextPage<EditProps> = ({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               whileHover={{ scale: 1.2 }}
-              className="fixed left-0 top-72 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[#9c88ff] xl:left-12"
+              className="fixed left-0 top-72 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-300 xl:left-12"
             >
               <svg
                 className="h-8 w-8"

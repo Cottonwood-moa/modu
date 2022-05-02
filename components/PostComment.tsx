@@ -113,7 +113,9 @@ export default function PostComment({
 
   return (
     <div className="mt-6 space-y-6">
-      <div className="text-2xl font-bold">{count} 개의 댓글이 있습니다.</div>
+      <div className="text-2xl font-bold dark:bg-slate-800 dark:text-white">
+        {count} 개의 댓글이 있습니다.
+      </div>
       <form className="relative" onSubmit={handleSubmit(onValid)}>
         <TextArea register={register("comment", { required: true })}></TextArea>
         <div className=" mt-4 flex justify-end">

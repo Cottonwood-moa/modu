@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilValue } from "recoil";
 import { SWRConfig } from "swr";
 import { SessionProvider } from "next-auth/react";
 const fetcher = (url: string) => fetch(url).then((response) => response.json());
@@ -14,7 +14,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     >
       <SWRConfig value={{ fetcher }}>
         <RecoilRoot>
-          <Component {...pageProps} />
+          <div>
+            <Component {...pageProps} />
+          </div>
         </RecoilRoot>
       </SWRConfig>
     </SessionProvider>

@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export const darkModeAtom = atom({
+  key: "darkModeAtom",
+  default: true,
+});
+
 export const pageAtom = atom({
   key: "currentPage",
   default: 1,

@@ -27,7 +27,7 @@ export default function PostCard({ post }: IProps) {
       whileHover={{
         scale: 1.1,
       }}
-      className="aspect-square w-full min-w-[300px] max-w-md cursor-pointer space-y-2 rounded-md bg-white p-4 shadow-lg"
+      className="aspect-square w-full min-w-[300px] max-w-md cursor-pointer space-y-2 rounded-md bg-white p-4 shadow-lg dark:border-2 dark:border-white dark:bg-slate-800"
       onClick={() => toPostDetail(post.id)}
     >
       <div className="relative h-[80%] w-full">
@@ -38,15 +38,15 @@ export default function PostCard({ post }: IProps) {
           alt=""
         />
       </div>
-      <div className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-bold text-gray-800">
-        {post.title}
+      <div className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-bold text-gray-800 dark:text-white">
+        {post?.title}
       </div>
-      <div className="flex space-x-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm font-thin text-gray-800">
+      <div className="flex space-x-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm font-thin text-gray-800 dark:text-white">
         {post?.postTags?.map((postTag, index) => {
           return <div key={index}>#{postTag?.tag?.name}</div>;
         })}
       </div>
-      <div className="relative flex w-full items-center text-gray-800">
+      <div className="relative flex w-full items-center text-gray-800 dark:text-white">
         <div className="flex items-center space-x-2">
           {post?.user?.image?.includes("https") ? (
             <Image
@@ -70,13 +70,13 @@ export default function PostCard({ post }: IProps) {
             />
           )}
 
-          <div>{post.user.name}</div>
+          <div>{post?.user?.name}</div>
         </div>
-        <div className="absolute right-0 flex items-center justify-end space-x-2">
+        <div className="absolute right-0 flex items-center justify-end space-x-2  dark:text-white">
           <div className="flex items-center space-x-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
+              className="h-6 w-6 "
               fill="none"
               viewBox="0 0 24 24"
               stroke="#d63031"
@@ -90,13 +90,13 @@ export default function PostCard({ post }: IProps) {
             </svg>
             <span>{countData?.count?.favs}</span>
           </div>
-          <div className="flex items-center space-x-1 text-gray-800">
+          <div className="flex items-center space-x-1 text-gray-800 dark:text-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="#4B5563"
+              stroke="currentcolor"
               strokeWidth="2"
             >
               <path
@@ -107,13 +107,13 @@ export default function PostCard({ post }: IProps) {
             </svg>
             <span>{countData?.count?.comments}</span>
           </div>
-          <div className="flex items-center space-x-1 text-gray-800">
+          <div className="flex items-center space-x-1 text-gray-800 dark:text-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="#4B5563"
+              stroke="currentcolor"
               strokeWidth="2"
             >
               <path

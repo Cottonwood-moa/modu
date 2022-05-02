@@ -138,15 +138,15 @@ const Write: NextPage = () => {
   }, [thumbnailImage, setThumbnailImagePreview]);
   return (
     <Layout>
-      <div className="right-0 left-0 m-auto mt-32 w-[90%] min-w-[1000px] bg-white p-12 text-gray-800 ">
+      <div className="right-0 left-0 m-auto mt-32 w-[90%] min-w-[1000px] bg-white p-12 text-gray-800  dark:bg-slate-800 dark:text-white">
         {/* post header */}
         <form onSubmit={handleSubmit(onValid)}>
-          <div className="space-y-12">
-            <div className="w-full ">
+          <div className="space-y-12 dark:bg-slate-800 dark:text-white">
+            <div className="w-full">
               <svg
-              onClick={()=> router.back()}
+                onClick={() => router.back()}
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12"
+                className="h-12 w-12 cursor-pointer"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -175,7 +175,7 @@ const Write: NextPage = () => {
               minLength={2}
               maxLength={50}
               required
-              className="w-full appearance-none border-b-2 p-2 text-4xl font-bold focus:outline-none"
+              className="w-full appearance-none border-b-2 p-2 text-4xl font-bold focus:outline-none dark:bg-slate-800 dark:text-white"
             ></input>
             {/* tag */}
 
@@ -189,7 +189,7 @@ const Write: NextPage = () => {
               <motion.div
                 initial={{ x: -400, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                className=" fixed top-56 left-0 z-10 space-y-2 rounded-lg bg-blue-400 p-6 text-xl font-bold text-white shadow-lg xl:left-28"
+                className=" fixed top-56 left-0 z-10 space-y-2 rounded-lg bg-[#9c88ff] p-6 text-xl font-bold text-white shadow-lg xl:left-28"
               >
                 <p>1. 코드 블럭을 넣을 땐</p>
                 <p className="my-4">
@@ -210,7 +210,8 @@ const Write: NextPage = () => {
                     링크
                   </a>
                 </p>
-                <p>2. 썸네일 이미지는 옆 이미지 아이콘을 클릭해주세요!</p>
+                <p>2. 썸네일 이미지는 옆 이미지 아이콘을 클릭해주세요.</p>
+                <p>3. 여러 줄을 띄우실 땐 &lt;br /&gt; 태그를 사용해주세요.</p>
               </motion.div>
             </OutsideClickHandler>
           ) : (
@@ -220,7 +221,7 @@ const Write: NextPage = () => {
               onClick={() => setInfo(true)}
               whileHover={{ scale: 1.2 }}
               className="fixed left-0
-              top-56 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-400 xl:left-12"
+              top-56 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[#9c88ff] xl:left-12"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -259,7 +260,7 @@ const Write: NextPage = () => {
                 <motion.label
                   initial={{ x: -400, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  className=" fixed top-72 left-0 flex h-60 w-60 cursor-pointer items-center justify-center space-y-2 rounded-lg bg-blue-400 p-6 text-xl font-bold text-white shadow-lg xl:left-12"
+                  className=" fixed top-72 left-0 flex h-60 w-60 cursor-pointer items-center justify-center space-y-2 rounded-lg bg-[#9c88ff] p-6 text-xl font-bold text-white shadow-lg xl:left-12"
                 >
                   <svg
                     className="h-20 w-20"
@@ -290,7 +291,7 @@ const Write: NextPage = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               whileHover={{ scale: 1.2 }}
-              className="fixed left-0 top-72 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-400 xl:left-12"
+              className="fixed left-0 top-72 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[#9c88ff] xl:left-12"
             >
               <svg
                 className="h-8 w-8"

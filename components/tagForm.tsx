@@ -49,7 +49,7 @@ export default function TagForm({ setTags, tags }: Props) {
         return (
           <div
             key={index}
-            className="flex w-auto items-center rounded-xl bg-slate-500 py-1 px-2  font-bold text-white"
+            className="flex w-auto items-center rounded-xl bg-slate-500 py-1 px-2 font-bold text-white dark:bg-slate-800 dark:text-white"
           >
             #{tag}
             <svg
@@ -73,12 +73,14 @@ export default function TagForm({ setTags, tags }: Props) {
           <></>
         ) : (
           <div className="flex rounded-md shadow-sm">
-            <div className="text-base font-normal text-gray-400">#</div>
+            <div className="text-base font-normal text-gray-400 dark:bg-slate-800 dark:text-white">
+              #
+            </div>
             <OutsideClickHandler onOutsideClick={onOutsideClick}>
               <input
                 placeholder="태그입력"
                 value={tag}
-                maxLength={10}
+                maxLength={20}
                 spellCheck={false}
                 onKeyDown={(e) => {
                   onTagEnter(e);
@@ -89,7 +91,7 @@ export default function TagForm({ setTags, tags }: Props) {
                 ) => {
                   e.key === "Enter" && e.preventDefault();
                 }}
-                className="w-20 appearance-none border-b-2 outline-none "
+                className="w-20 appearance-none border-b-2 outline-none dark:bg-slate-800 dark:text-white "
               />
             </OutsideClickHandler>
           </div>

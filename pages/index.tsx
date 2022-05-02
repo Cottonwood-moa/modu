@@ -85,10 +85,10 @@ const Home: NextPage = () => {
   return (
     <Layout>
       {/* main */}
-      <div className="flex h-[30rem] w-full items-center  justify-start space-x-24 bg-white">
+      <div className="flex h-[30rem] w-full items-center justify-start space-x-24 bg-white dark:bg-slate-800">
         <div className="space-y-8 p-4">
-          <div className="text-6xl font-bold">모두의 hook</div>
-          <div className="text-2xl font-bold">
+          <div className="text-6xl font-bold dark:text-white">모두의 HOOK</div>
+          <div className="text-2xl font-bold dark:text-white">
             개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요.
           </div>
         </div>
@@ -102,7 +102,7 @@ const Home: NextPage = () => {
 
       {/* posts */}
       <div>
-        <div className="flex h-[10rem] w-full items-center justify-between space-x-8 bg-white px-8 pt-8">
+        <div className="flex h-[10rem] w-full items-center justify-between space-x-8 bg-white px-8 pt-8 dark:bg-slate-800">
           <form
             onSubmit={handleSubmit(onValid)}
             className="flex items-center space-x-4"
@@ -113,7 +113,7 @@ const Home: NextPage = () => {
                 className="h-20 w-20"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="#0fb9b1"
+                stroke="#9c88ff"
                 strokeWidth="3"
               >
                 <path
@@ -128,14 +128,14 @@ const Home: NextPage = () => {
               type="text"
               autoComplete="off"
               defaultValue={searchChar}
-              className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800  focus:border-b-2 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
+              className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800 focus:border-b-2 focus:border-[#9c88ff]  focus:outline-none focus:ring-0 dark:border-white dark:bg-slate-800 dark:text-white"
             />
-            <button className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800">
+            <button className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white">
               검색
             </button>
             <div
               onClick={searchReset}
-              className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800"
+              className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white"
             >
               초기화
             </div>
@@ -146,7 +146,9 @@ const Home: NextPage = () => {
               onClick={() => orderByHandle(OrderBy.favs)}
               className={cls(
                 "flex cursor-pointer items-center text-2xl font-bold ",
-                orderBy === OrderBy.favs ? "text-[#0fb9b1]" : "text-gray-800"
+                orderBy === OrderBy.favs
+                  ? "text-[#9c88ff]"
+                  : "text-gray-800 dark:text-white"
               )}
             >
               {/* orderBy */}
@@ -175,7 +177,9 @@ const Home: NextPage = () => {
               onClick={() => orderByHandle(OrderBy.latest)}
               className={cls(
                 "flex cursor-pointer items-center text-2xl font-bold ",
-                orderBy === OrderBy.latest ? "text-[#0fb9b1]" : "text-gray-800"
+                orderBy === OrderBy.latest
+                  ? "text-[#9c88ff]"
+                  : "text-gray-800 dark:text-white"
               )}
             >
               <svg
@@ -196,8 +200,8 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className="space-x-2 px-8 text-lg font-medium text-gray-600">
-          <span className="text-[#0fb9b1]">✔</span>
+        <div className="space-x-2 px-8 text-lg font-medium text-gray-600 dark:text-white">
+          <span className="text-[#9c88ff]">✔</span>
           <span>제목과 태그를 기반으로 검색합니다.</span>
         </div>
 
@@ -219,7 +223,7 @@ const Home: NextPage = () => {
               <motion.div
                 layoutId="moreButton"
                 onClick={() => setMoreLoading(true)}
-                className="cursor-pointer text-2xl font-bold text-gray-800"
+                className="cursor-pointer text-2xl font-bold text-gray-800 dark:text-white"
               >
                 더보기
               </motion.div>
@@ -231,7 +235,7 @@ const Home: NextPage = () => {
                   type: "spring",
                   damping: 15,
                 }}
-                className=" text-2xl font-bold text-gray-800"
+                className=" text-2xl font-bold text-gray-800 dark:text-white"
               >
                 게시글이 없습니다.
               </motion.div>
@@ -244,7 +248,7 @@ const Home: NextPage = () => {
                 type: "spring",
                 damping: 15,
               }}
-              className=" text-2xl font-bold text-gray-800"
+              className=" text-2xl font-bold text-gray-800 dark:text-white"
             >
               로딩중
             </motion.div>

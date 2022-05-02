@@ -125,7 +125,7 @@ export default function CommentCard({
   }, [data, mutate, id]);
   return (
     <div className="flex flex-col  ">
-      <div className="flex flex-col space-x-6 rounded-xl bg-gray-50 p-2">
+      <div className="flex flex-col space-x-6 rounded-xl bg-gray-50 p-2 dark:rounded-none dark:bg-slate-700 dark:text-white">
         {/* comment profile */}
         <div className="flex items-center space-x-6">
           {comment?.user?.image?.includes("https") ? (
@@ -152,7 +152,7 @@ export default function CommentCard({
             />
           )}
           <div>
-            <div className="text-lg font-bold text-gray-700 xl:text-xl ">
+            <div className="text-lg font-bold text-gray-700 dark:text-white xl:text-xl ">
               {userId === comment?.user?.id ? (
                 <span className="mr-6 rounded-2xl bg-orange-300 py-1 px-2 text-xs font-bold text-white">
                   작성자
@@ -160,7 +160,7 @@ export default function CommentCard({
               ) : null}
               {comment?.user?.name}
             </div>
-            <div className="flex items-center text-sm font-semibold text-gray-400 xl:text-base">
+            <div className="flex items-center text-sm font-semibold text-gray-400  xl:text-base">
               {ParsingCreatedAt(comment?.createdAt)}
               {comment?.user?.id === user?.id ? (
                 <div
@@ -182,11 +182,11 @@ export default function CommentCard({
         <OutsideClickHandler onOutsideClick={() => setReplyPop(false)}>
           <form
             onSubmit={handleSubmit(onValid)}
-            className="flex items-center text-base font-bold text-gray-600"
+            className="flex items-center text-base font-bold text-gray-600 "
           >
             <label
               onClick={() => setReplyPop((prev) => !prev)}
-              className="flex h-12 cursor-pointer items-center whitespace-nowrap"
+              className="flex h-12 cursor-pointer items-center whitespace-nowrap dark:text-white"
             >
               답글
             </label>
@@ -201,7 +201,7 @@ export default function CommentCard({
                       type: "tween",
                     }}
                     {...register("reply", { required: true })}
-                    className="mx-2 h-12 w-full resize-none appearance-none border-0 border-b-2 border-gray-400 bg-transparent py-2 px-2 leading-tight text-gray-700 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
+                    className="mx-2 h-12 w-full resize-none appearance-none border-0 border-b-2 border-gray-400 bg-transparent py-2 px-2 leading-tight text-gray-700 focus:border-[#9c88ff] focus:outline-none focus:ring-0 dark:text-white"
                   />
                   <Button
                     onClick={() => setReplyPop(false)}
@@ -216,8 +216,8 @@ export default function CommentCard({
 
       {comment?.replys?.map((reply) => {
         return (
-          <div key={reply?.id} className="flex items-center">
-            <div className="p-6">
+          <div key={reply?.id} className="flex items-center ">
+            <div className="p-6 dark:text-white">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6 rotate-180"
@@ -262,7 +262,7 @@ export default function CommentCard({
                   />
                 )}
                 <div>
-                  <div className="flex items-center text-lg font-bold text-gray-700 xl:text-xl ">
+                  <div className="flex items-center text-lg font-bold text-gray-700 dark:text-white xl:text-xl ">
                     {userId === reply?.user?.id ? (
                       <span className="mr-2 rounded-2xl bg-orange-300 py-1 px-2 text-xs font-bold text-white">
                         작성자

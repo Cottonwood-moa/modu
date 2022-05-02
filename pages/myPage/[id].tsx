@@ -300,19 +300,22 @@ const Profile: NextPage<Props> = () => {
       {!data ? (
         <ProfileSkeleton></ProfileSkeleton>
       ) : (
-        <div className=" flex  h-[100vh] w-full flex-col items-center space-y-12">
+        <div className=" flex  h-[100vh] w-full flex-col items-center space-y-12 dark:text-white">
           {loadingState ? <PageLoading /> : null}
           {/* 프로필 사진 */}
           {editMode ? (
-            <div className="mt-12 flex w-[50rem]  items-center justify-between text-4xl font-bold text-gray-800">
-              <motion.div layoutId="userInfo" className="flex items-center">
+            <div className="mt-12 flex w-[50rem] items-center justify-between text-4xl font-bold text-gray-800 dark:text-white">
+              <motion.div
+                layoutId="userInfo"
+                className="flex items-center dark:text-white"
+              >
                 <span>프로필 수정</span>
               </motion.div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className={cls(
-                  `h-8 w-8 cursor-pointer`,
-                  editMode ? "text-[#0fb9b1]" : ""
+                  `h-8 w-8 cursor-pointer dark:text-white`,
+                  editMode ? "text-[#9c88ff] dark:text-[#9c88ff]" : ""
                 )}
                 fill="none"
                 viewBox="0 0 24 24"
@@ -328,7 +331,7 @@ const Profile: NextPage<Props> = () => {
               </svg>
             </div>
           ) : (
-            <div className="mt-12 flex w-[50rem] items-center justify-between text-4xl font-bold text-gray-800">
+            <div className="mt-12 flex w-[50rem] items-center justify-between text-4xl font-bold text-gray-800 dark:text-white">
               <motion.div layoutId="userInfo" className="flex items-center">
                 <span>프로필</span>
               </motion.div>
@@ -337,7 +340,7 @@ const Profile: NextPage<Props> = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   className={cls(
                     `h-8 w-8 cursor-pointer`,
-                    editMode ? "text-[#0fb9b1]" : ""
+                    editMode ? "text-[#9c88ff]" : ""
                   )}
                   fill="none"
                   viewBox="0 0 24 24"
@@ -430,18 +433,18 @@ const Profile: NextPage<Props> = () => {
                   autoComplete="off"
                   {...register("name")}
                   maxLength={10}
-                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent  text-2xl font-bold text-gray-800  focus:border-b-2 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
+                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent  text-2xl font-bold text-gray-800 focus:border-b-2  focus:border-[#9c88ff] focus:outline-none focus:ring-0 dark:text-white"
                   defaultValue={data?.user?.name ? data?.user?.name : ""}
                 />
 
-                <div className="flex justify-between p-1 text-xl font-medium text-gray-800">
-                  <span className="text-base font-medium text-gray-400">
-                    <span className="text-[#0fb9b1]">*</span> modu에서 사용할
+                <div className="flex justify-between p-1 text-xl font-medium text-gray-800 dark:text-white">
+                  <span className="text-base font-medium text-gray-400 dark:text-white">
+                    <span className="text-[#9c88ff]">*</span> modu에서 사용할
                     이름입니다.
                   </span>
                   <span
                     onClick={() => onNameValid({ name: watchName })}
-                    className="cursor-pointer text-[#0fb9b1]"
+                    className="cursor-pointer text-[#9c88ff]"
                   >
                     확인
                   </span>
@@ -451,19 +454,19 @@ const Profile: NextPage<Props> = () => {
                   {...register("intro")}
                   autoComplete="off"
                   maxLength={100}
-                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800  focus:border-b-2 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
+                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-[#9c88ff] focus:outline-none focus:ring-0 dark:text-white"
                   defaultValue={
                     data?.user?.introduce ? data?.user?.introduce : ""
                   }
                 />
-                <div className="flex justify-between p-1 text-right text-xl font-medium text-gray-800">
-                  <span className="text-base font-medium text-gray-400">
-                    <span className="text-[#0fb9b1]">*</span> 프로필에 표시될
+                <div className="flex justify-between p-1 text-right text-xl font-medium text-gray-800 dark:text-white">
+                  <span className="text-base font-medium text-gray-400 dark:text-white">
+                    <span className="text-[#9c88ff]">*</span> 프로필에 표시될
                     간단 소개글 입니다.
                   </span>
                   <span
                     onClick={() => onIntroValid({ intro: watchIntro })}
-                    className="cursor-pointer text-[#0fb9b1]"
+                    className="cursor-pointer text-[#9c88ff]"
                   >
                     확인
                   </span>
@@ -476,7 +479,7 @@ const Profile: NextPage<Props> = () => {
                       autoComplete="off"
                       maxLength={10}
                       placeholder="이름"
-                      className="w-32 appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800  focus:border-b-2 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
+                      className="w-32 appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-[#9c88ff] focus:outline-none focus:ring-0 dark:text-white"
                     />
                     <span>:</span>
                     <input
@@ -484,17 +487,17 @@ const Profile: NextPage<Props> = () => {
                       type="text"
                       autoComplete="off"
                       placeholder="URL"
-                      className="w-64 appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800  focus:border-b-2 focus:border-[#0fb9b1] focus:outline-none focus:ring-0"
+                      className="w-64 appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-[#9c88ff] focus:outline-none focus:ring-0 dark:text-white"
                     />
                   </div>
-                  <div className="flex justify-between p-1 text-xl font-medium text-gray-400">
+                  <div className="flex justify-between p-1 text-xl font-medium text-gray-400 dark:text-white">
                     <div className="flex flex-col">
                       <span className="flex text-base font-medium">
-                        <span className="text-[#0fb9b1]">*</span>
+                        <span className="text-[#9c88ff]">*</span>
                         <span> 프로필에 삽입 될 링크입니다.</span>
                       </span>
                       <span className="flex text-base font-medium">
-                        <span className="text-[#0fb9b1]">*</span>
+                        <span className="text-[#9c88ff]">*</span>
                         <span> 링크는 최대 3개 까지 추가할 수 있습니다.</span>
                       </span>
                     </div>
@@ -503,7 +506,7 @@ const Profile: NextPage<Props> = () => {
                       onClick={() =>
                         onLinkValid({ linkName: watchLinkName, url: watchUrl })
                       }
-                      className="cursor-pointer text-[#0fb9b1]"
+                      className="cursor-pointer text-[#9c88ff]"
                     >
                       추가
                     </span>
@@ -513,7 +516,7 @@ const Profile: NextPage<Props> = () => {
                   {data?.user?.links?.map((link) => {
                     return (
                       <div key={link?.id} className="flex flex-col p-1">
-                        <div className="flex justify-between text-base font-medium text-gray-800">
+                        <div className="flex justify-between text-base font-medium text-gray-800 dark:text-white">
                           <span className="w-32 overflow-hidden text-ellipsis whitespace-nowrap">
                             {link?.name}
                           </span>
@@ -521,7 +524,7 @@ const Profile: NextPage<Props> = () => {
                             {link?.url}
                           </span>
                           <span
-                            className="cursor-pointer text-base  font-medium text-[#0fb9b1]"
+                            className="cursor-pointer text-base  font-medium text-[#9c88ff]"
                             onClick={() => onLinkDelete(link?.id)}
                           >
                             삭제
@@ -568,14 +571,14 @@ const Profile: NextPage<Props> = () => {
                 )}
               </motion.div>
               <div className="w-full space-y-2 ">
-                <div className="flex items-center justify-between  text-2xl font-bold text-gray-800">
+                <div className="flex items-center justify-between  text-2xl font-bold text-gray-800 dark:text-white">
                   <span>{data?.user?.name}</span>
                   <div className="flex space-x-2">
                     {data?.user?.links?.map((link) => {
                       return (
                         <div key={link?.id}>
                           <span
-                            className="cursor-pointer text-lg text-[#0fb9b1]"
+                            className="cursor-pointer text-lg text-[#9c88ff]"
                             onClick={() => router.push(`${link?.url}`)}
                           >
                             {link?.name}
@@ -590,7 +593,7 @@ const Profile: NextPage<Props> = () => {
                   <div>좋아요 {data?.totalFavs}개</div>
                 </div>
 
-                <div className="text-lg font-bold text-gray-800">
+                <div className="text-lg font-bold text-gray-800 dark:text-white">
                   {data?.user?.introduce}
                 </div>
               </div>
@@ -600,7 +603,7 @@ const Profile: NextPage<Props> = () => {
           {editMode ? (
             <></>
           ) : data?.posts?.length === 0 ? (
-            <div className="pt-20  text-2xl font-bold text-gray-800">
+            <div className="pt-20  text-2xl font-bold text-gray-800 dark:text-white">
               게시글이 없습니다.
             </div>
           ) : (
@@ -610,18 +613,18 @@ const Profile: NextPage<Props> = () => {
                   <motion.div
                     key={index}
                     onClick={() => router.push(`/post/${item?.id}`)}
-                    className="group relative flex h-[17rem] w-[17rem] cursor-pointer flex-col items-center justify-center rounded-md p-4 shadow-md filter transition hover:bg-black hover:bg-opacity-50"
+                    className="group relative flex h-[17rem] w-[17rem] cursor-pointer flex-col items-center justify-center rounded-md p-4 shadow-md filter transition hover:bg-black hover:bg-opacity-75"
                   >
                     <Image
                       src={ImageDelivery(item?.thumnail)}
-                      className="absolute z-[-1] h-full w-full rounded-md bg-slate-600 "
+                      className="absolute h-full w-full rounded-md bg-slate-600 group-hover:opacity-5"
                       layout="fill"
                       alt=""
                     />
-                    <div className="hidden w-full items-center justify-center space-x-2  text-2xl font-bold text-white  transition group-hover:flex">
+                    <div className=" hidden w-full items-center justify-center space-x-2  text-2xl font-bold text-white transition group-hover:flex">
                       {item?.title}
                     </div>
-                    <div className="hidden w-full items-center justify-center space-x-2 whitespace-nowrap text-xl text-white  transition group-hover:flex">
+                    <div className=" hidden w-full items-center justify-center space-x-2 whitespace-nowrap text-xl text-white  transition group-hover:flex">
                       <div className="flex items-center space-x-1">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

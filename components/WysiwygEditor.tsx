@@ -2,9 +2,14 @@ import dynamic from "next/dynamic";
 import * as React from "react";
 import { Editor as EditorType, EditorProps } from "@toast-ui/react-editor";
 import { TuiEditorWithForwardedProps } from "@components/TuiEditorWrapper";
+import { AnimatePresence, motion } from "framer-motion";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
 import useMutation from "@libs/client/useMutation";
+import PageLoading from "./pageLoading";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { darkModeAtom } from "@atom/atom";
 // import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
-
 interface EditorPropsWithHandlers extends EditorProps {
   onChange?(value: string): void;
 }
@@ -24,7 +29,8 @@ const EditorWithForwardedRef = React.forwardRef<
 
 interface Props extends EditorProps {
   onChange(value: string): void;
-  valueType?: "markdown" | "html";
+  // valueType?: "markdown" | "html";
+  valueType?: "html";
 }
 
 const WysiwygEditor: React.FC<Props> = (props) => {
@@ -50,41 +56,62 @@ const WysiwygEditor: React.FC<Props> = (props) => {
       valueType === "markdown" ? instance.getMarkdown() : instance.getHTML()
     );
   }, [props, editorRef]);
-
+  const [imageLoading, setImageLoading] = React.useState(false);
+  const isDarkMode = useRecoilValue(darkModeAtom);
   return (
-    <div>
-      <EditorWithForwardedRef
-        {...props}
-        initialValue={initialValue || "hello react editor world!"}
-        previewStyle={previewStyle || "vertical"}
-        height={height || "600px"}
-        initialEditType={initialEditType || "markdown"}
-        useCommandShortcut={useCommandShortcut || true}
-        // plugins={[colorSyntax]}
-        ref={editorRef}
-        // UTF-8로 인코딩 되는 이미지 업로드 방식을
-        // cloudflare에 바로 이미지를 저장해주고 반환되는 url을 md에 삽입하는 방식으로 변경
-        hooks={{
-          addImageBlobHook: async (blob, callback) => {
-            const { uploadURL } = await (await fetch(`/api/files`)).json();
-            const form = new FormData();
-            form.append("file", blob);
-            const {
-              result: { id },
-            } = await (
-              await fetch(uploadURL, {
-                method: "POST",
-                body: form,
-              })
-            ).json();
-            callback(
-              `https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${id}/public`
-            );
-          },
-        }}
-        onChange={handleChange}
-      />
-    </div>
+    <>
+      <div>
+        <EditorWithForwardedRef
+          {...props}
+          theme={isDarkMode ? "dark" : ""}
+          initialValue={initialValue || "hello react editor world!"}
+          previewStyle={previewStyle || "vertical"}
+          height={height || "600px"}
+          // initialEditType={"wysiwyg"}
+          initialEditType={initialEditType || "markdown"}
+          useCommandShortcut={useCommandShortcut || true}
+          // plugins={[colorSyntax]}
+          ref={editorRef}
+          // UTF-8로 인코딩 되는 이미지 업로드 방식을
+          // cloudflare에 바로 이미지를 저장해주고 반환되는 url을 md에 삽입하는 방식으로 변경
+          hooks={{
+            addImageBlobHook: async (blob, callback) => {
+              setImageLoading(true);
+              const { uploadURL } = await (await fetch(`/api/files`)).json();
+              const form = new FormData();
+              form.append("file", blob);
+              const {
+                result: { id },
+              } = await (
+                await fetch(uploadURL, {
+                  method: "POST",
+                  body: form,
+                })
+              ).json();
+              callback(
+                `https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${id}/public`
+              );
+              setImageLoading(false);
+            },
+          }}
+          onChange={handleChange}
+        />
+        <AnimatePresence>
+          {imageLoading ? (
+            <motion.div
+              initial={{ translateX: -200, opacity: 0 }}
+              animate={{ translateX: 0, opacity: 1 }}
+              exit={{ translateX: -200, opacity: 0 }}
+              className="text-xl font-bold text-[#9c88ff]"
+            >
+              이미지를 추가하고 있습니다.
+            </motion.div>
+          ) : (
+            <></>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 };
 

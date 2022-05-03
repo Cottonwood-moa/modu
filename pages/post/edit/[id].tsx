@@ -8,7 +8,7 @@ import Button from "@components/button";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
-
+import Head from "next/head"
 import WysiwygEditor from "@components/WysiwygEditor";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
@@ -167,7 +167,16 @@ const Write: NextPage<EditProps> = ({
       // @ts-ignore
       setThumbnailImagePreview(URL.createObjectURL(thumbnailImage[0]));
   }, [thumbnailImage, setThumbnailImagePreview]);
-  return (
+  return (<>
+  <Head>
+        <title>모두의 HOOK | 게시글 수정</title>
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="모두의 HOOK" />
+        <meta property="og:title" content="모두의 HOOK" />
+        <meta property="og:description" content="블라블라" />
+        <meta property="og:image" content="/images/modu.png" />
+        <meta property="og:url" content="https://starbucks.co.kr" />
+      </Head>
     <Layout>
       <div className="right-0 left-0 m-auto mt-32 w-[90%] min-w-[1000px] bg-white p-12 text-gray-800 dark:bg-slate-800 dark:text-white ">
         {/* post header */}
@@ -336,7 +345,7 @@ const Write: NextPage<EditProps> = ({
           </div>
         </form>
       </div>
-    </Layout>
+    </Layout></>
   );
 };
 export const getServerSideProps: GetServerSideProps = async (ctx: any) => {

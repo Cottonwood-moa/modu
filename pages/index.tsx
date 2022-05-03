@@ -121,7 +121,7 @@ const Home: NextPage = () => {
                 className="h-20 w-20"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="#7ed6df"
+                stroke="#74b9ff"
                 strokeWidth="3"
               >
                 <path
@@ -155,7 +155,7 @@ const Home: NextPage = () => {
               className={cls(
                 "flex cursor-pointer items-center text-2xl font-bold ",
                 orderBy === OrderBy.favs
-                  ? "text-[#7ed6df]"
+                  ? "text-[#74b9ff]"
                   : "text-gray-800 dark:text-white"
               )}
             >
@@ -186,7 +186,7 @@ const Home: NextPage = () => {
               className={cls(
                 "flex cursor-pointer items-center text-2xl font-bold ",
                 orderBy === OrderBy.latest
-                  ? "text-[#7ed6df]"
+                  ? "text-[#74b9ff]"
                   : "text-gray-800 dark:text-white"
               )}
             >
@@ -209,7 +209,7 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="space-x-2 px-8 text-lg font-medium text-gray-600 dark:text-white">
-          <span className="text-[#7ed6df]">✔</span>
+          <span className="text-[#74b9ff]">✔</span>
           <span>제목과 태그를 기반으로 검색합니다.</span>
         </div>
 

@@ -14,6 +14,7 @@ import ParsingAgo from "@libs/client/parsingAgo";
 import ImageDelivery from "@libs/client/imageDelivery";
 import { useRecoilState } from "recoil";
 import { darkModeAtom } from "@atom/atom";
+import Swal from "sweetalert2";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -53,7 +54,31 @@ export default function Layout({ children }: LayoutProps) {
   const onTitleClick = () => {
     router.push("/");
   };
-
+  const darkModeHandle = () => {
+    const refreshPath = ["write", "edit"];
+    const check = refreshPath.map((pathname) => {
+      return router.pathname.includes(pathname);
+    });
+    if (check.includes(true)) {
+      Swal.fire({
+        icon: "info",
+        title: "알림",
+        text: "작성중에는 테마를 바꿀 수 없습니다!",
+        showConfirmButton: false,
+        timer: 1200,
+      });
+      return;
+    }
+    setIsDarkMode((prev) => !prev);
+  };
+  useEffect(() => {
+    const isDark = JSON.parse(localStorage.getItem("isDark") as string);
+    setIsDarkMode(isDark);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("isDark", JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
   return (
     <div className={isDarkMode ? "dark" : undefined}>
       <div className="min-h-[100vh] dark:bg-slate-800">
@@ -68,21 +93,21 @@ export default function Layout({ children }: LayoutProps) {
           <div className="flex items-center space-x-6 text-xl font-bold text-gray-900 dark:text-white">
             {!isDarkMode ? (
               <img
-                onClick={() => setIsDarkMode(true)}
+                onClick={darkModeHandle}
                 className="h-16 w-16 cursor-pointer rounded-full bg-white dark:bg-slate-800"
                 src="https://media0.giphy.com/media/ZCNKNsiPMOo5jr0pBd/200w.webp?cid=ecf05e47gic26w59s7naot5orabvtnpuk0jg8a2ahgn1o5hd&rid=200w.webp&ct=s"
                 alt="light"
               />
             ) : (
               <img
-                onClick={() => setIsDarkMode(false)}
+                onClick={darkModeHandle}
                 className="h-16 w-16 cursor-pointer rounded-full bg-white dark:bg-slate-800"
                 src="https://media0.giphy.com/media/c2D2388XDMGVwUeD90/200w.webp?cid=ecf05e475h4bg6mfhn1hoclcjibvh39plq0ud72v5k5y39zd&rid=200w.webp&ct=s"
                 alt="dark"
               />
             )}
 
-            <div className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#7ed6df] dark:text-white dark:hover:text-[#7ed6df]">
+            <div className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#74b9ff] dark:text-white dark:hover:text-[#74b9ff]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-8 w-8"
@@ -152,7 +177,7 @@ export default function Layout({ children }: LayoutProps) {
                       duration: 1,
                       repeat: Infinity,
                     }}
-                    className="flex cursor-pointer items-center text-red-500 transition dark:text-white "
+                    className="flex cursor-pointer items-center text-red-500 transition  "
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -173,7 +198,7 @@ export default function Layout({ children }: LayoutProps) {
                 ) : (
                   <motion.div
                     onClick={alertOpen}
-                    className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#7ed6df] dark:text-white dark:hover:text-[#7ed6df]"
+                    className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#74b9ff] dark:text-white dark:hover:text-[#74b9ff]"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +225,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="flex cursor-pointer items-center text-gray-800 transition dark:text-white">
               {!user ? (
                 <div
-                  className="flex items-center hover:text-[#7ed6df]"
+                  className="flex items-center hover:text-[#74b9ff]"
                   onClick={onLogin}
                 >
                   <svg
@@ -225,7 +250,7 @@ export default function Layout({ children }: LayoutProps) {
                     className="relative z-10 flex items-center"
                     onClick={onInfo}
                   >
-                    <div className="flex items-center hover:text-[#7ed6df]">
+                    <div className="flex items-center hover:text-[#74b9ff]">
                       {user?.image?.includes("https") ? (
                         <Image
                           src={user?.image}
@@ -276,17 +301,17 @@ export default function Layout({ children }: LayoutProps) {
                           className="absolute top-20  right-0 flex w-52 flex-col space-y-6 bg-white p-6 shadow-lg"
                         >
                           <Link href="/myPage/favs">
-                            <a className="text-gray-800 hover:text-[#7ed6df]">
+                            <a className="text-gray-800 hover:text-[#74b9ff]">
                               좋아요 목록
                             </a>
                           </Link>
                           <Link href={`/myPage/${user?.id}`}>
-                            <a className="text-gray-800 hover:text-[#7ed6df]">
+                            <a className="text-gray-800 hover:text-[#74b9ff]">
                               프로필
                             </a>
                           </Link>
                           <div
-                            className="text-gray-800 hover:text-[#7ed6df]"
+                            className="text-gray-800 hover:text-[#74b9ff]"
                             onClick={onSignOut}
                           >
                             로그아웃

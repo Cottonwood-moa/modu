@@ -63,7 +63,7 @@ const WysiwygEditor: React.FC<Props> = (props) => {
       <div>
         <EditorWithForwardedRef
           {...props}
-          theme={isDarkMode ? "dark" : ""}
+          theme={isDarkMode ? "dark" : "light"}
           initialValue={initialValue || "hello react editor world!"}
           previewStyle={previewStyle || "vertical"}
           height={height || "600px"}
@@ -102,7 +102,7 @@ const WysiwygEditor: React.FC<Props> = (props) => {
               initial={{ translateX: -200, opacity: 0 }}
               animate={{ translateX: 0, opacity: 1 }}
               exit={{ translateX: -200, opacity: 0 }}
-              className="text-xl font-bold text-[#7ed6df]"
+              className="text-xl font-bold text-[#74b9ff]"
             >
               이미지를 추가하고 있습니다.
             </motion.div>

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 // Post detail
 
 import Layout from "@components/Layout";
@@ -302,7 +303,7 @@ const Profile: NextPage<Props> = () => {
         <ProfileSkeleton></ProfileSkeleton>
       ) : (
         <div className=" flex  h-[100vh] w-full flex-col items-center space-y-12 dark:text-white">
-          {loadingState ? <PageLoading /> : null}
+          {/* {loadingState ? <PageLoading /> : null} */}
           {/* 프로필 사진 */}
           {editMode ? (
             <div className="mt-12 flex w-[50rem] items-center justify-between text-4xl font-bold text-gray-800 dark:text-white">
@@ -316,7 +317,7 @@ const Profile: NextPage<Props> = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 className={cls(
                   `h-8 w-8 cursor-pointer dark:text-white`,
-                  editMode ? "text-[#7ed6df] dark:text-[#7ed6df]" : ""
+                  editMode ? "text-[#74b9ff] dark:text-[#74b9ff]" : ""
                 )}
                 fill="none"
                 viewBox="0 0 24 24"
@@ -341,7 +342,7 @@ const Profile: NextPage<Props> = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   className={cls(
                     `h-8 w-8 cursor-pointer`,
-                    editMode ? "text-[#7ed6df]" : ""
+                    editMode ? "text-[#74b9ff]" : ""
                   )}
                   fill="none"
                   viewBox="0 0 24 24"
@@ -364,8 +365,14 @@ const Profile: NextPage<Props> = () => {
             <div className="flex w-[50rem] flex-col items-center  space-y-12 ">
               <motion.div
                 layoutId="userImage"
-                className="selection:bg-transparent"
+                className="relative  selection:bg-transparent"
               >
+                {loadingState ? (
+                  <div className="absolute left-0 right-0 z-10 m-auto flex h-full items-center justify-center bg-transparent">
+                    <img src="/images/loading.gif" alt="imageloading" />
+                  </div>
+                ) : null}
+
                 {data?.user?.image?.includes("https") ? (
                   <Image
                     src={data?.user?.image}
@@ -387,7 +394,6 @@ const Profile: NextPage<Props> = () => {
                     alt=""
                   />
                 )}
-
                 <label>
                   <AnimatePresence>
                     <motion.svg
@@ -434,18 +440,18 @@ const Profile: NextPage<Props> = () => {
                   autoComplete="off"
                   {...register("name")}
                   maxLength={10}
-                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent  text-2xl font-bold text-gray-800 focus:border-b-2  focus:border-blue-300 focus:outline-none focus:ring-0 dark:text-white"
+                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent  text-2xl font-bold text-gray-800 focus:border-b-2  focus:border-[#74b9ff] focus:outline-none focus:ring-0 dark:text-white"
                   defaultValue={data?.user?.name ? data?.user?.name : ""}
                 />
 
                 <div className="flex justify-between p-1 text-xl font-medium text-gray-800 dark:text-white">
                   <span className="text-base font-medium text-gray-400 dark:text-white">
-                    <span className="text-[#7ed6df]">*</span> modu에서 사용할
+                    <span className="text-[#74b9ff]">*</span> modu에서 사용할
                     이름입니다.
                   </span>
                   <span
                     onClick={() => onNameValid({ name: watchName })}
-                    className="cursor-pointer text-[#7ed6df]"
+                    className="cursor-pointer text-[#74b9ff]"
                   >
                     확인
                   </span>
@@ -455,19 +461,19 @@ const Profile: NextPage<Props> = () => {
                   {...register("intro")}
                   autoComplete="off"
                   maxLength={100}
-                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-blue-300 focus:outline-none focus:ring-0 dark:text-white"
+                  className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-[#74b9ff] focus:outline-none focus:ring-0 dark:text-white"
                   defaultValue={
                     data?.user?.introduce ? data?.user?.introduce : ""
                   }
                 />
                 <div className="flex justify-between p-1 text-right text-xl font-medium text-gray-800 dark:text-white">
                   <span className="text-base font-medium text-gray-400 dark:text-white">
-                    <span className="text-[#7ed6df]">*</span> 프로필에 표시될
+                    <span className="text-[#74b9ff]">*</span> 프로필에 표시될
                     간단 소개글 입니다.
                   </span>
                   <span
                     onClick={() => onIntroValid({ intro: watchIntro })}
-                    className="cursor-pointer text-[#7ed6df]"
+                    className="cursor-pointer text-[#74b9ff]"
                   >
                     확인
                   </span>
@@ -480,7 +486,7 @@ const Profile: NextPage<Props> = () => {
                       autoComplete="off"
                       maxLength={10}
                       placeholder="이름"
-                      className="w-32 appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-blue-300 focus:outline-none focus:ring-0 dark:text-white"
+                      className="w-32 appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-[#74b9ff] focus:outline-none focus:ring-0 dark:text-white"
                     />
                     <span>:</span>
                     <input
@@ -488,17 +494,17 @@ const Profile: NextPage<Props> = () => {
                       type="text"
                       autoComplete="off"
                       placeholder="URL"
-                      className="w-64 appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-blue-300 focus:outline-none focus:ring-0 dark:text-white"
+                      className="w-64 appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-[#74b9ff] focus:outline-none focus:ring-0 dark:text-white"
                     />
                   </div>
                   <div className="flex justify-between p-1 text-xl font-medium text-gray-400 dark:text-white">
                     <div className="flex flex-col">
                       <span className="flex text-base font-medium">
-                        <span className="text-[#7ed6df]">*</span>
+                        <span className="text-[#74b9ff]">*</span>
                         <span> 프로필에 삽입 될 링크입니다.</span>
                       </span>
                       <span className="flex text-base font-medium">
-                        <span className="text-[#7ed6df]">*</span>
+                        <span className="text-[#74b9ff]">*</span>
                         <span> 링크는 최대 3개 까지 추가할 수 있습니다.</span>
                       </span>
                     </div>
@@ -507,7 +513,7 @@ const Profile: NextPage<Props> = () => {
                       onClick={() =>
                         onLinkValid({ linkName: watchLinkName, url: watchUrl })
                       }
-                      className="cursor-pointer text-[#7ed6df]"
+                      className="cursor-pointer text-[#74b9ff]"
                     >
                       추가
                     </span>
@@ -525,7 +531,7 @@ const Profile: NextPage<Props> = () => {
                             {link?.url}
                           </span>
                           <span
-                            className="cursor-pointer text-base  font-medium text-[#7ed6df]"
+                            className="cursor-pointer text-base  font-medium text-[#74b9ff]"
                             onClick={() => onLinkDelete(link?.id)}
                           >
                             삭제
@@ -579,7 +585,7 @@ const Profile: NextPage<Props> = () => {
                       return (
                         <div key={link?.id}>
                           <span
-                            className="cursor-pointer text-lg text-[#7ed6df]"
+                            className="cursor-pointer text-lg text-[#74b9ff]"
                             onClick={() => router.push(`${link?.url}`)}
                           >
                             {link?.name}

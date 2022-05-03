@@ -2,7 +2,7 @@ import { atom } from "recoil";
 
 export const darkModeAtom = atom({
   key: "darkModeAtom",
-  default: true,
+  default: false,
 });
 
 export const pageAtom = atom({

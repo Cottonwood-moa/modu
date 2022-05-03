@@ -206,7 +206,7 @@ const Write: NextPage<EditProps> = ({
               minLength={2}
               maxLength={50}
               required
-              className="w-full appearance-none border-b-2 p-2 text-4xl font-bold focus:outline-none"
+              className="w-full appearance-none border-b-2 p-2 text-4xl font-bold focus:outline-none dark:bg-slate-800"
             ></input>
             {/* tag */}
 
@@ -223,7 +223,7 @@ const Write: NextPage<EditProps> = ({
               <motion.div
                 initial={{ x: -400, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                className=" fixed top-56 left-0 z-10 space-y-2 rounded-lg bg-blue-300 p-6 text-xl font-bold text-white shadow-lg xl:left-28"
+                className="   fixed top-56 left-0 z-10 space-y-2 rounded-lg bg-slate-700 p-6 text-xl font-bold text-white shadow-lg xl:left-28"
               >
                 <p>1. 코드 블럭을 넣을 땐</p>
                 <p className="my-4">
@@ -254,15 +254,15 @@ const Write: NextPage<EditProps> = ({
               animate={{ scale: 1 }}
               onClick={() => setInfo(true)}
               whileHover={{ scale: 1.2 }}
-              className="fixed left-0
-              top-56 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-300 xl:left-12"
+              className=" fixed left-0
+              top-56 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-slate-700 text-white dark:bg-transparent dark:text-white  xl:left-12"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-8 w-8"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="white"
+                stroke="currentcolor"
                 strokeWidth="2"
               >
                 <path
@@ -280,7 +280,7 @@ const Write: NextPage<EditProps> = ({
                   <motion.img
                     initial={{ x: -400, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    className="fixed top-72 left-0 flex h-[300px] w-[350px] cursor-pointer rounded-lg shadow-xl xl:left-12"
+                    className="fixed top-72 left-0 flex h-[300px] w-[350px] cursor-pointer rounded-lg bg-slate-700 shadow-xl xl:left-12"
                     src={thumbnailImagePreview}
                   ></motion.img>
                   <input
@@ -295,7 +295,7 @@ const Write: NextPage<EditProps> = ({
                   <motion.img
                     initial={{ x: -400, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    className="fixed top-72 left-0 flex h-[300px] w-[350px] cursor-pointer rounded-lg bg-blue-300 shadow-xl xl:left-12"
+                    className=" fixed top-72 left-0 flex h-[300px] w-[350px] cursor-pointer rounded-lg bg-slate-700 shadow-xl xl:left-12"
                     src={ImageDelivery(prevThumbnail)}
                   ></motion.img>
                   <input
@@ -313,11 +313,11 @@ const Write: NextPage<EditProps> = ({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               whileHover={{ scale: 1.2 }}
-              className="fixed left-0 top-72 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-300 xl:left-12"
+              className=" fixed left-0 top-72 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-slate-700 bg-transparent text-white dark:bg-transparent dark:text-white xl:left-12"
             >
               <svg
                 className="h-8 w-8"
-                stroke="white"
+                stroke="currentcolor"
                 fill="none"
                 viewBox="0 0 48 48"
                 aria-hidden="true"

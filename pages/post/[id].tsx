@@ -2,7 +2,7 @@
 // SWR + SSR
 import Layout from "@components/Layout";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import client from "@libs/server/client";
 import { Post, Tag, User } from "@prisma/client";
@@ -25,7 +25,6 @@ import ParsingCreatedAt from "@libs/client/parsingCreatedAt";
 import { orderAtom, pageAtom } from "@atom/atom";
 import { useRecoilState } from "recoil";
 import ImageDelivery from "@libs/client/imageDelivery";
-import OutsideClickHandler from "react-outside-click-handler";
 import replaceMultiple from "@libs/client/replaceAllMultiple";
 import numberWithCommas from "@libs/client/numberWithComma";
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
@@ -185,11 +184,19 @@ const PostDetail: NextPage<staticProps> = ({
   }, [id]);
 
   if (router.isFallback) {
-    return <PageLoading />;
+    return (
+      <Layout>
+        <PageLoading />
+      </Layout>
+    );
   }
   return (
     <Layout>
-      <div className="right-0 left-0 m-auto mt-32 w-[60%] min-w-[800px] bg-white p-12 text-gray-800 dark:bg-slate-800 dark:text-white ">
+      <motion.div
+        initial={{ translateY: 2000, opacity: 0 }}
+        animate={{ translateY: 0, opacity: 1 }}
+        className="right-0 left-0 m-auto mt-32 w-[60%] min-w-[800px] bg-white p-12 text-gray-800 dark:bg-slate-800 dark:text-white "
+      >
         {/* post header */}
         <div className="space-y-12">
           <div className="flex  w-full items-center justify-between">
@@ -316,8 +323,10 @@ const PostDetail: NextPage<staticProps> = ({
           )}
           {/* user & date */}
           <div className="flex w-full items-center justify-between">
-            <div className="flex items-center space-x-2">
-              {console.log("avatar", avatar)}
+            <div
+              className="flex cursor-pointer items-center space-x-2"
+              onClick={() => router.push(`/myPage/${userId}`)}
+            >
               {avatar.includes("https") ? (
                 <Image
                   src={avatar}
@@ -413,7 +422,7 @@ const PostDetail: NextPage<staticProps> = ({
           countMutate={countMutate}
         />
         {/* 추천 글 */}
-      </div>
+      </motion.div>
     </Layout>
   );
 };

@@ -104,11 +104,33 @@ const Home: NextPage = () => {
         {/* main */}
         <div className="flex h-[30rem] w-full items-center justify-start bg-white dark:bg-slate-800">
           <div className="z-[1] space-y-8 p-4">
-            <div className="text-6xl font-bold dark:text-white">
+            <div className="font-[gugi] text-6xl font-bold dark:text-white">
               모두의 HOOK
             </div>
             <div className="whitespace-nowrap text-2xl font-bold dark:text-white">
               개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요.
+            </div>
+            <div className="flex items-center whitespace-nowrap text-2xl font-bold  dark:text-white ">
+              <motion.div
+                whileHover={{ translateX: 50 }}
+                className=" flex cursor-pointer items-center hover:text-[#74b9ff] dark:hover:text-[#74b9ff]"
+              >
+                <span>- npm 패키지 비교하기</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-20 w-20"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                  />
+                </svg>
+              </motion.div>
             </div>
           </div>
           <motion.div

@@ -87,7 +87,11 @@ export default function Layout({ children }: LayoutProps) {
             onClick={onTitleClick}
             className="cursor-pointer font-[Gugi] text-4xl font-bold"
           >
-            모두의 HOOK
+            {router?.pathname?.includes("trend") ? (
+              <span>NPM 트렌드</span>
+            ) : (
+              <span>modu</span>
+            )}
           </div>
 
           <div className="flex items-center space-x-6 text-xl font-bold text-gray-900 dark:text-white">
@@ -298,7 +302,7 @@ export default function Layout({ children }: LayoutProps) {
                             opacity: 0,
                             transition: { type: "tween" },
                           }}
-                          className="absolute top-20  right-0 flex w-52 flex-col space-y-6 bg-white p-6 shadow-lg"
+                          className="absolute top-20 right-0 flex w-52 flex-col space-y-6 bg-white p-6 shadow-lg"
                         >
                           <Link href="/myPage/favs">
                             <a className="text-gray-800 hover:text-[#74b9ff]">

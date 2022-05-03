@@ -9,6 +9,9 @@ body {
 .react-markdown a {
   color: royalblue;
 }
+.apexcharts-toolbar {
+  z-index: 0 !important;
+}
 .post-content p {
   @apply text-xl font-medium;
 }

@@ -13,7 +13,6 @@ async function handler(
     const {
       query: { linkId },
     } = req;
-    console.log(linkId);
     await client.link.delete({
       where: {
         id: +linkId,

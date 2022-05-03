@@ -4,7 +4,6 @@ import { useRecoilState } from "recoil";
 
 export function useInfiniteScroll() {
   const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
-  console.log("currentPage", currentPage);
   function handleScroll() {
     if (
       document.documentElement.scrollTop + window.innerHeight ===

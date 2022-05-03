@@ -96,7 +96,6 @@ const PostDetail: NextPage<staticProps> = ({
   const { data: favsList, mutate: favsListMutate } = useSWR<FavsListResponse>(
     id ? `/api/post/favsList?postId=${id}` : null
   );
-  console.log("favsList", favsList);
 
   const { data: count, mutate: countMutate } = useSWR<CountResponse>(
     id ? `/api/post/count?postId=${id}` : null
@@ -443,7 +442,6 @@ const PostDetail: NextPage<staticProps> = ({
           {/* 추천 글 */}
         </motion.div>
       </Layout>
-      );
     </>
   );
 };

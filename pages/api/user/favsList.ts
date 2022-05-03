@@ -48,7 +48,6 @@ async function handler(
       },
     },
   });
-  console.log("favsList", favsList);
   res.json({
     ok: true,
     favsList,

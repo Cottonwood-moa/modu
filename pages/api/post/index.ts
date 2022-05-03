@@ -296,7 +296,6 @@ async function handler(
           },
         });
         const pagesWithSearch = Math.ceil(postsCountWithSearch / 8);
-        console.log("검색어 있는 전체 페이지", pagesWithSearch);
         const posts = await client.post.findMany({
           take: 8,
           skip: 8 * (+page - 1),

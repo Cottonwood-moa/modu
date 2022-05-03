@@ -86,6 +86,8 @@ model Post {
   notifications Notification[]
   postTags      PostTags[]
   replys        Reply[]
+
+  @@index([userId])
 }
 
 model PostTags {
@@ -94,6 +96,8 @@ model PostTags {
   tag    Tag?  @relation(fields: [tagId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   postId Int?
   tagId  Int?
+
+  @@index([postId, tagId])
 }
 
 model Tag {
@@ -112,6 +116,8 @@ model Comment {
   userId    String
   postId    Int
   replys    Reply[]
+
+  @@index([postId, userId])
 }
 
 // https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/526c056b-b1a8-48af-7d39-3577ba0c0400/avatar
@@ -126,6 +132,8 @@ model Reply {
   commentId Int
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
+
+  @@index([postId, userId, commentId])
 }
 
 model Fav {
@@ -136,6 +144,8 @@ model Fav {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   postId    Int
+
+  @@index([postId, userId])
 }
 
 model Notification {
@@ -148,6 +158,8 @@ model Notification {
   userId    String
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
+
+  @@index([postId, userId])
 }
 
 model Link {
@@ -158,4 +170,6 @@ model Link {
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+
+  @@index([userId])
 }

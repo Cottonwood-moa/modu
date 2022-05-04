@@ -22,7 +22,7 @@ const nextConfig = {
   },
   experimental: {
     scrollRestoration: true,
-    outputStandalone: true,
+    outputFileTracing: false,
   },
 };
 

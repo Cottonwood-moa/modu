@@ -94,13 +94,13 @@ const Home: NextPage = () => {
         <meta property="og:title" content="modu" />
         <meta property="og:description" content="블라블라" />
         <meta property="og:image" content="/images/modu.png" />
-        <meta property="og:url" content="https://starbucks.co.kr" />
+        <meta property="og:url" content="https://modu.vercel.app" />
         <meta property="twitter:card" content="summary" />
         <meta property="twitter:site" content="modu" />
         <meta property="twitter:title" content="modu" />
         <meta property="twitter:description" content="블라블라" />
         <meta property="twitter:image" content="/images/modu.png" />
-        <meta property="twitter:url" content="https://starbucks.co.kr" />
+        <meta property="twitter:url" content="https://modu.vercel.app" />
       </Head>
       <Layout>
         {/* main */}

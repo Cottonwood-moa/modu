@@ -308,7 +308,7 @@ const Profile: NextPage<Props> = () => {
         />
         <meta property="og:description" content={`${data?.user?.introduce}`} />
         <meta property="og:image" content="/images/modu.png" />
-        <meta property="og:url" content="https://starbucks.co.kr" />
+        <meta property="og:url" content="https://modu.vercel.app" />
       </Head>
       <Layout>
         {!data ? (

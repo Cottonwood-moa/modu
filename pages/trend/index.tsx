@@ -129,7 +129,7 @@ const Trend: NextPage = () => {
           content="npm에 등록된 패키지의 다운로드 횟수를 차트로 확인할 수 있습니다."
         />
         <meta property="og:image" content="/images/modu.png" />
-        <meta property="og:url" content="https://starbucks.co.kr" />
+        <meta property="og:url" content="https://modu.vercel.app" />
       </Head>
       <Layout>
         {info ? (

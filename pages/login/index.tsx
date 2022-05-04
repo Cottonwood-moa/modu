@@ -21,7 +21,7 @@ export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
         <meta property="og:title" content={`modu 로그인`} />
         <meta property="og:description" content={`modu 로그인 페이지`} />
         <meta property="og:image" content="/images/modu.png" />
-        <meta property="og:url" content="https://starbucks.co.kr" />
+        <meta property="og:url" content="https://modu.vercel.app" />
       </Head>
       <div className={isDarkMode ? "dark" : ""}>
         <div

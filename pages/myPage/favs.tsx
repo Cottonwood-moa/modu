@@ -22,7 +22,7 @@ const Favs: NextPage = () => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="modu" />
         <meta property="og:image" content="/images/modu.png" />
-        <meta property="og:url" content="https://starbucks.co.kr" />
+        <meta property="og:url" content="https://modu.vercel.app" />
       </Head>
       <Layout>
         {data?.favsList?.length === 0 ? (

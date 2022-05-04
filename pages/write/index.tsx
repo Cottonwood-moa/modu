@@ -146,7 +146,7 @@ const Write: NextPage = () => {
         <meta property="og:title" content="modu" />
         <meta property="og:description" content="블라블라" />
         <meta property="og:image" content="/images/modu.png" />
-        <meta property="og:url" content="https://starbucks.co.kr" />
+        <meta property="og:url" content="https://modu.vercel.app" />
       </Head>
       <Layout>
         <div className="right-0 left-0 m-auto mt-32 w-[90%] min-w-[1000px] bg-white p-12 text-gray-800  dark:bg-slate-900 dark:text-white">

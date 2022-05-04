@@ -101,6 +101,10 @@ const Home: NextPage = () => {
         <meta property="twitter:description" content="블라블라" />
         <meta property="twitter:image" content="/images/modu.png" />
         <meta property="twitter:url" content="https://modu.vercel.app" />
+        <meta
+          name="google-site-verification"
+          content="jP_LRgp2ourifn-dveaqSx3v-cBhd7cwuHbUlM6bsA4"
+        />
       </Head>
       <Layout>
         {/* main */}

@@ -12,9 +12,6 @@ function interceptStdout(text) {
 // Intercept in dev and prod
 intercept(interceptStdout);
 const nextConfig = {
-  experimental: {
-    outputStandalone: true,
-  },
   reactStrictMode: true,
   images: {
     domains: [
@@ -25,6 +22,7 @@ const nextConfig = {
   },
   experimental: {
     scrollRestoration: true,
+    outputStandalone: true,
   },
 };
 

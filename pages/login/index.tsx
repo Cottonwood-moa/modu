@@ -62,11 +62,10 @@ export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
                   })
                 }
               >
-                {/* ${provider.name} */}
                 <Image
                   width={120}
                   height={120}
-                  src={`/images/Google.png`}
+                  src={`/images/${provider.name.toLowerCase()}.png`}
                   alt=""
                 />
               </motion.div>

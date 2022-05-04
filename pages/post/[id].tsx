@@ -483,6 +483,7 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
     });
     if (!post)
       return {
+        props: null,
         redirect: {
           permanent: false,
           destination: "/404",
@@ -505,6 +506,7 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
   } catch {
     return {
       redirect: {
+        props: null,
         permanent: false,
         destination: "/500",
       },

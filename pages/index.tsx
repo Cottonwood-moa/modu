@@ -110,7 +110,7 @@ const Home: NextPage = () => {
               모두의 HOOK
             </div>
             <div className="whitespace-nowrap text-2xl font-bold dark:text-white">
-              개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요.껄껄
+              개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요.
             </div>
             <div className="flex items-center whitespace-nowrap text-2xl font-bold  dark:text-white ">
               <motion.div

@@ -174,6 +174,7 @@ const PostDetail: NextPage<staticProps> = ({
       mutate();
       countMutate();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
   useEffect(() => {
     if (!id) return;
@@ -193,15 +194,15 @@ const PostDetail: NextPage<staticProps> = ({
   return (
     <>
       <Head>
-        <title>모두의 HOOK | {title}</title>
+        <title>modu | {title}</title>
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="모두의 HOOK" />
+        <meta property="og:site_name" content="modu" />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={content} />
         <meta property="og:image" content="/images/modu.png" />
         <meta property="og:url" content="https://starbucks.co.kr" />
         <meta property="twitter:card" content="summary" />
-        <meta property="twitter:site" content="모두의 HOOK" />
+        <meta property="twitter:site" content="modu" />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={content} />
         <meta property="twitter:image" content="/images/modu.png" />
@@ -211,7 +212,7 @@ const PostDetail: NextPage<staticProps> = ({
         <motion.div
           initial={{ translateY: 2000, opacity: 0 }}
           animate={{ translateY: 0, opacity: 1 }}
-          className="right-0 left-0 m-auto mt-32 w-[60%] min-w-[800px] bg-white p-12 text-gray-800 dark:bg-slate-800 dark:text-white "
+          className="right-0 left-0 m-auto mt-32 w-[60%] min-w-[800px] bg-white p-12 text-gray-800 dark:bg-slate-900 dark:text-white "
         >
           {/* post header */}
           <div className="space-y-12">

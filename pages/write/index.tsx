@@ -140,19 +140,19 @@ const Write: NextPage = () => {
   return (
     <>
       <Head>
-        <title>모두의 HOOK | 게시글 작성</title>
+        <title>modu | 게시글 작성</title>
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="모두의 HOOK" />
-        <meta property="og:title" content="모두의 HOOK" />
+        <meta property="og:site_name" content="modu" />
+        <meta property="og:title" content="modu" />
         <meta property="og:description" content="블라블라" />
         <meta property="og:image" content="/images/modu.png" />
         <meta property="og:url" content="https://starbucks.co.kr" />
       </Head>
       <Layout>
-        <div className="right-0 left-0 m-auto mt-32 w-[90%] min-w-[1000px] bg-white p-12 text-gray-800  dark:bg-slate-800 dark:text-white">
+        <div className="right-0 left-0 m-auto mt-32 w-[90%] min-w-[1000px] bg-white p-12 text-gray-800  dark:bg-slate-900 dark:text-white">
           {/* post header */}
           <form onSubmit={handleSubmit(onValid)}>
-            <div className="space-y-12 dark:bg-slate-800 dark:text-white">
+            <div className="space-y-12 dark:bg-slate-900 dark:text-white">
               <div className="w-full">
                 <svg
                   onClick={() => router.back()}
@@ -186,7 +186,7 @@ const Write: NextPage = () => {
                 minLength={2}
                 maxLength={50}
                 required
-                className="w-full appearance-none border-b-2 p-2 text-4xl font-bold focus:outline-none dark:bg-slate-800 dark:text-white"
+                className="w-full appearance-none border-b-2 p-2 text-4xl font-bold focus:outline-none dark:bg-slate-900 dark:text-white"
               ></input>
               {/* tag */}
 
@@ -323,7 +323,7 @@ const Write: NextPage = () => {
               </motion.div>
             )}
             <div className="flex justify-end space-x-2 p-4">
-              <Button text={"글 등록"} large css="bg-slate-800"></Button>
+              <Button text={"글 등록"} large css="bg-slate-900"></Button>
             </div>
           </form>
         </div>

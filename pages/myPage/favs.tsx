@@ -18,9 +18,9 @@ const Favs: NextPage = () => {
   return (
     <>
       <Head>
-        <title>모두의 HOOK | 좋아요 목록</title>
+        <title>modu | 좋아요 목록</title>
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="모두의 HOOK" />
+        <meta property="og:site_name" content="modu" />
         <meta property="og:image" content="/images/modu.png" />
         <meta property="og:url" content="https://starbucks.co.kr" />
       </Head>

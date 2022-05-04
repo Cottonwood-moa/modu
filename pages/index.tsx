@@ -4,19 +4,18 @@ import { useRecoilState } from "recoil";
 import { orderAtom, OrderBy, pageAtom, searchAtom } from "@atom/atom";
 import type { NextPage } from "next";
 import Image from "next/image";
-import { AnimatePresence, motion, useCycle } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import CategoryIcon from "@components/categoryIcon";
 import client from "@libs/server/client";
 import { getSession } from "next-auth/react";
 import { UserSession } from "./api/user/session";
 import useSWRInfinite from "swr/infinite";
-import { Post, PostTags, Tag, User } from "@prisma/client";
-import { useInfiniteScroll } from "@libs/client/useInfiniteScroll";
+import { Post, User } from "@prisma/client";
 import SkeletonCard from "@components/skeletonCard";
 import { cls } from "@libs/client/utils";
 import PostCard from "@components/PostCard";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
 export interface PostWithInclude extends Post {
   user: User;
   postTags: {
@@ -35,6 +34,7 @@ interface SearchForm {
 }
 
 const Home: NextPage = () => {
+  const router = useRouter();
   const [orderBy, setOrderBy] = useRecoilState(orderAtom);
   const [searchChar, setSearchChar] = useRecoilState(searchAtom);
   const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
@@ -74,6 +74,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     setSize(currentPage);
     mutate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchChar, orderBy, mutate]);
   useEffect(() => {
     if (data) {
@@ -82,27 +83,28 @@ const Home: NextPage = () => {
   }, [setMoreLoading, data]);
   useEffect(() => {
     setSize(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
       <Head>
-        <title>모두의 HOOK</title>
+        <title>modu</title>
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="모두의 HOOK" />
-        <meta property="og:title" content="모두의 HOOK" />
+        <meta property="og:site_name" content="modu" />
+        <meta property="og:title" content="modu" />
         <meta property="og:description" content="블라블라" />
         <meta property="og:image" content="/images/modu.png" />
         <meta property="og:url" content="https://starbucks.co.kr" />
         <meta property="twitter:card" content="summary" />
-        <meta property="twitter:site" content="모두의 HOOK" />
-        <meta property="twitter:title" content="모두의 HOOK" />
+        <meta property="twitter:site" content="modu" />
+        <meta property="twitter:title" content="modu" />
         <meta property="twitter:description" content="블라블라" />
         <meta property="twitter:image" content="/images/modu.png" />
         <meta property="twitter:url" content="https://starbucks.co.kr" />
       </Head>
       <Layout>
         {/* main */}
-        <div className="flex h-[30rem] w-full items-center justify-start bg-white dark:bg-slate-800">
+        <div className="flex h-[30rem] w-full items-center justify-start bg-white dark:bg-slate-900">
           <div className="z-[1] space-y-8 p-4">
             <div className="font-[gugi] text-6xl font-bold dark:text-white">
               모두의 HOOK
@@ -113,15 +115,16 @@ const Home: NextPage = () => {
             <div className="flex items-center whitespace-nowrap text-2xl font-bold  dark:text-white ">
               <motion.div
                 whileHover={{ translateX: 50 }}
-                className=" flex cursor-pointer items-center hover:text-[#74b9ff] dark:hover:text-[#74b9ff]"
+                onClick={() => router.push("/trend")}
+                className=" flex cursor-pointer items-center font-[gugi] hover:text-[#2ecc71] dark:hover:text-[#2ecc71]"
               >
-                <span>- npm 패키지 비교하기</span>
+                <span>- npm 트렌드 비교하기</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-20 w-20"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  stroke="#2ecc71"
                   strokeWidth="2"
                 >
                   <path
@@ -151,7 +154,7 @@ const Home: NextPage = () => {
 
         {/* posts */}
         <div>
-          <div className="flex h-[10rem] w-full items-center justify-between space-x-8 bg-white px-8 pt-8 dark:bg-slate-800">
+          <div className="flex h-[10rem] w-full items-center justify-between space-x-8 bg-white px-8 pt-8 dark:bg-slate-900">
             <form
               onSubmit={handleSubmit(onValid)}
               className="flex items-center space-x-4"
@@ -162,7 +165,7 @@ const Home: NextPage = () => {
                   className="h-20 w-20"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="#74b9ff"
+                  stroke="#2ecc71"
                   strokeWidth="3"
                 >
                   <path
@@ -177,7 +180,7 @@ const Home: NextPage = () => {
                 type="text"
                 autoComplete="off"
                 defaultValue={searchChar}
-                className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800 focus:border-b-2 focus:border-blue-300  focus:outline-none focus:ring-0 dark:border-white dark:bg-slate-800 dark:text-white"
+                className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800 focus:border-b-2 focus:border-[#2ecc71]  focus:outline-none focus:ring-0 dark:border-white dark:bg-slate-900 dark:text-white"
               />
               <button className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white">
                 검색
@@ -196,7 +199,7 @@ const Home: NextPage = () => {
                 className={cls(
                   "flex cursor-pointer items-center text-2xl font-bold ",
                   orderBy === OrderBy.favs
-                    ? "text-[#74b9ff]"
+                    ? "text-[#2ecc71]"
                     : "text-gray-800 dark:text-white"
                 )}
               >
@@ -227,7 +230,7 @@ const Home: NextPage = () => {
                 className={cls(
                   "flex cursor-pointer items-center text-2xl font-bold ",
                   orderBy === OrderBy.latest
-                    ? "text-[#74b9ff]"
+                    ? "text-[#2ecc71]"
                     : "text-gray-800 dark:text-white"
                 )}
               >
@@ -250,7 +253,7 @@ const Home: NextPage = () => {
             </div>
           </div>
           <div className="space-x-2 px-8 text-lg font-medium text-gray-600 dark:text-white">
-            <span className="text-[#74b9ff]">✔</span>
+            <span className="text-[#2ecc71]">✔</span>
             <span>제목과 태그를 기반으로 검색합니다.</span>
           </div>
 

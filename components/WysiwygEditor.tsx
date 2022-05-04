@@ -5,9 +5,7 @@ import { TuiEditorWithForwardedProps } from "@components/TuiEditorWrapper";
 import { AnimatePresence, motion } from "framer-motion";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
-import useMutation from "@libs/client/useMutation";
-import PageLoading from "./pageLoading";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { darkModeAtom } from "@atom/atom";
 // import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 interface EditorPropsWithHandlers extends EditorProps {
@@ -102,7 +100,7 @@ const WysiwygEditor: React.FC<Props> = (props) => {
               initial={{ translateX: -200, opacity: 0 }}
               animate={{ translateX: 0, opacity: 1 }}
               exit={{ translateX: -200, opacity: 0 }}
-              className="text-xl font-bold text-[#74b9ff]"
+              className="text-xl font-bold text-[#2ecc71]"
             >
               이미지를 추가하고 있습니다.
             </motion.div>

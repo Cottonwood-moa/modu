@@ -15,17 +15,17 @@ export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
   return (
     <>
       <Head>
-        <title>모두의 HOOK | 로그인</title>
+        <title>modu | 로그인</title>
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="모두의 HOOK" />
-        <meta property="og:title" content={`모두의 HOOK 로그인`} />
-        <meta property="og:description" content={`모두의 HOOK 로그인 페이지`} />
+        <meta property="og:site_name" content="modu" />
+        <meta property="og:title" content={`modu 로그인`} />
+        <meta property="og:description" content={`modu 로그인 페이지`} />
         <meta property="og:image" content="/images/modu.png" />
         <meta property="og:url" content="https://starbucks.co.kr" />
       </Head>
       <div className={isDarkMode ? "dark" : ""}>
         <div
-          className={`flex h-[100vh] w-full items-center justify-center space-x-6 dark:bg-slate-800`}
+          className={`flex h-[100vh] w-full items-center justify-center space-x-6 dark:bg-slate-900`}
         >
           <div className="space-y-4">
             <motion.div

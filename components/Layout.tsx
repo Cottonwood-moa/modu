@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import useUser from "@libs/client/useUser";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -9,7 +9,6 @@ import Link from "next/link";
 import OutsideClickHandler from "react-outside-click-handler";
 import useSWR from "swr";
 import { Notification } from "@prisma/client";
-import ParsingCreatedAt from "@libs/client/parsingCreatedAt";
 import ParsingAgo from "@libs/client/parsingAgo";
 import ImageDelivery from "@libs/client/imageDelivery";
 import { useRecoilState } from "recoil";
@@ -81,8 +80,8 @@ export default function Layout({ children }: LayoutProps) {
   }, [isDarkMode]);
   return (
     <div className={isDarkMode ? "dark" : undefined}>
-      <div className="min-h-[100vh] dark:bg-slate-800">
-        <div className="z-10 flex h-24 w-full  items-center justify-between bg-white px-6 text-lg font-bold dark:bg-slate-800 dark:text-white">
+      <div className="min-h-[100vh] dark:bg-slate-900">
+        <div className="z-10 flex h-24 w-full  items-center justify-between bg-white px-6 text-lg font-bold dark:bg-slate-900 dark:text-white">
           <div
             onClick={onTitleClick}
             className="cursor-pointer font-[Gugi] text-4xl font-bold"
@@ -98,20 +97,20 @@ export default function Layout({ children }: LayoutProps) {
             {!isDarkMode ? (
               <img
                 onClick={darkModeHandle}
-                className="h-16 w-16 cursor-pointer rounded-full bg-white dark:bg-slate-800"
+                className="h-16 w-16 cursor-pointer rounded-full bg-white dark:bg-slate-900"
                 src="https://media0.giphy.com/media/ZCNKNsiPMOo5jr0pBd/200w.webp?cid=ecf05e47gic26w59s7naot5orabvtnpuk0jg8a2ahgn1o5hd&rid=200w.webp&ct=s"
                 alt="light"
               />
             ) : (
               <img
                 onClick={darkModeHandle}
-                className="h-16 w-16 cursor-pointer rounded-full bg-white dark:bg-slate-800"
+                className="h-16 w-16 cursor-pointer rounded-full bg-white dark:bg-slate-900"
                 src="https://media0.giphy.com/media/c2D2388XDMGVwUeD90/200w.webp?cid=ecf05e475h4bg6mfhn1hoclcjibvh39plq0ud72v5k5y39zd&rid=200w.webp&ct=s"
                 alt="dark"
               />
             )}
 
-            <div className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#74b9ff] dark:text-white dark:hover:text-[#74b9ff]">
+            <div className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#2ecc71] dark:text-white dark:hover:text-[#2ecc71]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-8 w-8"
@@ -202,7 +201,7 @@ export default function Layout({ children }: LayoutProps) {
                 ) : (
                   <motion.div
                     onClick={alertOpen}
-                    className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#74b9ff] dark:text-white dark:hover:text-[#74b9ff]"
+                    className="flex cursor-pointer items-center text-gray-800 transition hover:text-[#2ecc71] dark:text-white dark:hover:text-[#2ecc71]"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -229,7 +228,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="flex cursor-pointer items-center text-gray-800 transition dark:text-white">
               {!user ? (
                 <div
-                  className="flex items-center hover:text-[#74b9ff]"
+                  className="flex items-center hover:text-[#2ecc71]"
                   onClick={onLogin}
                 >
                   <svg
@@ -254,7 +253,7 @@ export default function Layout({ children }: LayoutProps) {
                     className="relative z-10 flex items-center"
                     onClick={onInfo}
                   >
-                    <div className="flex items-center hover:text-[#74b9ff]">
+                    <div className="flex items-center hover:text-[#2ecc71]">
                       {user?.image?.includes("https") ? (
                         <Image
                           src={user?.image}
@@ -305,17 +304,17 @@ export default function Layout({ children }: LayoutProps) {
                           className="absolute top-20 right-0 flex w-52 flex-col space-y-6 bg-white p-6 shadow-lg"
                         >
                           <Link href="/myPage/favs">
-                            <a className="text-gray-800 hover:text-[#74b9ff]">
+                            <a className="text-gray-800 hover:text-[#2ecc71]">
                               좋아요 목록
                             </a>
                           </Link>
                           <Link href={`/myPage/${user?.id}`}>
-                            <a className="text-gray-800 hover:text-[#74b9ff]">
+                            <a className="text-gray-800 hover:text-[#2ecc71]">
                               프로필
                             </a>
                           </Link>
                           <div
-                            className="text-gray-800 hover:text-[#74b9ff]"
+                            className="text-gray-800 hover:text-[#2ecc71]"
                             onClick={onSignOut}
                           >
                             로그아웃

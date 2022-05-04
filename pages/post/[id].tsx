@@ -457,60 +457,49 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
   const {
     params: { id },
   } = ctx;
-  try {
-    const post = await client.post.findUnique({
-      where: {
-        id: +id.toString(),
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-          },
+  const post = await client.post.findUnique({
+    where: {
+      id: +id.toString(),
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
         },
-        postTags: {
-          select: {
-            tag: {
-              select: {
-                name: true,
-              },
+      },
+      postTags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
             },
           },
         },
       },
-    });
-    if (!post)
-      return {
-        props: null,
-        redirect: {
-          permanent: false,
-          destination: "/404",
-        },
-      };
-
-    return {
-      props: {
-        id: post?.id,
-        title: post?.title,
-        content: post?.content,
-        userId: post?.user?.id,
-        name: post?.user?.name,
-        avatar: post?.user?.image,
-        tags: post?.postTags,
-        views: post?.views,
-        createdAt: jsonSerialize(post?.createdAt),
-      },
-    };
-  } catch {
-    return {
-      redirect: {
-        props: null,
-        permanent: false,
-        destination: "/500",
-      },
-    };
-  }
+    },
+  });
+  // if (!post)
+  //   return {
+  //     props: null,
+  //     redirect: {
+  //       permanent: false,
+  //       destination: "/404",
+  //     },
+  //   };
+  return {
+    props: {
+      id: post?.id,
+      title: post?.title,
+      content: post?.content,
+      userId: post?.user?.id,
+      name: post?.user?.name,
+      avatar: post?.user?.image,
+      tags: post?.postTags,
+      views: post?.views,
+      createdAt: jsonSerialize(post?.createdAt),
+    },
+  };
 };
 export default PostDetail;

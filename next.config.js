@@ -12,6 +12,7 @@ function interceptStdout(text) {
 // Intercept in dev and prod
 intercept(interceptStdout);
 const nextConfig = {
+  outputFileTracing: false,
   reactStrictMode: true,
   images: {
     domains: [

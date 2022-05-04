@@ -458,7 +458,7 @@ const PostDetail: NextPage<staticProps> = ({
 export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
-    fallback: true,
+    fallback: "blocking",
   };
 };
 export const getStaticProps: GetStaticProps = async (ctx: any) => {

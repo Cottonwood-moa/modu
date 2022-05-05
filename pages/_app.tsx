@@ -3,6 +3,8 @@ import type { AppProps } from "next/app";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import { SWRConfig } from "swr";
 import { SessionProvider } from "next-auth/react";
+import "@fontsource/gugi";
+import "@fontsource/noto-sans-kr";
 const fetcher = (url: string) => fetch(url).then((response) => response.json());
 
 function MyApp({ Component, pageProps }: AppProps) {

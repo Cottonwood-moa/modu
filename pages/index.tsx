@@ -110,7 +110,7 @@ const Home: NextPage = () => {
         {/* main */}
         <div className="flex h-[30rem] w-full items-center justify-start bg-white dark:bg-slate-900">
           <div className="z-[1] space-y-8 p-4">
-            <div className="font-[gugi] text-6xl font-bold dark:text-white">
+            <div className="font-gugi text-6xl font-bold dark:text-white">
               모두의 HOOK
             </div>
             <div className="whitespace-nowrap text-2xl font-bold dark:text-white">
@@ -120,7 +120,7 @@ const Home: NextPage = () => {
               <motion.div
                 whileHover={{ translateX: 50 }}
                 onClick={() => router.push("/trend")}
-                className=" flex cursor-pointer items-center font-[gugi] hover:text-[#2ecc71] dark:hover:text-[#2ecc71]"
+                className=" flex cursor-pointer items-center font-gugi hover:text-[#2ecc71] dark:hover:text-[#2ecc71]"
               >
                 <span>- npm 트렌드 비교하기</span>
                 <svg

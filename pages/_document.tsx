@@ -1,19 +1,15 @@
-import Document, { Head, Html, Main, NextScript } from "next/document";
-// only renders one
-class CustomDocument extends Document {
-  render(): JSX.Element {
+import Document, { Html, Head, Main, NextScript } from "next/document";
+
+class MyDocument extends Document {
+  static async getInitialProps(ctx: any) {
+    const initialProps = await Document.getInitialProps(ctx);
+    return { ...initialProps };
+  }
+
+  render() {
     return (
-      <Html lang="ko">
-        <Head>
-          <link
-            href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap"
-            rel="stylesheet"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Gugi&display=swap"
-            rel="stylesheet"
-          />
-        </Head>
+      <Html>
+        <Head></Head>
         <body>
           <Main />
           <NextScript />
@@ -23,4 +19,4 @@ class CustomDocument extends Document {
   }
 }
 
-export default CustomDocument;
+export default MyDocument;

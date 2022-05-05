@@ -90,6 +90,12 @@ const Write: NextPage<EditProps> = ({
       if (result.isConfirmed) {
         try {
           if (thumbnail && thumbnail.length > 0) {
+            Swal.fire({
+              title: "게시글을 발행중입니다.",
+              imageUrl:
+                "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
+              showConfirmButton: false,
+            });
             const { uploadURL } = await (await fetch(`/api/files`)).json();
             const form = new FormData();
             form.append("file", thumbnail[0]);
@@ -101,42 +107,48 @@ const Write: NextPage<EditProps> = ({
                 body: form,
               })
             ).json();
-            postSubmit({
+            await postSubmit({
               title,
               content,
               thumbnailId: id,
               tags: tags,
-            });
+            }).then(() => Swal.close());
           } else {
+            Swal.fire({
+              title: "게시글을 발행중입니다.",
+              imageUrl:
+                "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
+              showConfirmButton: false,
+            });
             postSubmit({
               title,
               content,
               thumbnailId: prevThumbnail,
               tags: tags,
-            });
+            }).then(() => Swal.close());
           }
           let timerInterval: any;
-          Swal.fire({
-            title: "게시글을 발행 중입니다.",
-            html: "<b></b> milliseconds.",
-            timer: 1200,
-            timerProgressBar: true,
-            didOpen: () => {
-              Swal.showLoading();
-              const b = Swal?.getHtmlContainer()?.querySelector("b");
-              timerInterval = setInterval(() => {
-                // @ts-ignore
-                b.textContent = Swal.getTimerLeft();
-              }, 100);
-            },
-            willClose: () => {
-              clearInterval(timerInterval);
-            },
-          }).then((result) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-            }
-          });
+          // Swal.fire({
+          //   title: "게시글을 발행 중입니다.",
+          //   html: "<b></b> milliseconds.",
+          //   timer: 1200,
+          //   timerProgressBar: true,
+          //   didOpen: () => {
+          //     Swal.showLoading();
+          //     const b = Swal?.getHtmlContainer()?.querySelector("b");
+          //     timerInterval = setInterval(() => {
+          //       // @ts-ignore
+          //       b.textContent = Swal.getTimerLeft();
+          //     }, 100);
+          //   },
+          //   willClose: () => {
+          //     clearInterval(timerInterval);
+          //   },
+          // }).then((result) => {
+          //   /* Read more about handling dismissals below */
+          //   if (result.dismiss === Swal.DismissReason.timer) {
+          //   }
+          // });
         } catch (err: any) {
           Swal.fire({
             icon: "error",

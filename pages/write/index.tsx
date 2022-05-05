@@ -62,8 +62,10 @@ const Write: NextPage = () => {
       if (result.isConfirmed) {
         try {
           if (thumbnail && thumbnail.length > 0) {
-            await Swal.fire({
+            Swal.fire({
               title: "게시글을 발행중입니다.",
+              imageUrl:
+                "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
               showConfirmButton: false,
             });
             const { uploadURL } = await (await fetch(`/api/files`)).json();
@@ -77,23 +79,26 @@ const Write: NextPage = () => {
                 body: form,
               })
             ).json();
-            postSubmit({
+            await postSubmit({
               title,
               content,
               thumbnailId: id,
               tags: tags,
-            });
+            }).then(() => Swal.close());
           } else {
             Swal.fire({
               title: "게시글을 발행중입니다.",
+              imageUrl:
+                "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
+              showConfirmButton: false,
             });
             const defaultThumbnailId = "50983e58-4731-4f42-3a4a-570b1222f400";
-            postSubmit({
+            await postSubmit({
               title,
               content,
               thumbnailId: defaultThumbnailId,
               tags: tags,
-            });
+            }).then(() => Swal.close());
           }
           let timerInterval: any;
           // Swal.fire({
@@ -128,7 +133,7 @@ const Write: NextPage = () => {
             cancelButtonColor: "#475569",
           });
         } finally {
-          Swal.close();
+          // Swal.close();
         }
       }
     });

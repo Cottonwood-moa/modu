@@ -62,7 +62,7 @@ const WysiwygEditor: React.FC<Props> = (props) => {
         <EditorWithForwardedRef
           {...props}
           theme={isDarkMode ? "dark" : "light"}
-          initialValue={initialValue || "hello react editor world!"}
+          initialValue={initialValue || "게시글을 작성해주세요!"}
           previewStyle={previewStyle || "vertical"}
           height={height || "600px"}
           // initialEditType={"wysiwyg"}

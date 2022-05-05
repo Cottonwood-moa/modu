@@ -7,7 +7,10 @@ interface UseMutationState<Type> {
   data?: Type; // 여기의 Type은 결국 enter page의 EnterMutationResult 이다.
   error?: object;
 }
-type UseMutationResult<Type> = [(data: any) => void, UseMutationState<Type>];
+type UseMutationResult<Type> = [
+  (data: any) => Promise<any>,
+  UseMutationState<Type>
+];
 // 제네릭 <Type>은 결국엔 props 같은것 -> useMutation에서 넘어오는 type.
 export default function useMutation<Type = any>(
   url: string,
@@ -19,18 +22,23 @@ export default function useMutation<Type = any>(
     error: undefined,
   });
   function mutation(data: any) {
-    setState((prev) => ({ ...prev, loading: true }));
-    fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json().catch(() => {}))
-      .then((data) => setState((prev) => ({ ...prev, data })))
-      .catch((error) => setState((prev) => ({ ...prev, error })))
-      .finally(() => setState((prev) => ({ ...prev, loading: false })));
+    return new Promise(function (resolve) {
+      setState((prev) => ({ ...prev, loading: true }));
+      fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json().catch(() => {}))
+        .then((data) => setState((prev) => ({ ...prev, data })))
+        .catch((error) => setState((prev) => ({ ...prev, error })))
+        .finally(() => {
+          setState((prev) => ({ ...prev, loading: false }));
+          resolve(null);
+        });
+    });
   }
   return [mutation, { ...state }];
 }

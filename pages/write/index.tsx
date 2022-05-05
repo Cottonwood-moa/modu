@@ -62,6 +62,9 @@ const Write: NextPage = () => {
       if (result.isConfirmed) {
         try {
           if (thumbnail && thumbnail.length > 0) {
+            Swal.fire({
+              title: "게시글을 발행중입니다.",
+            });
             const { uploadURL } = await (await fetch(`/api/files`)).json();
             const form = new FormData();
             form.append("file", thumbnail[0]);
@@ -79,7 +82,11 @@ const Write: NextPage = () => {
               thumbnailId: id,
               tags: tags,
             });
+            Swal.close();
           } else {
+            Swal.fire({
+              title: "게시글을 발행중입니다.",
+            });
             const defaultThumbnailId = "50983e58-4731-4f42-3a4a-570b1222f400";
             postSubmit({
               title,
@@ -87,29 +94,30 @@ const Write: NextPage = () => {
               thumbnailId: defaultThumbnailId,
               tags: tags,
             });
+            Swal.close();
           }
           let timerInterval: any;
-          Swal.fire({
-            title: "게시글을 발행 중입니다.",
-            html: "<b></b> milliseconds.",
-            timer: 1200,
-            timerProgressBar: true,
-            didOpen: () => {
-              Swal.showLoading();
-              const b = Swal?.getHtmlContainer()?.querySelector("b");
-              timerInterval = setInterval(() => {
-                // @ts-ignore
-                b.textContent = Swal.getTimerLeft();
-              }, 100);
-            },
-            willClose: () => {
-              clearInterval(timerInterval);
-            },
-          }).then((result) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-            }
-          });
+          // Swal.fire({
+          //   title: "게시글을 발행 중입니다.",
+          //   html: "<b></b> milliseconds.",
+          //   timer: 1200,
+          //   timerProgressBar: true,
+          //   didOpen: () => {
+          //     Swal.showLoading();
+          //     const b = Swal?.getHtmlContainer()?.querySelector("b");
+          //     timerInterval = setInterval(() => {
+          //       // @ts-ignore
+          //       b.textContent = Swal.getTimerLeft();
+          //     }, 100);
+          //   },
+          //   willClose: () => {
+          //     clearInterval(timerInterval);
+          //   },
+          // }).then((result) => {
+          //   /* Read more about handling dismissals below */
+          //   if (result.dismiss === Swal.DismissReason.timer) {
+          //   }
+          // });
         } catch (err: any) {
           Swal.fire({
             icon: "error",

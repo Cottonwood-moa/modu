@@ -392,55 +392,57 @@ const PostDetail: NextPage<staticProps> = ({
             </div>
           </div>
           {/* post content */}
-          <div className="post-content py-12">
-            <ReactMarkdown
-              className="react-markdown"
-              rehypePlugins={[rehypeRaw]}
-              remarkPlugins={[remarkGfm]}
-              children={content?.replaceAll("\n", "\n\n")}
-              components={{
-                code({ node, inline, className, children, ...props }) {
-                  const match = /language-(\w+)/.exec(className || "");
-                  return !inline && match ? (
-                    <SyntaxHighlighter
-                      children={replaceMultiple(`${String(children)}`, [
-                        { "\n\n": "\n" },
-                      ])}
-                      style={a11yDark}
-                      language={match[1]}
-                      PreTag="main"
-                      {...props}
-                    />
-                  ) : (
-                    <SyntaxHighlighter
-                      children={String(children).replaceAll("\n\n", "\n")}
-                      style={a11yDark}
-                      language="textile"
-                      PreTag="main"
-                      {...props}
-                    />
-                  );
-                },
-                main({ node, children, ...props }) {
-                  return (
-                    // @ts-ignore
-                    <div className="code" {...props}>
-                      {children}
-                    </div>
-                  );
-                },
-                // 인용문
-                blockquote({ node, children, ...props }) {
-                  return (
-                    // @ts-ignore
-                    <div className="block-quote" {...props}>
-                      {children}
-                    </div>
-                  );
-                },
-              }}
-            />
-          </div>
+          {content && (
+            <div className="post-content py-12">
+              <ReactMarkdown
+                className="react-markdown"
+                rehypePlugins={[rehypeRaw]}
+                remarkPlugins={[remarkGfm]}
+                children={content?.replaceAll("\n", "\n\n")}
+                components={{
+                  code({ node, inline, className, children, ...props }) {
+                    const match = /language-(\w+)/.exec(className || "");
+                    return !inline && match ? (
+                      <SyntaxHighlighter
+                        children={replaceMultiple(`${String(children)}`, [
+                          { "\n\n": "\n" },
+                        ])}
+                        style={a11yDark}
+                        language={match[1]}
+                        PreTag="main"
+                        {...props}
+                      />
+                    ) : (
+                      <SyntaxHighlighter
+                        children={String(children).replaceAll("\n\n", "\n")}
+                        style={a11yDark}
+                        language="textile"
+                        PreTag="main"
+                        {...props}
+                      />
+                    );
+                  },
+                  main({ node, children, ...props }) {
+                    return (
+                      // @ts-ignore
+                      <div className="code" {...props}>
+                        {children}
+                      </div>
+                    );
+                  },
+                  // 인용문
+                  blockquote({ node, children, ...props }) {
+                    return (
+                      // @ts-ignore
+                      <div className="block-quote" {...props}>
+                        {children}
+                      </div>
+                    );
+                  },
+                }}
+              />
+            </div>
+          )}
 
           <PostComment
             id={id}

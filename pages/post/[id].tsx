@@ -25,7 +25,6 @@ import ParsingCreatedAt from "@libs/client/parsingCreatedAt";
 import { orderAtom, pageAtom } from "@atom/atom";
 import { useRecoilState } from "recoil";
 import ImageDelivery from "@libs/client/imageDelivery";
-import replaceMultiple from "@libs/client/replaceAllMultiple";
 import numberWithCommas from "@libs/client/numberWithComma";
 import Head from "next/head";
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
@@ -398,15 +397,13 @@ const PostDetail: NextPage<staticProps> = ({
                 className="react-markdown"
                 rehypePlugins={[rehypeRaw]}
                 remarkPlugins={[remarkGfm]}
-                children={content?.replaceAll("\n", "\n\n")}
+                children={content?.replace(/\n/g, "\n\n")}
                 components={{
                   code({ node, inline, className, children, ...props }) {
                     const match = /language-(\w+)/.exec(className || "");
                     return !inline && match ? (
                       <SyntaxHighlighter
-                        children={replaceMultiple(`${String(children)}`, [
-                          { "\n\n": "\n" },
-                        ])}
+                        children={String(children).replace(/\n\n/g, "\n")}
                         style={a11yDark}
                         language={match[1]}
                         PreTag="main"
@@ -414,7 +411,7 @@ const PostDetail: NextPage<staticProps> = ({
                       />
                     ) : (
                       <SyntaxHighlighter
-                        children={String(children).replaceAll("\n\n", "\n")}
+                        children={String(children).replace(/\n\n/g, "\n")}
                         style={a11yDark}
                         language="textile"
                         PreTag="main"

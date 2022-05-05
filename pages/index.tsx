@@ -114,7 +114,7 @@ const Home: NextPage = () => {
               모두의 HOOK
             </div>
             <div className="whitespace-nowrap text-2xl font-bold dark:text-white">
-              개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요. 수정2
+              개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요.
             </div>
             <div className="flex items-center whitespace-nowrap text-2xl font-bold  dark:text-white ">
               <motion.div
@@ -256,7 +256,7 @@ const Home: NextPage = () => {
               </div>
             </div>
           </div>
-          <div className="space-x-2 px-8 text-lg font-medium text-gray-600 dark:text-white">
+          <div className="space-x-2 px-8 text-lg font-bold text-gray-600 dark:text-white">
             <span className="text-[#2ecc71]">✔</span>
             <span>제목과 태그를 기반으로 검색합니다.</span>
           </div>

@@ -62,8 +62,9 @@ const Write: NextPage = () => {
       if (result.isConfirmed) {
         try {
           if (thumbnail && thumbnail.length > 0) {
-            Swal.fire({
+            await Swal.fire({
               title: "게시글을 발행중입니다.",
+              showConfirmButton: false,
             });
             const { uploadURL } = await (await fetch(`/api/files`)).json();
             const form = new FormData();
@@ -82,7 +83,6 @@ const Write: NextPage = () => {
               thumbnailId: id,
               tags: tags,
             });
-            Swal.close();
           } else {
             Swal.fire({
               title: "게시글을 발행중입니다.",
@@ -94,7 +94,6 @@ const Write: NextPage = () => {
               thumbnailId: defaultThumbnailId,
               tags: tags,
             });
-            Swal.close();
           }
           let timerInterval: any;
           // Swal.fire({
@@ -128,6 +127,8 @@ const Write: NextPage = () => {
             denyButtonColor: "#475569",
             cancelButtonColor: "#475569",
           });
+        } finally {
+          Swal.close();
         }
       }
     });

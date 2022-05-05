@@ -496,7 +496,6 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
           permanent: false,
           destination: "/404",
         },
-        notFound: true,
       };
 
     return {
@@ -511,7 +510,6 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
         views: post?.views,
         createdAt: jsonSerialize(post?.createdAt),
       },
-      notFound: true,
     };
   } catch {
     return {

@@ -465,8 +465,9 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
   const {
     params: { id },
   } = ctx;
+  let post;
   try {
-    const post = await client.post.findUnique({
+    post = await client.post.findUnique({
       where: {
         id: +id.toString(),
       },
@@ -497,28 +498,27 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
           destination: "/404",
         },
       };
-
-    return {
-      props: {
-        id: post?.id,
-        title: post?.title,
-        content: post?.content,
-        userId: post?.user?.id,
-        name: post?.user?.name,
-        avatar: post?.user?.image,
-        tags: post?.postTags,
-        views: post?.views,
-        createdAt: jsonSerialize(post?.createdAt),
-      },
-    };
   } catch {
-    return {
-      redirect: {
-        props: null,
-        permanent: false,
-        destination: "/500",
-      },
-    };
+    // return {
+    //   redirect: {
+    //     props: null,
+    //     permanent: false,
+    //     destination: "/500",
+    //   },
+    // };
   }
+  return {
+    props: {
+      id: post?.id,
+      title: post?.title,
+      content: post?.content,
+      userId: post?.user?.id,
+      name: post?.user?.name,
+      avatar: post?.user?.image,
+      tags: post?.postTags,
+      views: post?.views,
+      createdAt: jsonSerialize(post?.createdAt),
+    },
+  };
 };
 export default PostDetail;

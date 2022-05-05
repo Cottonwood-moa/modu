@@ -121,15 +121,24 @@ const Trend: NextPage = () => {
     <>
       <Head>
         <title>modu | npm 트렌드</title>
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="modu" />
-        <meta property="og:title" content="modu npm 트렌드 페이지 입니다." />
+        <meta property="og:type" content="website" key="ogtype" />
+        <meta property="og:site_name" content="modu" key="ogsitename" />
+        <meta
+          property="og:title"
+          content="modu npm 트렌드 페이지 입니다."
+          key="ogtitle"
+        />
         <meta
           property="og:description"
           content="npm에 등록된 패키지의 다운로드 횟수를 차트로 확인할 수 있습니다."
+          key="ogdesc"
         />
-        <meta property="og:image" content="/images/modu.png" />
-        <meta property="og:url" content="https://modu.vercel.app/trend" />
+        <meta property="og:image" content="/images/modu.png" key="ogimage" />
+        <meta
+          property="og:url"
+          content="https://modu.vercel.app/trend"
+          key="ogurl"
+        />
       </Head>
       <Layout>
         {info ? (

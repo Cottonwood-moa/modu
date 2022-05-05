@@ -455,12 +455,6 @@ const PostDetail: NextPage<staticProps> = ({
   );
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-};
 export const getStaticProps: GetStaticProps = async (ctx: any) => {
   const {
     params: { id },
@@ -520,5 +514,11 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
       },
     };
   }
+};
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
 };
 export default PostDetail;

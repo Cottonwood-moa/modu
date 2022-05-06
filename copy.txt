@@ -2,7 +2,7 @@ import Layout from "@components/Layout";
 import Head from "next/head";
 import { useRecoilState } from "recoil";
 import { orderAtom, OrderBy, pageAtom, searchAtom } from "@atom/atom";
-import type { GetStaticProps, NextPage } from "next";
+import type { NextPage } from "next";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -16,7 +16,6 @@ import { cls } from "@libs/client/utils";
 import PostCard from "@components/PostCard";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import jsonSerialize from "@libs/server/jsonSerialize";
 export interface PostWithInclude extends Post {
   user: User;
   postTags: {
@@ -25,53 +24,91 @@ export interface PostWithInclude extends Post {
     };
   }[];
 }
-export interface IProps {
-  postsOrderedFavs: PostWithInclude[];
-  postsOrderedLatest: PostWithInclude[];
-  postsCount: number;
+export interface PostsResponse {
+  ok: boolean;
+  pages: number;
+  posts: PostWithInclude[];
 }
 interface SearchForm {
   search: string;
 }
 
-const Home: NextPage<IProps> = ({
-  postsOrderedFavs,
-  postsOrderedLatest,
-  postsCount,
-}) => {
+const Home: NextPage = () => {
   const router = useRouter();
   const [orderBy, setOrderBy] = useRecoilState(orderAtom);
   const [searchChar, setSearchChar] = useRecoilState(searchAtom);
   const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
+  const [maxPage, setMaxPage] = useState(1);
   const { register, handleSubmit, reset } = useForm<SearchForm>();
   const [moreLoading, setMoreLoading] = useState(false);
   const onValid = ({ search }: SearchForm) => {
     setCurrentPage(1);
     setSearchChar(search);
+    mutate();
+  };
+  const getKey = (pageIndex: number, previousPageData: PostsResponse) => {
+    if (pageIndex === 0 && !previousPageData)
+      return `/api/post?page=1&order=${orderBy}&search=${searchChar}`;
+    if (pageIndex + 1 > previousPageData.pages) return null;
+    return `/api/post?page=${
+      pageIndex + 1
+    }&order=${orderBy}&search=${searchChar}`;
   };
 
+  const { data, setSize, isValidating, mutate } =
+    useSWRInfinite<PostsResponse>(getKey);
   const orderByHandle = (kind: OrderBy) => {
     setOrderBy(kind);
   };
   const searchReset = () => {
     setSearchChar("");
+    mutate();
     reset();
   };
-
+  // useInfiniteScroll을 사용하면 posts가 요청 순서대로 배열로 감싸져서 응답된다.
+  // 배열 벗겨내서 posts내용만 들어있는 배열 하나로 만듬.
+  const posts = data ? data.map((post) => post?.posts).flat() : [];
+  // scroll이 끝에 도달하면 currentpage + 1
   const handleScroll = () => {
     if (
       document.documentElement.scrollTop + window.innerHeight ===
       document.documentElement.scrollHeight
     ) {
+      if (maxPage === currentPage) return;
       setCurrentPage((p) => p + 1);
     }
   };
+  // data가 받아와지면 maxPage 저장
+  useEffect(() => {
+    if (!data) return;
+    setMaxPage(data[0]?.pages + 1);
+  }, [data]);
+
+  // currentpage가 바뀌면 fetch 진행
+  useEffect(() => {
+    if (currentPage === maxPage) return;
+    setMoreLoading(true);
+    setSize(currentPage)
+      .then(() => mutate())
+      .finally(() => setMoreLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setSize, currentPage]);
+
+  // 인기순 최신순 바뀌면 다시 fetch
+  useEffect(() => {
+    setSize(currentPage);
+    mutate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchChar, orderBy, mutate]);
+
+  // 이벤트 리스너에 함수가 등록되면 반응성을 잃어버린다
+  // state가 바뀌면 다시 등록
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [maxPage, currentPage]);
 
   return (
     <>
@@ -249,96 +286,78 @@ const Home: NextPage<IProps> = ({
             <span>제목과 태그를 기반으로 검색합니다.</span>
           </div>
 
-          <div className="mx-12 mt-12 grid grid-cols-2 gap-6  pb-12 xl:grid-cols-3 2xl:grid-cols-4">
-            {postsOrderedFavs?.map((post, index) => {
-              const page = 12 * currentPage;
-              if (index >= page) return;
-              return <PostCard post={post} key={index} />;
-            })}
+          <div className="m-12 grid grid-cols-2 gap-6  xl:grid-cols-3 2xl:grid-cols-4">
+            {!data && isValidating
+              ? Array.from({ length: 8 }, (v, i) => i).map((index) => {
+                  return <SkeletonCard key={index} />;
+                })
+              : posts?.map((post, index) => {
+                  return <PostCard post={post} key={index} />;
+                })}
+          </div>
+          <div className="flex justify-center p-12">
+            {!moreLoading ? (
+              maxPage !== currentPage ? (
+                <motion.div
+                  layoutId="moreButton"
+                  // onClick={() => {
+                  //   setMoreLoading(true);
+                  //   setCurrentPage((prev) => prev + 1);
+                  //   return;
+                  // }}
+                  className=" text-2xl font-bold text-gray-800 dark:text-white"
+                >
+                  더보기
+                </motion.div>
+              ) : (
+                <motion.div
+                  layoutId="moreButton"
+                  transition={{
+                    type: "spring",
+                    damping: 15,
+                  }}
+                  className=" text-2xl font-bold text-gray-800 dark:text-white"
+                >
+                  게시글이 없습니다.
+                </motion.div>
+              )
+            ) : (
+              <motion.div
+                layoutId="moreButton"
+                animate={{ rotate: 360 }}
+                transition={{
+                  type: "spring",
+                  damping: 15,
+                }}
+                className=" text-2xl font-bold text-gray-800 dark:text-white"
+              >
+                로딩중
+              </motion.div>
+            )}
           </div>
         </div>
       </Layout>
     </>
   );
 };
-
-export const getStaticProps: GetStaticProps = async (ctx: any) => {
-  try {
-    const postsOrderedFavs = await client.post.findMany({
-      orderBy: [
-        {
-          favs: {
-            _count: "desc",
-          },
-        },
-      ],
-      select: {
-        id: true,
-        thumnail: true,
-        userId: true,
-        views: true,
-        title: true,
-        user: {
-          select: {
-            name: true,
-            image: true,
-          },
-        },
-        postTags: {
-          select: {
-            tag: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-    });
-    const postsOrderedLatest = await client.post.findMany({
-      orderBy: {
-        id: "desc",
-      },
-      select: {
-        id: true,
-        thumnail: true,
-        userId: true,
-        views: true,
-        title: true,
-        user: {
-          select: {
-            name: true,
-            image: true,
-          },
-        },
-        postTags: {
-          select: {
-            tag: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-    });
-    const postsCount = await client.post.count();
+export const getServerSideProps = async ({ req }: any) => {
+  const session: UserSession = await getSession({ req });
+  if (!session)
     return {
       props: {
-        postsOrderedFavs: jsonSerialize(postsOrderedLatest),
-        postsOrderedLatest: jsonSerialize(postsOrderedLatest),
-        postsCount,
-      },
-      revalidate: 60,
-    };
-  } catch {
-    return {
-      redirect: {
-        props: null,
-        permanent: false,
-        destination: "/500",
+        user: null,
       },
     };
-  }
+  const user = await client.user.findFirst({
+    where: {
+      email: session?.user?.email,
+    },
+  });
+  return {
+    props: {
+      user,
+    },
+  };
 };
+
 export default Home;

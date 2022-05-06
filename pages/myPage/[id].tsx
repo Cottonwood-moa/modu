@@ -314,7 +314,7 @@ const Profile: NextPage<Props> = () => {
         {!data ? (
           <ProfileSkeleton></ProfileSkeleton>
         ) : (
-          <div className=" flex  h-[100vh] w-full flex-col items-center space-y-12 dark:text-white">
+          <div className=" flex  min-h-[100vh] w-full flex-col items-center space-y-12 dark:text-white">
             {/* {loadingState ? <PageLoading /> : null} */}
             {/* 프로필 사진 */}
             {editMode ? (

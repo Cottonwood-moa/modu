@@ -250,11 +250,43 @@ const Home: NextPage<IProps> = ({
           </div>
 
           <div className="mx-12 mt-12 grid grid-cols-2 gap-6  pb-12 xl:grid-cols-3 2xl:grid-cols-4">
-            {postsOrderedFavs?.map((post, index) => {
-              const page = 12 * currentPage;
-              if (index >= page) return;
-              return <PostCard post={post} key={index} />;
-            })}
+            {orderBy === OrderBy.favs
+              ? postsOrderedFavs?.map((post, index) => {
+                  const page = 12 * currentPage;
+                  if (index >= page) return;
+                  if (searchChar) {
+                    if (post?.title?.includes(searchChar)) {
+                      return <PostCard post={post} key={index} />;
+                    } else {
+                      const tags = post?.postTags?.map((tag) => {
+                        return tag?.tag?.name;
+                      });
+                      if (tags?.includes(searchChar)) {
+                        return <PostCard post={post} key={index} />;
+                      }
+                    }
+                  } else {
+                    return <PostCard post={post} key={index} />;
+                  }
+                })
+              : postsOrderedLatest?.map((post, index) => {
+                  const page = 12 * currentPage;
+                  if (index >= page) return;
+                  if (searchChar) {
+                    if (post?.title?.includes(searchChar)) {
+                      return <PostCard post={post} key={index} />;
+                    } else {
+                      const tags = post?.postTags?.map((tag) => {
+                        return tag?.tag?.name;
+                      });
+                      if (tags?.includes(searchChar)) {
+                        return <PostCard post={post} key={index} />;
+                      }
+                    }
+                  } else {
+                    return <PostCard post={post} key={index} />;
+                  }
+                })}
           </div>
         </div>
       </Layout>

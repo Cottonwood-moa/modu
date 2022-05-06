@@ -69,7 +69,6 @@ async function handler(
         })
       );
       await res.unstable_revalidate(`/post/${postId}`);
-      await res.unstable_revalidate(`/`);
       return res.json({ ok: true });
     }
     const TempPost = await client.post.create({
@@ -121,7 +120,6 @@ async function handler(
         id: TempPost.id,
       },
     });
-    await res.unstable_revalidate(`/post/${post?.id}`);
     await res.unstable_revalidate(`/`);
     return res.json({
       ok: true,

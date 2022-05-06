@@ -208,13 +208,16 @@ const PostDetail: NextPage<staticProps> = ({
         <meta property="og:title" content={title} />
         <meta property="og:description" content={content} />
         <meta property="og:image" content="/images/modu.png" />
-        <meta property="og:url" content="https://modu.vercel.app" />
+        <meta property="og:url" content={`https://modu.vercel.app/${id}`} />
         <meta property="twitter:card" content="summary" />
         <meta property="twitter:site" content="modu" />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={content} />
         <meta property="twitter:image" content="/images/modu.png" />
-        <meta property="twitter:url" content="https://modu.vercel.app" />
+        <meta
+          property="twitter:url"
+          content={`https://modu.vercel.app/${id}`}
+        />
       </Head>
       <Layout>
         <motion.div

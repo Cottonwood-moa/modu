@@ -16,6 +16,7 @@ import { cls } from "@libs/client/utils";
 import PostCard from "@components/PostCard";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import { useInfiniteScroll } from "@libs/client/useInfiniteScroll";
 export interface PostWithInclude extends Post {
   user: User;
   postTags: {
@@ -66,9 +67,14 @@ const Home: NextPage = () => {
   };
   const posts = data ? data.map((post) => post?.posts).flat() : [];
   // const page = useInfiniteScroll();
+  const page = useInfiniteScroll();
+  console.log("currentpage", currentPage);
   useEffect(() => {
     if (isValidating) return;
-    setSize(currentPage).then(() => mutate());
+    setMoreLoading(true);
+    setSize(currentPage)
+      .then(() => mutate())
+      .finally(() => setMoreLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setSize, currentPage]);
   useEffect(() => {
@@ -85,6 +91,7 @@ const Home: NextPage = () => {
     setSize(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  console.log(data);
   return (
     <>
       <Head>
@@ -270,23 +277,23 @@ const Home: NextPage = () => {
                   return <PostCard post={post} key={index} />;
                 })}
           </div>
-          <div
-            className="flex justify-center p-12"
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-          >
+          <div className="flex justify-center p-12">
             {!moreLoading ? (
               !(data && data[0]?.pages <= currentPage) ? (
                 <motion.div
                   layoutId="moreButton"
-                  onClick={() => setMoreLoading(true)}
-                  className="cursor-pointer text-2xl font-bold text-gray-800 dark:text-white"
+                  // onClick={() => {
+                  //   setMoreLoading(true);
+                  //   setCurrentPage((prev) => prev + 1);
+                  //   return;
+                  // }}
+                  className=" text-2xl font-bold text-gray-800 dark:text-white"
                 >
                   더보기
                 </motion.div>
               ) : (
                 <motion.div
                   layoutId="moreButton"
-                  animate={{ rotate: 360 }}
                   transition={{
                     type: "spring",
                     damping: 15,

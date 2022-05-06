@@ -7,16 +7,13 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import client from "@libs/server/client";
-import { getSession } from "next-auth/react";
-import { UserSession } from "./api/user/session";
-import useSWRInfinite from "swr/infinite";
 import { Post, User } from "@prisma/client";
-import SkeletonCard from "@components/skeletonCard";
 import { cls } from "@libs/client/utils";
 import PostCard from "@components/PostCard";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import jsonSerialize from "@libs/server/jsonSerialize";
+import LazyHydrate from "react-lazy-hydration";
 export interface PostWithInclude extends Post {
   user: User;
   postTags: {
@@ -256,17 +253,29 @@ const Home: NextPage<IProps> = ({
                   if (index >= page) return;
                   if (searchChar) {
                     if (post?.title?.includes(searchChar)) {
-                      return <PostCard post={post} key={index} />;
+                      return (
+                        <LazyHydrate whenVisible key={index}>
+                          <PostCard post={post} />
+                        </LazyHydrate>
+                      );
                     } else {
                       const tags = post?.postTags?.map((tag) => {
                         return tag?.tag?.name;
                       });
                       if (tags?.includes(searchChar)) {
-                        return <PostCard post={post} key={index} />;
+                        return (
+                          <LazyHydrate whenVisible key={index}>
+                            <PostCard post={post} />
+                          </LazyHydrate>
+                        );
                       }
                     }
                   } else {
-                    return <PostCard post={post} key={index} />;
+                    return (
+                      <LazyHydrate whenVisible key={index}>
+                        <PostCard post={post} />
+                      </LazyHydrate>
+                    );
                   }
                 })
               : postsOrderedLatest?.map((post, index) => {
@@ -274,17 +283,29 @@ const Home: NextPage<IProps> = ({
                   if (index >= page) return;
                   if (searchChar) {
                     if (post?.title?.includes(searchChar)) {
-                      return <PostCard post={post} key={index} />;
+                      return (
+                        <LazyHydrate whenVisible key={index}>
+                          <PostCard post={post} />
+                        </LazyHydrate>
+                      );
                     } else {
                       const tags = post?.postTags?.map((tag) => {
                         return tag?.tag?.name;
                       });
                       if (tags?.includes(searchChar)) {
-                        return <PostCard post={post} key={index} />;
+                        return (
+                          <LazyHydrate whenVisible key={index}>
+                            <PostCard post={post} />
+                          </LazyHydrate>
+                        );
                       }
                     }
                   } else {
-                    return <PostCard post={post} key={index} />;
+                    return (
+                      <LazyHydrate whenVisible key={index}>
+                        <PostCard post={post} />
+                      </LazyHydrate>
+                    );
                   }
                 })}
           </div>

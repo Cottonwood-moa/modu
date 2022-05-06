@@ -84,42 +84,43 @@ async function handler(
         },
       },
     });
-    await Promise.all(
-      tags.map(async (tag: any) => {
-        // 전달 받은 태그를 돌려서 tag모델에 있는 지 확인하고 없으면 만듬
-        const alreayExists = await client.tag.findFirst({
-          where: {
-            name: tag,
-          },
-        });
-        if (!alreayExists) {
-          await client.tag.create({
-            data: {
-              name: tag,
-            },
-          });
-        }
-        await client.postTags.create({
-          data: {
-            post: {
-              connect: {
-                id: TempPost.id,
-              },
-            },
-            tag: {
-              connect: {
-                name: tag,
-              },
-            },
-          },
-        });
-      })
-    );
+    // await Promise.all(
+    //   tags.map(async (tag: any) => {
+    //     // 전달 받은 태그를 돌려서 tag모델에 있는 지 확인하고 없으면 만듬
+    //     const alreayExists = await client.tag.findFirst({
+    //       where: {
+    //         name: tag,
+    //       },
+    //     });
+    //     if (!alreayExists) {
+    //       await client.tag.create({
+    //         data: {
+    //           name: tag,
+    //         },
+    //       });
+    //     }
+    //     await client.postTags.create({
+    //       data: {
+    //         post: {
+    //           connect: {
+    //             id: TempPost.id,
+    //           },
+    //         },
+    //         tag: {
+    //           connect: {
+    //             name: tag,
+    //           },
+    //         },
+    //       },
+    //     });
+    //   })
+    // );
     const post = await client.post.findUnique({
       where: {
         id: TempPost.id,
       },
     });
+    await res.unstable_revalidate(`/`);
     return res.json({
       ok: true,
       post,

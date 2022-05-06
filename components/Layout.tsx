@@ -79,7 +79,7 @@ export default function Layout({ children }: LayoutProps) {
     localStorage.setItem("isDark", JSON.stringify(isDarkMode));
   }, [isDarkMode]);
   return (
-    <div className={isDarkMode ? "dark" : undefined}>
+    <div className={isDarkMode ? "dark" : undefined} suppressHydrationWarning>
       <div className="min-h-[100vh] dark:bg-slate-900">
         <div className="z-10 flex h-24 w-full  items-center justify-between bg-white px-6 text-lg font-bold dark:bg-slate-900 dark:text-white">
           <div

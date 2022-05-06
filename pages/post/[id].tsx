@@ -2,22 +2,22 @@
 /* eslint-disable react/no-children-prop */
 // SWR + SSR
 import Layout from "@components/Layout";
+import dynamic from "next/dynamic";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Head from "next/head";
 import client from "@libs/server/client";
 import { Post, Tag, User } from "@prisma/client";
+import { motion } from "framer-motion";
 import jsonSerialize from "@libs/server/jsonSerialize";
-import PostComment from "@components/PostComment";
+// import PostComment from "@components/PostComment";
 // import ReactMarkdown from "react-markdown";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import PageLoading from "@components/pageLoading";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import Image from "next/image";
 import useSWR, { useSWRConfig } from "swr";
 import useUser from "@libs/client/useUser";
 import useMutation from "@libs/client/useMutation";
@@ -27,8 +27,10 @@ import { orderAtom, pageAtom } from "@atom/atom";
 import { useRecoilState } from "recoil";
 import ImageDelivery from "@libs/client/imageDelivery";
 import numberWithCommas from "@libs/client/numberWithComma";
-import Head from "next/head";
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
+const PostComment = dynamic(() => import("@components/PostComment"), {
+  ssr: false,
+});
 export interface PostWithUser extends Post {
   user: User;
 }

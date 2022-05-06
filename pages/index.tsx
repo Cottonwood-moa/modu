@@ -325,7 +325,7 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
     const postsCount = await client.post.count();
     return {
       props: {
-        postsOrderedFavs: jsonSerialize(postsOrderedLatest),
+        postsOrderedFavs: jsonSerialize(postsOrderedFavs),
         postsOrderedLatest: jsonSerialize(postsOrderedLatest),
         postsCount,
       },

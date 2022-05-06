@@ -86,7 +86,6 @@ const Home: NextPage = () => {
 
   // currentpage가 바뀌면 fetch 진행
   useEffect(() => {
-    if (isValidating) return;
     if (currentPage === maxPage) return;
     setMoreLoading(true);
     setSize(currentPage)

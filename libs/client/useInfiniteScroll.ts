@@ -2,7 +2,7 @@ import { pageAtom } from "@atom/atom";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 interface IProps {
-  pages?: number;
+  pages: number;
 }
 export function useInfiniteScroll({ pages }: IProps) {
   const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
@@ -12,6 +12,7 @@ export function useInfiniteScroll({ pages }: IProps) {
       document.documentElement.scrollHeight
     ) {
       console.log(pages, currentPage);
+
       if (pages === currentPage) return;
       setCurrentPage((p) => p + 1);
     }

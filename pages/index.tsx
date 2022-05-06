@@ -16,7 +16,6 @@ import { cls } from "@libs/client/utils";
 import PostCard from "@components/PostCard";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { useInfiniteScroll } from "@libs/client/useInfiniteScroll";
 export interface PostWithInclude extends Post {
   user: User;
   postTags: {
@@ -39,6 +38,7 @@ const Home: NextPage = () => {
   const [orderBy, setOrderBy] = useRecoilState(orderAtom);
   const [searchChar, setSearchChar] = useRecoilState(searchAtom);
   const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
+  const [maxPage, setMaxPage] = useState(1);
   const { register, handleSubmit, reset } = useForm<SearchForm>();
   const [moreLoading, setMoreLoading] = useState(false);
   const onValid = ({ search }: SearchForm) => {
@@ -66,10 +66,23 @@ const Home: NextPage = () => {
     reset();
   };
   const posts = data ? data.map((post) => post?.posts).flat() : [];
-  const page = useInfiniteScroll({ pages: data ? data[0]?.pages : undefined });
-  console.log("currentpage", currentPage);
+  const handleScroll = () => {
+    if (
+      document.documentElement.scrollTop + window.innerHeight ===
+      document.documentElement.scrollHeight
+    ) {
+      console.log("maxPage", maxPage, "currentPage", currentPage);
+      if (maxPage === currentPage) return;
+      setCurrentPage((p) => p + 1);
+    }
+  };
+  useEffect(() => {
+    if (!data) return;
+    setMaxPage(data[0]?.pages + 1);
+  }, [data]);
   useEffect(() => {
     if (isValidating) return;
+    if (currentPage === maxPage) return;
     setMoreLoading(true);
     setSize(currentPage)
       .then(() => mutate())
@@ -90,6 +103,13 @@ const Home: NextPage = () => {
     setSize(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [maxPage, currentPage]);
+
   return (
     <>
       <Head>
@@ -277,7 +297,7 @@ const Home: NextPage = () => {
           </div>
           <div className="flex justify-center p-12">
             {!moreLoading ? (
-              !(data && data[0]?.pages <= currentPage) ? (
+              maxPage !== currentPage ? (
                 <motion.div
                   layoutId="moreButton"
                   // onClick={() => {

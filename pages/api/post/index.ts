@@ -15,6 +15,8 @@ async function handler(
       email: session?.user?.email,
     },
   });
+  const takePostNumber = 12;
+  // ===========================================================
   if (req.method === "POST") {
     const {
       body: { title, content, thumbnailId, tags },
@@ -154,10 +156,12 @@ async function handler(
             ],
           },
         });
-        const pagesWithSearch = Math.ceil(postsCountWithSearch / 8);
+        const pagesWithSearch = Math.ceil(
+          postsCountWithSearch / takePostNumber
+        );
         const posts = await client.post.findMany({
-          take: 8,
-          skip: 8 * (+page - 1),
+          take: takePostNumber,
+          skip: takePostNumber * (+page - 1),
           where: {
             OR: [
               {
@@ -224,10 +228,10 @@ async function handler(
         // post 전체 갯수
         const postsCount = await client.post.count();
         // 페이지 전체 갯수
-        const pages = Math.ceil(postsCount / 8);
+        const pages = Math.ceil(postsCount / takePostNumber);
         const posts = await client.post.findMany({
-          take: 8,
-          skip: 8 * (+page - 1),
+          take: takePostNumber,
+          skip: takePostNumber * (+page - 1),
           orderBy: [
             {
               favs: {
@@ -295,10 +299,12 @@ async function handler(
             ],
           },
         });
-        const pagesWithSearch = Math.ceil(postsCountWithSearch / 8);
+        const pagesWithSearch = Math.ceil(
+          postsCountWithSearch / takePostNumber
+        );
         const posts = await client.post.findMany({
-          take: 8,
-          skip: 8 * (+page - 1),
+          take: takePostNumber,
+          skip: takePostNumber * (+page - 1),
           where: {
             OR: [
               {
@@ -362,10 +368,10 @@ async function handler(
         // post 전체 갯수
         const postsCount = await client.post.count();
         // 페이지 전체 갯수
-        const pages = Math.ceil(postsCount / 8);
+        const pages = Math.ceil(postsCount / takePostNumber);
         const posts = await client.post.findMany({
-          take: 8,
-          skip: 8 * (+page - 1),
+          take: takePostNumber,
+          skip: takePostNumber * (+page - 1),
           orderBy: {
             id: "desc",
           },

@@ -514,7 +514,7 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
 export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: true,
   };
 };
 export default PostDetail;

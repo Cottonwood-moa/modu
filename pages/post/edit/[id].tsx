@@ -147,7 +147,7 @@ const Write: NextPage<EditProps> = ({
   }, [router, user, userId]);
   useEffect(() => {
     if (data && data?.ok) {
-      router.replace(`/post/${id}`);
+      router.replace(`/post/${id}`).then(() => router.reload());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, router]);

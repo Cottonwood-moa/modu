@@ -12,7 +12,7 @@ function interceptStdout(text) {
 // Intercept in dev and prod
 intercept(interceptStdout);
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     domains: [
       "imagedelivery.net",

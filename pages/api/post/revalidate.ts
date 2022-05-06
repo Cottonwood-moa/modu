@@ -5,10 +5,20 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  await res.unstable_revalidate(`/`);
-  res.json({
-    ok: true,
-  });
+  const { query: postId } = req;
+  try {
+    if (postId) {
+      await res.unstable_revalidate(`/post/${postId}`);
+      return res.json({ ok: true });
+    } else {
+      await res.unstable_revalidate(`/`);
+      return res.json({ ok: true });
+    }
+  } catch (err) {
+    // If there was an error, Next.js will continue
+    // to show the last successfully generated page
+    return res.status(500).json({ ok: false });
+  }
 }
 
 export default withHandler({

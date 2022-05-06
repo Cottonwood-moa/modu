@@ -67,7 +67,7 @@ const Write: NextPage<EditProps> = ({
   );
   const revalidateHandler = async () => {
     const data = await (
-      await fetch(`/api/post/revalidatePostDetail?postId=${id}`)
+      await fetch(`/api/post/revalidate?postId=${id}`)
     ).json();
     console.log(data);
     if (data.ok) router.replace(`/post/${id}`);

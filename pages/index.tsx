@@ -40,8 +40,8 @@ const Home: NextPage<IProps> = ({
   const [orderBy, setOrderBy] = useRecoilState(orderAtom);
   const [searchChar, setSearchChar] = useRecoilState(searchAtom);
   const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
+  const [prevent, setPrevent] = useState(false);
   const { register, handleSubmit, reset } = useForm<SearchForm>();
-  const [moreLoading, setMoreLoading] = useState(false);
   const onValid = ({ search }: SearchForm) => {
     setCurrentPage(1);
     setSearchChar(search);
@@ -63,6 +63,7 @@ const Home: NextPage<IProps> = ({
       setCurrentPage((p) => p + 1);
     }
   };
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -93,6 +94,7 @@ const Home: NextPage<IProps> = ({
       </Head>
       <Layout>
         {/* main */}
+
         <div className="flex h-[30rem] w-full items-center justify-start bg-white dark:bg-slate-900">
           <div className="z-[1] space-y-8 p-4">
             <div className="font-gugi text-6xl font-bold dark:text-white">
@@ -142,174 +144,176 @@ const Home: NextPage<IProps> = ({
         {/* search */}
 
         {/* posts */}
-        <div>
-          <div className="flex h-[10rem] w-full items-center justify-between space-x-8 bg-white px-8 pt-8 dark:bg-slate-900">
-            <form
-              onSubmit={handleSubmit(onValid)}
-              className="flex items-center space-x-4"
-            >
-              <label>
-                <motion.svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-20 w-20"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="#2ecc71"
-                  strokeWidth="3"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </motion.svg>
-              </label>
-              <input
-                {...register("search")}
-                type="text"
-                autoComplete="off"
-                defaultValue={searchChar}
-                className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800 focus:border-b-2 focus:border-[#2ecc71]  focus:outline-none focus:ring-0 dark:border-white dark:bg-slate-900 dark:text-white"
-              />
-              <button className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white">
-                검색
-              </button>
-              <div
-                onClick={searchReset}
-                className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white"
+        <LazyHydrate whenVisible>
+          <div>
+            <div className="flex h-[10rem] w-full items-center justify-between space-x-8 bg-white px-8 pt-8 dark:bg-slate-900">
+              <form
+                onSubmit={handleSubmit(onValid)}
+                className="flex items-center space-x-4"
               >
-                초기화
-              </div>
-            </form>
+                <label>
+                  <motion.svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-20 w-20"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="#2ecc71"
+                    strokeWidth="3"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </motion.svg>
+                </label>
+                <input
+                  {...register("search")}
+                  type="text"
+                  autoComplete="off"
+                  defaultValue={searchChar}
+                  className="w-[50%] appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-2xl font-bold text-gray-800 focus:border-b-2 focus:border-[#2ecc71]  focus:outline-none focus:ring-0 dark:border-white dark:bg-slate-900 dark:text-white"
+                />
+                <button className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white">
+                  검색
+                </button>
+                <div
+                  onClick={searchReset}
+                  className="cursor-pointer whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white"
+                >
+                  초기화
+                </div>
+              </form>
 
-            <div className="flex space-x-4">
-              <div
-                onClick={() => orderByHandle(OrderBy.favs)}
-                className={cls(
-                  "flex cursor-pointer items-center text-2xl font-bold ",
-                  orderBy === OrderBy.favs
-                    ? "text-[#2ecc71]"
-                    : "text-gray-800 dark:text-white"
-                )}
-              >
-                {/* orderBy */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
+              <div className="flex space-x-4">
+                <div
+                  onClick={() => orderByHandle(OrderBy.favs)}
+                  className={cls(
+                    "flex cursor-pointer items-center text-2xl font-bold ",
+                    orderBy === OrderBy.favs
+                      ? "text-[#2ecc71]"
+                      : "text-gray-800 dark:text-white"
+                  )}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"
-                  />
-                </svg>
-                <span className="whitespace-nowrap">인기</span>
-              </div>
-              <div
-                onClick={() => orderByHandle(OrderBy.latest)}
-                className={cls(
-                  "flex cursor-pointer items-center text-2xl font-bold ",
-                  orderBy === OrderBy.latest
-                    ? "text-[#2ecc71]"
-                    : "text-gray-800 dark:text-white"
-                )}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
+                  {/* orderBy */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"
+                    />
+                  </svg>
+                  <span className="whitespace-nowrap">인기</span>
+                </div>
+                <div
+                  onClick={() => orderByHandle(OrderBy.latest)}
+                  className={cls(
+                    "flex cursor-pointer items-center text-2xl font-bold ",
+                    orderBy === OrderBy.latest
+                      ? "text-[#2ecc71]"
+                      : "text-gray-800 dark:text-white"
+                  )}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                <span className="whitespace-nowrap">최신</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span className="whitespace-nowrap">최신</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="space-x-2 px-8 text-lg font-bold text-gray-600 dark:text-white">
-            <span className="text-[#2ecc71]">✔</span>
-            <span>제목과 태그를 기반으로 검색합니다.</span>
-          </div>
+            <div className="space-x-2 px-8 text-lg font-bold text-gray-600 dark:text-white">
+              <span className="text-[#2ecc71]">✔</span>
+              <span>제목과 태그를 기반으로 검색합니다.</span>
+            </div>
 
-          <div className="mx-12 mt-12 grid grid-cols-2 gap-6  pb-12 xl:grid-cols-3 2xl:grid-cols-4">
-            {orderBy === OrderBy.favs
-              ? postsOrderedFavs?.map((post, index) => {
-                  const page = 12 * currentPage;
-                  if (index >= page) return;
-                  if (searchChar) {
-                    if (post?.title?.includes(searchChar)) {
-                      return (
-                        <LazyHydrate whenVisible key={index}>
-                          <PostCard post={post} />
-                        </LazyHydrate>
-                      );
-                    } else {
-                      const tags = post?.postTags?.map((tag) => {
-                        return tag?.tag?.name;
-                      });
-                      if (tags?.includes(searchChar)) {
+            <div className="mx-12 mt-12 grid grid-cols-2 gap-6  pb-12 xl:grid-cols-3 2xl:grid-cols-4">
+              {orderBy === OrderBy.favs
+                ? postsOrderedFavs?.map((post, index) => {
+                    const page = 12 * currentPage;
+                    if (index >= page) return;
+                    if (searchChar) {
+                      if (post?.title?.includes(searchChar)) {
                         return (
                           <LazyHydrate whenVisible key={index}>
                             <PostCard post={post} />
                           </LazyHydrate>
                         );
+                      } else {
+                        const tags = post?.postTags?.map((tag) => {
+                          return tag?.tag?.name;
+                        });
+                        if (tags?.includes(searchChar)) {
+                          return (
+                            <LazyHydrate whenVisible key={index}>
+                              <PostCard post={post} />
+                            </LazyHydrate>
+                          );
+                        }
                       }
-                    }
-                  } else {
-                    return (
-                      <LazyHydrate whenVisible key={index}>
-                        <PostCard post={post} />
-                      </LazyHydrate>
-                    );
-                  }
-                })
-              : postsOrderedLatest?.map((post, index) => {
-                  const page = 12 * currentPage;
-                  if (index >= page) return;
-                  if (searchChar) {
-                    if (post?.title?.includes(searchChar)) {
+                    } else {
                       return (
                         <LazyHydrate whenVisible key={index}>
                           <PostCard post={post} />
                         </LazyHydrate>
                       );
-                    } else {
-                      const tags = post?.postTags?.map((tag) => {
-                        return tag?.tag?.name;
-                      });
-                      if (tags?.includes(searchChar)) {
+                    }
+                  })
+                : postsOrderedLatest?.map((post, index) => {
+                    const page = 12 * currentPage;
+                    if (index >= page) return;
+                    if (searchChar) {
+                      if (post?.title?.includes(searchChar)) {
                         return (
                           <LazyHydrate whenVisible key={index}>
                             <PostCard post={post} />
                           </LazyHydrate>
                         );
+                      } else {
+                        const tags = post?.postTags?.map((tag) => {
+                          return tag?.tag?.name;
+                        });
+                        if (tags?.includes(searchChar)) {
+                          return (
+                            <LazyHydrate whenVisible key={index}>
+                              <PostCard post={post} />
+                            </LazyHydrate>
+                          );
+                        }
                       }
+                    } else {
+                      return (
+                        <LazyHydrate whenVisible key={index}>
+                          <PostCard post={post} />
+                        </LazyHydrate>
+                      );
                     }
-                  } else {
-                    return (
-                      <LazyHydrate whenVisible key={index}>
-                        <PostCard post={post} />
-                      </LazyHydrate>
-                    );
-                  }
-                })}
+                  })}
+            </div>
           </div>
-        </div>
+        </LazyHydrate>
       </Layout>
     </>
   );

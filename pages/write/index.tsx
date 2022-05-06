@@ -98,7 +98,9 @@ const Write: NextPage = () => {
               content,
               thumbnailId: defaultThumbnailId,
               tags: tags,
-            }).then(() => Swal.close());
+            })
+              .then(() => Swal.close())
+              .finally(() => fetch(`/api/post/revalidate`));
           }
         } catch (err: any) {
           Swal.fire({

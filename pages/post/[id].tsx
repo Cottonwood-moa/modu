@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-children-prop */
 // SWR + SSR
 import Layout from "@components/Layout";
@@ -352,18 +353,14 @@ const PostDetail: NextPage<staticProps> = ({
                 onClick={() => router.push(`/myPage/${userId}`)}
               >
                 {avatar.includes("https") ? (
-                  <Image
+                  <img
                     src={avatar}
-                    width={48}
-                    height={48}
                     className="h-12 w-12 rounded-full bg-slate-600"
                     alt=""
                   />
                 ) : (
-                  <Image
+                  <img
                     src={ImageDelivery(avatar, "avatar")}
-                    width={48}
-                    height={48}
                     className="h-12 w-12 rounded-full bg-slate-600"
                     alt=""
                   />

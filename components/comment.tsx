@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 import ParsingCreatedAt from "@libs/client/parsingCreatedAt";
 import OutsideClickHandler from "react-outside-click-handler";
@@ -129,24 +130,20 @@ export default function CommentCard({
         {/* comment profile */}
         <div className="flex items-center space-x-6">
           {comment?.user?.image?.includes("https") ? (
-            <Image
+            <img
               src={
                 comment?.user?.image ? comment?.user?.image : "/images/modu.png"
               }
-              width={48}
-              height={48}
               className="rounded-full"
               alt=""
             />
           ) : (
-            <Image
+            <img
               src={
                 comment?.user?.image
                   ? ImageDelivery(comment?.user?.image)
                   : "/images/modu.png"
               }
-              width={48}
-              height={48}
               className="h-12 w-12 rounded-full bg-slate-600"
               alt=""
             />
@@ -237,26 +234,22 @@ export default function CommentCard({
               {/* recomment profile */}
               <div className="flex items-center space-x-6">
                 {reply?.user?.image?.includes("https") ? (
-                  <Image
+                  <img
                     src={
                       reply?.user?.image
                         ? reply?.user?.image
                         : "/images/react.png"
                     }
-                    width={48}
-                    height={48}
                     className="rounded-full"
                     alt=""
                   />
                 ) : (
-                  <Image
+                  <img
                     src={
                       reply?.user?.image
                         ? ImageDelivery(reply?.user?.image)
                         : "/images/react.png"
                     }
-                    width={48}
-                    height={48}
                     className="h-12 w-12 rounded-full bg-slate-600"
                     alt=""
                   />

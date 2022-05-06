@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import ImageDelivery from "@libs/client/imageDelivery";
 import numberWithCommas from "@libs/client/numberWithComma";
 import { motion } from "framer-motion";
@@ -33,10 +34,9 @@ export default function PostCard({ post }: IProps) {
       onClick={() => toPostDetail(post.id)}
     >
       <div className="relative h-[80%] w-full">
-        <Image
-          className="rounded-md"
+        <img
+          className="h-full w-full rounded-md"
           src={`https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${post.thumnail}/thumbnail`}
-          layout={"fill"}
           alt=""
         />
       </div>
@@ -51,22 +51,18 @@ export default function PostCard({ post }: IProps) {
       <div className="relative flex w-full items-center text-gray-800 dark:text-white">
         <div className="flex items-center space-x-2">
           {post?.user?.image?.includes("https") ? (
-            <Image
+            <img
               src={post?.user?.image}
-              width={48}
-              height={48}
               className="h-12 w-12 rounded-full bg-slate-600"
               alt=""
             />
           ) : (
-            <Image
+            <img
               src={
                 post?.user?.image
                   ? ImageDelivery(post?.user?.image)
                   : "/images/modu.png"
               }
-              width={48}
-              height={48}
               className="h-12 w-12 rounded-full bg-slate-600"
               alt=""
             />

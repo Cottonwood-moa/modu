@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import type { NextPage } from "next";
 import { AppProvider } from "next-auth/providers";
 import { getProviders, signIn, useSession } from "next-auth/react";
@@ -62,9 +63,8 @@ export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
                   })
                 }
               >
-                <Image
-                  width={120}
-                  height={120}
+                <img
+                  className="h-32 w-32"
                   src={`/images/${provider.name.toLowerCase()}.png`}
                   alt=""
                 />

@@ -255,22 +255,18 @@ export default function Layout({ children }: LayoutProps) {
                   >
                     <div className="flex items-center hover:text-[#2ecc71]">
                       {user?.image?.includes("https") ? (
-                        <Image
+                        <img
                           src={user?.image}
-                          width={48}
-                          height={48}
                           className="h-12 w-12 rounded-full bg-slate-600"
                           alt=""
                         />
                       ) : (
-                        <Image
+                        <img
                           src={
                             user?.image
                               ? ImageDelivery(user?.image)
                               : "/images/modu.png"
                           }
-                          width={48}
-                          height={48}
                           className="h-12 w-12 rounded-full bg-slate-600"
                           alt=""
                         />

@@ -386,22 +386,18 @@ const Profile: NextPage<Props> = () => {
                   ) : null}
 
                   {data?.user?.image?.includes("https") ? (
-                    <Image
+                    <img
                       src={data?.user?.image}
-                      width={128}
-                      height={128}
-                      className="h-32 w-32  rounded-full bg-slate-200"
+                      className="h-32 w-32 rounded-full bg-slate-200"
                       alt=""
                     />
                   ) : (
-                    <Image
+                    <img
                       src={
                         data?.user?.image
                           ? ImageDelivery(data?.user?.image, "avatar")
                           : "/images/modu.png"
                       }
-                      width={128}
-                      height={128}
                       className="h-32 w-32  rounded-full bg-slate-200"
                       alt=""
                     />
@@ -571,28 +567,24 @@ const Profile: NextPage<Props> = () => {
                   className="selection:bg-transparent"
                 >
                   {data?.user?.image?.includes("https") ? (
-                    <Image
+                    <img
                       src={data?.user?.image}
-                      width={128}
-                      height={128}
                       className="h-32 w-32  rounded-full bg-slate-200"
                       alt=""
                     />
                   ) : (
-                    <Image
+                    <img
                       src={
                         data?.user?.image
                           ? ImageDelivery(data?.user?.image, "avatar")
                           : "/images/modu.png"
                       }
-                      width={128}
-                      height={128}
-                      className="h-32 w-32  rounded-full bg-slate-200"
+                      className="h-32 w-32 rounded-full bg-slate-200"
                       alt=""
                     />
                   )}
                 </motion.div>
-                <div className="w-full space-y-2 ">
+                <div className="w-[80%] space-y-2 ">
                   <div className="flex items-center justify-between  text-2xl font-bold text-gray-800 dark:text-white">
                     <span>{data?.user?.name}</span>
                     <div className="flex space-x-2">
@@ -637,10 +629,9 @@ const Profile: NextPage<Props> = () => {
                       onClick={() => router.push(`/post/${item?.id}`)}
                       className="group relative  flex h-[17rem] w-[17rem] cursor-pointer flex-col items-center justify-center rounded-md p-4 shadow-md filter transition hover:bg-black hover:bg-opacity-75"
                     >
-                      <Image
+                      <img
                         src={ImageDelivery(item?.thumnail)}
                         className="absolute h-full w-full rounded-md bg-slate-600 transition group-hover:opacity-5"
-                        layout="fill"
                         alt=""
                       />
                       <div className=" hidden w-full items-center justify-center space-x-2  text-xl font-bold text-white transition group-hover:flex">

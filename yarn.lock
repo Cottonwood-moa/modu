@@ -95,7 +95,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.3.1":
+"@babel/runtime@^7.3.1", "@babel/runtime@^7.9.2":
   version "7.17.9"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.9.tgz#d19fbf802d01a8cb6cf053a64e472d42c434ba72"
   integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
@@ -3449,6 +3449,13 @@ react-is@^18.0.0:
   version "18.0.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.0.0.tgz#026f6c4a27dbe33bf4a35655b9e1327c4e55e3f5"
   integrity sha512-yUcBYdBBbo3QiPsgYDcfQcIkGZHfxOaoE6HLSnr1sPzMhdyxusbfKOSUbSd/ocGi32dxcj366PsTj+5oggeKKw==
+
+react-lazy-hydration@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-lazy-hydration/-/react-lazy-hydration-0.1.0.tgz#7ebca1b783d2a6b81360724704ec0c47b53611aa"
+  integrity sha512-TyQ55cxsvheS7ZGFH8zcrLrnfrpXy23wo0I0dtB3p3n8+VhpQE6vbULc7T8ikSOig2gbcS1CZUrti0U/8zZVZQ==
+  dependencies:
+    "@babel/runtime" "^7.9.2"
 
 react-markdown@^8.0.3:
   version "8.0.3"

@@ -69,6 +69,7 @@ async function handler(
         })
       );
       await res.unstable_revalidate(`/post/${postId}`);
+      await res.unstable_revalidate(`/`);
       return res.json({ ok: true });
     }
 

@@ -361,7 +361,6 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
         postsOrderedLatest: jsonSerialize(postsOrderedLatest),
         postsCount,
       },
-      revalidate: 60,
     };
   } catch {
     return {

@@ -120,7 +120,6 @@ async function handler(
         id: TempPost.id,
       },
     });
-    // await res.unstable_revalidate(`/`);
     return res.json({
       ok: true,
       post,

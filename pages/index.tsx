@@ -65,21 +65,26 @@ const Home: NextPage = () => {
     mutate();
     reset();
   };
+  // useInfiniteScroll을 사용하면 posts가 요청 순서대로 배열로 감싸져서 응답된다.
+  // 배열 벗겨내서 posts내용만 들어있는 배열 하나로 만듬.
   const posts = data ? data.map((post) => post?.posts).flat() : [];
+  // scroll이 끝에 도달하면 currentpage + 1
   const handleScroll = () => {
     if (
       document.documentElement.scrollTop + window.innerHeight ===
       document.documentElement.scrollHeight
     ) {
-      console.log("maxPage", maxPage, "currentPage", currentPage);
       if (maxPage === currentPage) return;
       setCurrentPage((p) => p + 1);
     }
   };
+  // data가 받아와지면 maxPage 저장
   useEffect(() => {
     if (!data) return;
     setMaxPage(data[0]?.pages + 1);
   }, [data]);
+
+  // currentpage가 바뀌면 fetch 진행
   useEffect(() => {
     if (isValidating) return;
     if (currentPage === maxPage) return;
@@ -89,20 +94,16 @@ const Home: NextPage = () => {
       .finally(() => setMoreLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setSize, currentPage]);
+
+  // 인기순 최신순 바뀌면 다시 fetch
   useEffect(() => {
     setSize(currentPage);
     mutate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchChar, orderBy, mutate]);
-  useEffect(() => {
-    if (data) {
-      setMoreLoading(false);
-    }
-  }, [setMoreLoading, data]);
-  useEffect(() => {
-    setSize(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+  // 이벤트 리스너에 함수가 등록되면 반응성을 잃어버린다
+  // state가 바뀌면 다시 등록
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {

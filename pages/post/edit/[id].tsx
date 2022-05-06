@@ -65,7 +65,13 @@ const Write: NextPage<EditProps> = ({
     `/api/post?postId=${id}`,
     "POST"
   );
-
+  const revalidateHandler = async () => {
+    const data = await (
+      await fetch(`/api/post/revalidatePostDetail?postId=${id}`)
+    ).json();
+    console.log(data);
+    if (data.ok) router.replace(`/post/${id}`);
+  };
   const onValid = ({ title, thumbnail }: PostForm) => {
     if (loading) return;
     if (tags.length < 1) {
@@ -112,7 +118,9 @@ const Write: NextPage<EditProps> = ({
               content,
               thumbnailId: id,
               tags: tags,
-            }).then(() => Swal.close());
+            })
+              .then(() => revalidateHandler())
+              .finally(() => Swal.close());
           } else {
             Swal.fire({
               title: "게시글을 발행중입니다.",
@@ -120,14 +128,15 @@ const Write: NextPage<EditProps> = ({
                 "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
               showConfirmButton: false,
             });
-            postSubmit({
+            await postSubmit({
               title,
               content,
               thumbnailId: prevThumbnail,
               tags: tags,
-            }).then(() => Swal.close());
+            })
+              .then(() => revalidateHandler())
+              .finally(() => Swal.close());
           }
-          let timerInterval: any;
         } catch (err: any) {
           Swal.fire({
             icon: "error",
@@ -145,12 +154,6 @@ const Write: NextPage<EditProps> = ({
   useEffect(() => {
     if (userId !== user?.id) router.replace("/404");
   }, [router, user, userId]);
-  useEffect(() => {
-    if (data && data?.ok) {
-      router.replace(`/post/${id}`).then(() => router.reload());
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, router]);
   const thumbnailImage = watch("thumbnail");
   const [thumbnailImagePreview, setThumbnailImagePreview] = useState("");
   useEffect(() => {

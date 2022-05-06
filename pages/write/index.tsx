@@ -84,7 +84,9 @@ const Write: NextPage = () => {
               content,
               thumbnailId: id,
               tags: tags,
-            }).then(() => Swal.close());
+            })
+              .then(() => fetch(`/api/post/revalidate`))
+              .finally(() => Swal.close());
           } else {
             Swal.fire({
               title: "게시글을 발행중입니다.",
@@ -99,8 +101,8 @@ const Write: NextPage = () => {
               thumbnailId: defaultThumbnailId,
               tags: tags,
             })
-              .then(() => Swal.close())
-              .finally(() => fetch(`/api/post/revalidate`));
+              .then(() => fetch(`/api/post/revalidate`))
+              .finally(() => Swal.close());
           }
         } catch (err: any) {
           Swal.fire({

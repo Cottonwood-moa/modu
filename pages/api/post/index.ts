@@ -68,7 +68,6 @@ async function handler(
           });
         })
       );
-      await res.unstable_revalidate(`/post/${postId}`);
       return res.json({ ok: true });
     }
     const TempPost = await client.post.create({

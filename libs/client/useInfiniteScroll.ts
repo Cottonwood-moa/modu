@@ -1,14 +1,18 @@
 import { pageAtom } from "@atom/atom";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-
-export function useInfiniteScroll() {
+interface IProps {
+  pages?: number;
+}
+export function useInfiniteScroll({ pages }: IProps) {
   const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
   function handleScroll() {
     if (
       document.documentElement.scrollTop + window.innerHeight ===
       document.documentElement.scrollHeight
     ) {
+      console.log(pages, currentPage);
+      if (pages === currentPage) return;
       setCurrentPage((p) => p + 1);
     }
   }

@@ -25,7 +25,7 @@ export interface PostWithInclude extends Post {
     };
   }[];
 }
-interface PostsResponse {
+export interface PostsResponse {
   ok: boolean;
   pages: number;
   posts: PostWithInclude[];
@@ -66,8 +66,7 @@ const Home: NextPage = () => {
     reset();
   };
   const posts = data ? data.map((post) => post?.posts).flat() : [];
-  // const page = useInfiniteScroll();
-  const page = useInfiniteScroll();
+  const page = useInfiniteScroll({ pages: data ? data[0]?.pages : undefined });
   console.log("currentpage", currentPage);
   useEffect(() => {
     if (isValidating) return;
@@ -91,7 +90,6 @@ const Home: NextPage = () => {
     setSize(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(data);
   return (
     <>
       <Head>

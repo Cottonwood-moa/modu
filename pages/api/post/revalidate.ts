@@ -5,13 +5,16 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  const { query: postId } = req;
+  const { query } = req;
+  console.log("???", query?.postId);
   try {
-    if (postId) {
-      await res.unstable_revalidate(`/post/${postId}`);
+    if (query?.postId) {
+      await res.unstable_revalidate(`/post/${query?.postId}`);
+      console.log("revalidate /post/", query?.postId);
       return res.json({ ok: true });
     } else {
       await res.unstable_revalidate(`/`);
+      console.log("revalidate /");
       return res.json({ ok: true });
     }
   } catch (err) {

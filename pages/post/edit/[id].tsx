@@ -70,7 +70,7 @@ const Write: NextPage<EditProps> = ({
       await fetch(`/api/post/revalidate?postId=${id}`)
     ).json();
     console.log(data);
-    if (data.ok) router.replace(`/post/${id}`);
+    if (data.ok) router.replace(`/post/${id}`).then(() => router.reload());
   };
   const onValid = ({ title, thumbnail }: PostForm) => {
     if (loading) return;

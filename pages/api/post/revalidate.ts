@@ -6,7 +6,7 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const { query } = req;
-  console.log("???", query?.postId);
+
   try {
     if (query?.postId) {
       await res.unstable_revalidate(`/post/${query?.postId}`);

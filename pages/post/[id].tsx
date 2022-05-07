@@ -143,7 +143,9 @@ const PostDetail: NextPage<staticProps> = ({
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          fetch(`/api/post/delete?postId=${id}`);
+          await fetch(`/api/post/delete?postId=${id}`);
+          await fetch(`/api/post/revalidatePostDetail?postId=${id}`);
+          await fetch(`/api/post/revalidate`);
         } catch (err: any) {
           Swal.fire({
             icon: "error",

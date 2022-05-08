@@ -94,7 +94,7 @@ const Write: NextPage = () => {
                 "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
               showConfirmButton: false,
             });
-            const defaultThumbnailId = "50983e58-4731-4f42-3a4a-570b1222f400";
+            const defaultThumbnailId = "c17abc05-d978-4487-8599-b5f7d83b3700";
             await postSubmit({
               title,
               content,

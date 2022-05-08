@@ -142,10 +142,17 @@ const PostDetail: NextPage<staticProps> = ({
       cancelButtonText: "취소",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        Swal.fire({
+          title: "게시글을 삭제중입니다.",
+          imageUrl:
+            "https://media1.giphy.com/media/2SEf4i4wdOC0E0rXzc/giphy.gif?cid=ecf05e47snavxkpeg0qpazivghzmcw38ot6ddxtkzs1s6d5w&rid=giphy.gif&ct=s",
+          showConfirmButton: false,
+        });
         try {
           await fetch(`/api/post/delete?postId=${id}`);
           await fetch(`/api/post/revalidatePostDetail?postId=${id}`);
           await fetch(`/api/post/revalidate`);
+          Swal.close();
         } catch (err: any) {
           Swal.fire({
             icon: "error",

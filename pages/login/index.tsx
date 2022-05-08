@@ -3,10 +3,8 @@ import type { NextPage } from "next";
 import { AppProvider } from "next-auth/providers";
 import { getProviders, signIn, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { darkModeAtom } from "@atom/atom";
-import { cls } from "@libs/client/utils";
 import Head from "next/head";
 import LazyHydrate from "react-lazy-hydration";
 export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
@@ -58,7 +56,7 @@ export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
                     rotate: [0, 32, 0],
                     transition: { type: "spring", damping: 20 },
                   }}
-                  className="flex cursor-pointer flex-col items-center justify-center"
+                  className="m-2 flex cursor-pointer flex-col items-center justify-center"
                   onClick={() =>
                     signIn(provider.id, {
                       callbackUrl: previous,

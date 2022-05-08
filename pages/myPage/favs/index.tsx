@@ -6,6 +6,9 @@ import { PostWithInclude } from "pages";
 import useSWR from "swr";
 import Image from "next/image";
 import Head from "next/head";
+import useUser from "@libs/client/useUser";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 interface FavsList {
   post: PostWithInclude;
 }
@@ -14,7 +17,14 @@ interface FavsListResponse {
   favsList: FavsList[];
 }
 const Favs: NextPage = () => {
+  const router = useRouter();
   const { data } = useSWR<FavsListResponse>(`/api/user/favsList`);
+  const { user } = useUser();
+  useEffect(() => {
+    if (!user) {
+      router.replace("/login");
+    }
+  }, []);
   return (
     <>
       <Head>

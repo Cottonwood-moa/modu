@@ -64,7 +64,9 @@ async function handler(
   });
   const totalFavs = await client.fav.count({
     where: {
-      userId: id.toString(),
+      post: {
+        userId: id.toString(),
+      },
     },
   });
 

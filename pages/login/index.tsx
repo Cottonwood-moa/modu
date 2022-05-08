@@ -8,6 +8,7 @@ import { useRecoilState } from "recoil";
 import { darkModeAtom } from "@atom/atom";
 import { cls } from "@libs/client/utils";
 import Head from "next/head";
+import LazyHydrate from "react-lazy-hydration";
 export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
   providers,
   previous,
@@ -47,29 +48,31 @@ export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
             </motion.div>
           </div>
           {Object.values(providers).map((provider) => (
-            <div key={provider.name}>
-              <motion.div
-                initial={{ scale: 0, rotate: 360 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ type: "spring", damping: 10 }}
-                whileHover={{
-                  rotate: [0, 32, 0],
-                  transition: { type: "spring", damping: 20 },
-                }}
-                className="flex cursor-pointer flex-col items-center justify-center"
-                onClick={() =>
-                  signIn(provider.id, {
-                    callbackUrl: previous,
-                  })
-                }
-              >
-                <img
-                  className="h-32 w-32"
-                  src={`/images/${provider.name.toLowerCase()}.png`}
-                  alt=""
-                />
-              </motion.div>
-            </div>
+            <LazyHydrate whenVisible key={provider.name}>
+              <div>
+                <motion.div
+                  initial={{ scale: 0, rotate: 360 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", damping: 10 }}
+                  whileHover={{
+                    rotate: [0, 32, 0],
+                    transition: { type: "spring", damping: 20 },
+                  }}
+                  className="flex cursor-pointer flex-col items-center justify-center"
+                  onClick={() =>
+                    signIn(provider.id, {
+                      callbackUrl: previous,
+                    })
+                  }
+                >
+                  <img
+                    className="h-32 w-32"
+                    src={`/images/${provider.name.toLowerCase()}.png`}
+                    alt=""
+                  />
+                </motion.div>
+              </div>
+            </LazyHydrate>
           ))}
         </div>
       </div>

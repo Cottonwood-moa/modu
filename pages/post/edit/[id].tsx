@@ -248,8 +248,13 @@ const Write: NextPage<EditProps> = ({
                     </a>
                   </p>
                   <p>2. 썸네일 이미지는 옆 이미지 아이콘을 클릭해주세요.</p>
+                  <p>3. 여러 줄을 띄울 땐 &lt;br /&gt; 태그를 사용해주세요.</p>
                   <p>
-                    3. 여러 줄을 띄우실 땐 &lt;br /&gt; 태그를 사용해주세요.
+                    4. B(bold) 옵션은 배경 색이 있는
+                    <span className="rounded-sm bg-[#ff7675] px-1 text-white">
+                      text
+                    </span>
+                    로 전환됩니다.
                   </p>
                 </motion.div>
               </OutsideClickHandler>

@@ -46,6 +46,9 @@ modu는 리액트 개발자를 위한 커스텀 훅이나 패키지 등을 공�
 
 ![ranking](https://user-images.githubusercontent.com/79053495/167310140-4c593e4b-9807-455f-8b5a-7f5a1dfe93b5.gif)  
 
+### - alert  
+![image](https://user-images.githubusercontent.com/79053495/167311321-26d4edf2-79fd-4f2d-971f-0c7500196780.png)  
+
 
 ## 📖 Docs
 

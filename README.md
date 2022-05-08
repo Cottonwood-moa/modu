@@ -67,6 +67,7 @@ modu는 리액트 개발자를 위한 커스텀 훅이나 패키지 등을 공�
 - SWR data fetching
 - SWR Infinite Loading.
 - SSR + SSG 
+- Incremental Static Regeneration
 - ORM - Prisma
 - Serverless DB - Planet Scale
 - Next Auth

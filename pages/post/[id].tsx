@@ -219,7 +219,10 @@ const PostDetail: NextPage<staticProps> = ({
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="modu" />
         <meta property="og:title" content={title} />
-        <meta property="og:description" content={content} />
+        <meta
+          property="og:description"
+          content={tags?.map((tag) => tag?.tag?.name).toString()}
+        />
         <meta
           property="og:image"
           content={`https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${thumbnail}/thumbnail`}
@@ -228,7 +231,10 @@ const PostDetail: NextPage<staticProps> = ({
         <meta property="twitter:card" content="summary" />
         <meta property="twitter:site" content="modu" />
         <meta property="twitter:title" content={title} />
-        <meta property="twitter:description" content={content} />
+        <meta
+          property="twitter:description"
+          content={tags?.map((tag) => tag?.tag?.name).toString()}
+        />
         <meta
           property="twitter:image"
           content={`https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${thumbnail}/thumbnail`}

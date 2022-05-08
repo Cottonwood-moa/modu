@@ -167,7 +167,7 @@ const Write: NextPage<EditProps> = ({
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="modu" />
         <meta property="og:title" content="modu" />
-        <meta property="og:description" content="블라블라" />
+        <meta property="og:description" content="게시글 수정" />
         <meta property="og:image" content="/images/modu.png" />
         <meta property="og:url" content="https://modu.vercel.app" />
       </Head>

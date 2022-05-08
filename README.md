@@ -74,14 +74,16 @@ modu는 리액트 개발자를 위한 커스텀 훅이나 패키지 등을 공�
 - CRUD / post, comment, reply
 - CloudFlare image 저장 및 최적화.
 - tailwind css -> application UI 생산성 상향.
+- Framer motion
 - Dark Mode
 - Skeleton UI
+- Apex chart
 - Lazy loading
 - markdown 지원
 - recoil state 관리
 - framer motion ui
-- vercel 배포
 - Lazy hydration
+- vercel 배포
 
 ## 🛠 Vitals  
 ![webVitals](https://user-images.githubusercontent.com/79053495/167311081-9e016f84-bbdc-4adf-8ede-863ff6d05e03.png)

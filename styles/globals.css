@@ -12,6 +12,15 @@ body {
 .apexcharts-toolbar {
   z-index: 0 !important;
 }
+.post-content main {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border-bottom-left-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+}
+.post-content strong {
+  @apply rounded-sm bg-[#ff7675] px-1 text-white;
+}
 .post-content p {
   @apply my-4 text-xl font-medium;
 }
@@ -19,22 +28,22 @@ body {
   @apply border-l-4 pl-4 text-2xl font-bold text-gray-400;
 }
 .post-content h6 {
-  @apply my-4 text-lg font-medium;
+  @apply my-4 text-lg font-bold;
 }
 .post-content h5 {
-  @apply my-4 text-xl font-medium;
+  @apply my-4 text-xl font-bold;
 }
 .post-content h4 {
-  @apply my-4 text-2xl font-medium;
+  @apply my-4 text-2xl font-bold;
 }
 .post-content h3 {
-  @apply my-4 text-3xl font-medium;
+  @apply my-4 text-3xl font-bold;
 }
 .post-content h2 {
-  @apply my-4 text-4xl font-medium;
+  @apply my-4 text-4xl font-bold;
 }
 .post-content h1 {
-  @apply my-4 text-5xl font-medium;
+  @apply my-4 text-5xl font-bold;
 }
 .post-content ul {
   @apply list-disc text-xl font-semibold;

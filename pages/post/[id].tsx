@@ -424,13 +424,20 @@ const PostDetail: NextPage<staticProps> = ({
                     code({ node, inline, className, children, ...props }) {
                       const match = /language-(\w+)/.exec(className || "");
                       return !inline && match ? (
-                        <SyntaxHighlighter
-                          children={String(children).replace(/\n\n/g, "\n")}
-                          style={a11yDark}
-                          language={match[1]}
-                          PreTag="main"
-                          {...props}
-                        />
+                        <>
+                          <div className="flex h-12 w-full items-center space-x-2 rounded-t-[4px] bg-gray-600 px-4">
+                            <div className="h-4 w-4 rounded-full bg-red-400"></div>
+                            <div className="h-4 w-4 rounded-full bg-yellow-400"></div>
+                            <div className="h-4 w-4 rounded-full bg-green-400"></div>
+                          </div>
+                          <SyntaxHighlighter
+                            children={String(children).replace(/\n\n/g, "\n")}
+                            style={a11yDark}
+                            language={match[1]}
+                            PreTag="main"
+                            {...props}
+                          />
+                        </>
                       ) : (
                         <SyntaxHighlighter
                           children={String(children).replace(/\n\n/g, "\n")}
@@ -444,9 +451,11 @@ const PostDetail: NextPage<staticProps> = ({
                     main({ node, children, ...props }) {
                       return (
                         // @ts-ignore
-                        <div className="code" {...props}>
-                          {children}
-                        </div>
+                        <>
+                          <div className="code" {...props}>
+                            {children}
+                          </div>
+                        </>
                       );
                     },
                     // 인용문

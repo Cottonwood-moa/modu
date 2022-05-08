@@ -11,8 +11,6 @@ export function useInfiniteScroll({ pages }: IProps) {
       document.documentElement.scrollTop + window.innerHeight ===
       document.documentElement.scrollHeight
     ) {
-      console.log(pages, currentPage);
-
       if (pages === currentPage) return;
       setCurrentPage((p) => p + 1);
     }

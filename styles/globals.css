@@ -13,28 +13,28 @@ body {
   z-index: 0 !important;
 }
 .post-content p {
-  @apply text-xl font-medium;
+  @apply my-4 text-xl font-medium;
 }
 .post-content .block-quote p {
   @apply border-l-4 pl-4 text-2xl font-bold text-gray-400;
 }
 .post-content h6 {
-  @apply text-lg font-medium;
+  @apply my-4 text-lg font-medium;
 }
 .post-content h5 {
-  @apply text-xl font-medium;
+  @apply my-4 text-xl font-medium;
 }
 .post-content h4 {
-  @apply text-2xl font-medium;
+  @apply my-4 text-2xl font-medium;
 }
 .post-content h3 {
-  @apply text-3xl font-medium;
+  @apply my-4 text-3xl font-medium;
 }
 .post-content h2 {
-  @apply text-4xl font-medium;
+  @apply my-4 text-4xl font-medium;
 }
 .post-content h1 {
-  @apply text-5xl font-medium;
+  @apply my-4 text-5xl font-medium;
 }
 .post-content ul {
   @apply list-disc text-xl font-semibold;

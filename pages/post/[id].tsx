@@ -97,7 +97,6 @@ const PostDetail: NextPage<staticProps> = ({
       ? `/api/post/fav?userId=${user?.id}&postId=${id}&postUserId=${userId}`
       : null
   );
-  console.log(thumbnail);
   // const { data: favsList, mutate: favsListMutate } = useSWR<FavsListResponse>(
   //   id ? `/api/post/favsList?postId=${id}` : null
   // );
@@ -415,7 +414,7 @@ const PostDetail: NextPage<staticProps> = ({
           {/* post content */}
           {content && (
             <LazyHydrate whenVisible>
-              <div className="post-content py-12">
+              <div className="post-content pb-12">
                 <ReactMarkdown
                   className="react-markdown"
                   rehypePlugins={[rehypeRaw]}

@@ -1,4 +1,6 @@
-# 👨‍👩‍👦‍👦 [modu](https://modu.vercel.app/)  <- 클릭
+# 👨‍👩‍👦‍👦 [modu](https://modu.vercel.app/)  <- 클릭  
+
+![modu](https://user-images.githubusercontent.com/79053495/167311059-f9d3c49d-34ba-4d26-9ecb-b6134c0302c8.png)  
 
 React 개발자를 위한 HOOK 공유 사이트.
 
@@ -74,8 +76,8 @@ modu는 리액트 개발자를 위한 커스텀 훅이나 패키지 등을 공�
 - vercel 배포
 - Lazy hydration
 
-## 🛠 detail
-
+## 🛠 Vitals  
+![webVitals](https://user-images.githubusercontent.com/79053495/167311081-9e016f84-bbdc-4adf-8ede-863ff6d05e03.png)
 
 ### 구성
 

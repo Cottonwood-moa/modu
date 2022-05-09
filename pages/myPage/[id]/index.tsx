@@ -1,6 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-// Post detail
-
 import Layout from "@components/Layout";
 import { Link, Post, User } from "@prisma/client";
 import type {
@@ -45,6 +43,7 @@ interface Profile {
   totalPosts: number;
   posts: PostWithTag[];
   pages: number;
+  user: UserWithLinks;
 }
 interface IForm {
   avatar?: string;
@@ -62,10 +61,7 @@ interface ProfileResponse extends Profile {
 interface DeleteUserResponse {
   ok: boolean;
 }
-interface IProps {
-  user: UserWithLinks;
-}
-const Profile: NextPage<IProps> = ({ user }) => {
+const Profile: NextPage = () => {
   const router = useRouter();
   const { user: loggedUser } = useUser();
   const [editMode, setEditMode] = useState(false);
@@ -98,7 +94,7 @@ const Profile: NextPage<IProps> = ({ user }) => {
   const watchUrl = watch("url");
 
   const onAvatarValid = async ({ avatar }: IForm) => {
-    if (loggedUser?.id !== user?.id) return;
+    if (loggedUser?.id !== data?.user?.id) return;
     setLoadingState(true);
     const { uploadURL } = await (await fetch(`/api/files`)).json();
     const form = new FormData();
@@ -115,7 +111,7 @@ const Profile: NextPage<IProps> = ({ user }) => {
     avatarMutation({
       avatarId: id,
       loggedUserId: loggedUser?.id,
-      userId: user?.id,
+      userId: data?.user?.id,
     });
     setLoadingState(false);
   };
@@ -148,7 +144,7 @@ const Profile: NextPage<IProps> = ({ user }) => {
       });
       return;
     }
-    if (name === user?.name) {
+    if (name === data?.user?.name) {
       Swal.fire({
         icon: "error",
         title: "변경사항이 없습니다.",
@@ -157,17 +153,28 @@ const Profile: NextPage<IProps> = ({ user }) => {
       });
       return;
     }
+    Swal.fire({
+      title: "이름을 변경중입니다.",
+      imageUrl:
+        "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
+      showConfirmButton: false,
+    });
     nameMutation({
       name,
-      userId: user?.id,
+      userId: data?.user?.id,
       loggedUserId: loggedUser?.id,
-    });
-    Swal.fire({
-      icon: "success",
-      title: "이름이 변경되었습니다.",
-      showConfirmButton: false,
-      timer: 1000,
-    });
+    })
+      .then(() => Swal.close())
+      .then(() =>
+        Swal.fire({
+          icon: "success",
+          title: "이름이 변경되었습니다.",
+          text: `적용까지 약간의 시간이 걸릴 수 있습니다.`,
+          showConfirmButton: false,
+          timer: 1600,
+        })
+      );
+
     return;
   };
   const onIntroValid = async ({ intro }: IForm) => {
@@ -198,7 +205,7 @@ const Profile: NextPage<IProps> = ({ user }) => {
       });
       return;
     }
-    if (intro === user?.introduce) {
+    if (intro === data?.user?.introduce) {
       Swal.fire({
         icon: "error",
         title: "변경사항이 없습니다.",
@@ -207,21 +214,32 @@ const Profile: NextPage<IProps> = ({ user }) => {
       });
       return;
     }
+    Swal.fire({
+      title: "소개를 작성중입니다.",
+      imageUrl:
+        "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
+      showConfirmButton: false,
+    });
     introMutation({
       intro,
-      userId: user?.id,
+      userId: data?.user?.id,
       loggedUserId: loggedUser?.id,
-    });
-    Swal.fire({
-      icon: "success",
-      title: "소개가 변경되었습니다.",
-      showConfirmButton: false,
-      timer: 1000,
-    });
+    })
+      .then(() => Swal.close())
+      .then(() =>
+        Swal.fire({
+          icon: "success",
+          title: "소개가 작성되었습니다.",
+          text: `적용까지 약간의 시간이 걸릴 수 있습니다.`,
+          showConfirmButton: false,
+          timer: 1600,
+        })
+      );
+
     return;
   };
   const onLinkValid = async ({ linkName, url }: IForm) => {
-    if (user?.links?.length === 3) {
+    if (data?.user?.links?.length === 3) {
       Swal.fire({
         icon: "error",
         title: "링크 수는 최대 3개입니다.",
@@ -307,26 +325,27 @@ const Profile: NextPage<IProps> = ({ user }) => {
   return (
     <>
       <Head>
-        <title>modu | {user?.name ? user?.name : "로딩중"} 프로필</title>
+        <title>
+          modu | {data?.user?.name ? data?.user?.name + "의 프로필" : "로딩중"}
+        </title>
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="modu" />
         <meta
           property="og:title"
-          content={`${user?.name as string}의 프로필`}
+          content={`${data?.user?.name as string}의 프로필`}
         />
-        <meta property="og:description" content={`${user?.introduce}`} />
+        <meta property="og:description" content={`${data?.user?.introduce}`} />
         <meta
           property="og:image"
-          content={`https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${user?.image}/avatar`}
+          content={`https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${data?.user?.image}/avatar`}
         />
         <meta
           property="og:url"
-          content={`https://modu.vercel.app/myPage/${user?.id}`}
+          content={`https://modu.vercel.app/myPage/${data?.user?.id}`}
         />
       </Head>
       <Layout>
         <div className=" flex  min-h-[100vh] w-full flex-col items-center space-y-12 dark:text-white">
-          {/* {loadingState ? <PageLoading /> : null} */}
           {/* 프로필 사진 */}
           {editMode ? (
             <div className="mt-12 flex w-[50rem] items-center justify-between text-4xl font-bold text-gray-800 dark:text-white">
@@ -360,7 +379,7 @@ const Profile: NextPage<IProps> = ({ user }) => {
               <motion.div layoutId="userInfo" className="flex items-center">
                 <span>프로필</span>
               </motion.div>
-              {user?.id === loggedUser?.id ? (
+              {data?.user?.id === loggedUser?.id ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className={cls(
@@ -396,17 +415,17 @@ const Profile: NextPage<IProps> = ({ user }) => {
                   </div>
                 ) : null}
 
-                {user?.image?.includes("https") ? (
+                {data?.user?.image?.includes("https") ? (
                   <img
-                    src={user?.image}
+                    src={data?.user?.image}
                     className="h-32 w-32 rounded-full bg-slate-200"
                     alt=""
                   />
                 ) : (
                   <img
                     src={
-                      user?.image
-                        ? ImageDelivery(user?.image, "avatar")
+                      data?.user?.image
+                        ? ImageDelivery(data?.user?.image, "avatar")
                         : "/images/modu.png"
                     }
                     className="h-32 w-32  rounded-full bg-slate-200"
@@ -439,7 +458,7 @@ const Profile: NextPage<IProps> = ({ user }) => {
                       />
                     </motion.svg>
                   </AnimatePresence>
-                  {/* user?.id === loggedUser?.id  */}
+                  {/* data?.user?.id === loggedUser?.id  */}
                   <input
                     {...register("avatar")}
                     className="hidden"
@@ -460,7 +479,7 @@ const Profile: NextPage<IProps> = ({ user }) => {
                   {...register("name")}
                   maxLength={10}
                   className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent  text-2xl font-bold text-gray-800 focus:border-b-2  focus:border-[#2ecc71] focus:outline-none focus:ring-0 dark:text-white"
-                  defaultValue={user?.name ? user?.name : ""}
+                  defaultValue={data?.user?.name ? data?.user?.name : ""}
                 />
 
                 <div className="flex justify-between p-1 text-xl font-medium text-gray-800 dark:text-white">
@@ -481,7 +500,9 @@ const Profile: NextPage<IProps> = ({ user }) => {
                   autoComplete="off"
                   maxLength={100}
                   className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-[#2ecc71] focus:outline-none focus:ring-0 dark:text-white"
-                  defaultValue={user?.introduce ? user?.introduce : ""}
+                  defaultValue={
+                    data?.user?.introduce ? data?.user?.introduce : ""
+                  }
                 />
                 <div className="flex justify-between p-1 text-right text-xl font-medium text-gray-800 dark:text-white">
                   <span className="text-base font-medium text-gray-400 dark:text-white">
@@ -540,7 +561,7 @@ const Profile: NextPage<IProps> = ({ user }) => {
                   </div>
                 </div>
                 <div className="pt-4">
-                  {user?.links?.map((link) => {
+                  {data?.user?.links?.map((link) => {
                     return (
                       <div key={link?.id} className="flex flex-col p-1">
                         <div className="flex justify-between text-base font-medium text-gray-800 dark:text-white">
@@ -575,17 +596,17 @@ const Profile: NextPage<IProps> = ({ user }) => {
                 layoutId="userImage"
                 className="selection:bg-transparent"
               >
-                {user?.image?.includes("https") ? (
+                {data?.user?.image?.includes("https") ? (
                   <img
-                    src={user?.image}
+                    src={data?.user?.image}
                     className="h-32 w-32  rounded-full bg-slate-200"
                     alt=""
                   />
                 ) : (
                   <img
                     src={
-                      user?.image
-                        ? ImageDelivery(user?.image, "avatar")
+                      data?.user?.image
+                        ? ImageDelivery(data?.user?.image, "avatar")
                         : "/images/modu.png"
                     }
                     className="h-32 w-32 rounded-full bg-slate-200"
@@ -595,9 +616,9 @@ const Profile: NextPage<IProps> = ({ user }) => {
               </motion.div>
               <div className="w-[80%] space-y-2 ">
                 <div className="flex items-center justify-between  text-2xl font-bold text-gray-800 dark:text-white">
-                  <span>{user?.name}</span>
+                  <span>{data?.user?.name}</span>
                   <div className="flex space-x-2">
-                    {user?.links?.map((link) => {
+                    {data?.user?.links?.map((link) => {
                       return (
                         <div key={link?.id}>
                           <span
@@ -617,7 +638,7 @@ const Profile: NextPage<IProps> = ({ user }) => {
                 </div>
 
                 <div className="text-lg font-bold text-gray-800 dark:text-white">
-                  {user?.introduce}
+                  {data?.user?.introduce}
                 </div>
               </div>
             </div>
@@ -743,27 +764,3 @@ const Profile: NextPage<IProps> = ({ user }) => {
 };
 
 export default Profile;
-
-export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
-  const {
-    params: { id },
-  } = ctx;
-
-  const user = await client.user.findFirst({
-    where: {
-      id: id.toString(),
-    },
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      introduce: true,
-      links: true,
-    },
-  });
-  return {
-    props: {
-      user,
-    },
-  };
-};

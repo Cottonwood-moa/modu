@@ -14,6 +14,18 @@ async function handler(
     query: { id, page },
   } = req;
 
+  const user = await client.user.findFirst({
+    where: {
+      id: id.toString(),
+    },
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      introduce: true,
+      links: true,
+    },
+  });
   const totalPosts = await client.post.count({
     where: {
       userId: id.toString(),
@@ -65,6 +77,7 @@ async function handler(
     totalFavs,
     totalPosts,
     pages,
+    user,
   });
 }
 

@@ -13,18 +13,7 @@ async function handler(
   const {
     query: { id, page },
   } = req;
-  const user = await client.user.findFirst({
-    where: {
-      id: id.toString(),
-    },
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      introduce: true,
-      links: true,
-    },
-  });
+
   const totalPosts = await client.post.count({
     where: {
       userId: id.toString(),
@@ -73,7 +62,6 @@ async function handler(
   return res.json({
     ok: true,
     posts: jsonSerialize(posts),
-    user,
     totalFavs,
     totalPosts,
     pages,

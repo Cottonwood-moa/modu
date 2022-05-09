@@ -315,7 +315,10 @@ const Profile: NextPage<IProps> = ({ user }) => {
           content={`${user?.name as string}의 프로필`}
         />
         <meta property="og:description" content={`${user?.introduce}`} />
-        <meta property="og:image" content="/images/modu.png" />
+        <meta
+          property="og:image"
+          content={`https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${user?.image}/avatar`}
+        />
         <meta
           property="og:url"
           content={`https://modu.vercel.app/myPage/${user?.id}`}

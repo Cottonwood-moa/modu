@@ -80,7 +80,7 @@ const Home: NextPage<IProps> = ({
         <meta property="og:title" content="modu" />
         <meta
           property="og:description"
-          content="개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요."
+          content="모두의 HOOK 개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요."
         />
         <meta property="og:image" content="/images/modu.png" />
         <meta property="og:url" content="https://modu.vercel.app" />
@@ -89,7 +89,7 @@ const Home: NextPage<IProps> = ({
         <meta property="twitter:title" content="modu" />
         <meta
           property="twitter:description"
-          content="개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요."
+          content="모두의 HOOK 개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요."
         />
         <meta property="twitter:image" content="/images/modu.png" />
         <meta property="twitter:url" content="https://modu.vercel.app" />

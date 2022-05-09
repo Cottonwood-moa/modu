@@ -661,7 +661,7 @@ const Profile: NextPage = () => {
                   <motion.div
                     key={index}
                     onClick={() => router.push(`/post/${item?.id}`)}
-                    className="group relative  flex h-[17rem] w-[17rem] cursor-pointer flex-col items-center justify-center rounded-md p-4 shadow-md filter transition hover:bg-black hover:bg-opacity-75"
+                    className="group relative  flex h-[17rem] w-[full] cursor-pointer flex-col items-center justify-center rounded-md p-4 shadow-md filter transition hover:bg-black hover:bg-opacity-75"
                   >
                     <img
                       src={ImageDelivery(item?.thumnail)}

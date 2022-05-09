@@ -64,6 +64,7 @@ const Write: NextPage = () => {
           if (thumbnail && thumbnail.length > 0) {
             Swal.fire({
               title: "게시글을 발행중입니다.",
+              allowOutsideClick: false,
               imageUrl:
                 "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
               showConfirmButton: false,
@@ -90,6 +91,7 @@ const Write: NextPage = () => {
           } else {
             Swal.fire({
               title: "게시글을 발행중입니다.",
+              allowOutsideClick: false,
               imageUrl:
                 "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
               showConfirmButton: false,

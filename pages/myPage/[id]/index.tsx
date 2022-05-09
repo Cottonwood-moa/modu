@@ -155,6 +155,7 @@ const Profile: NextPage = () => {
     }
     Swal.fire({
       title: "이름을 변경중입니다.",
+      allowOutsideClick: false,
       imageUrl:
         "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
       showConfirmButton: false,
@@ -216,6 +217,7 @@ const Profile: NextPage = () => {
     }
     Swal.fire({
       title: "소개를 작성중입니다.",
+      allowOutsideClick: false,
       imageUrl:
         "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
       showConfirmButton: false,

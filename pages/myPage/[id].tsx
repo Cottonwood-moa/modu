@@ -316,7 +316,10 @@ const Profile: NextPage<IProps> = ({ user }) => {
         />
         <meta property="og:description" content={`${user?.introduce}`} />
         <meta property="og:image" content="/images/modu.png" />
-        <meta property="og:url" content="https://modu.vercel.app" />
+        <meta
+          property="og:url"
+          content={`https://modu.vercel.app/myPage/${user?.id}`}
+        />
       </Head>
       <Layout>
         <div className=" flex  min-h-[100vh] w-full flex-col items-center space-y-12 dark:text-white">

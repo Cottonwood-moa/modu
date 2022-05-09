@@ -198,19 +198,11 @@ const PostDetail: NextPage<staticProps> = ({
   }, [id]);
 
   if (!router.isFallback && !title) {
-    return (
-      <Layout>
-        <PageLoading />
-      </Layout>
-    );
+    return <PageLoading />;
   }
 
   if (router.isFallback) {
-    return (
-      <Layout>
-        <PageLoading />
-      </Layout>
-    );
+    return <PageLoading />;
   }
   return (
     <>
@@ -542,6 +534,7 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
         thumbnail: post?.thumnail,
         createdAt: jsonSerialize(post?.createdAt),
       },
+      revalidate: 600,
     };
   } catch {
     return {

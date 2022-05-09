@@ -97,6 +97,10 @@ const Home: NextPage<IProps> = ({
           name="google-site-verification"
           content="jP_LRgp2ourifn-dveaqSx3v-cBhd7cwuHbUlM6bsA4"
         />
+        <meta
+          name="naver-site-verification"
+          content="f1cd025c016baf42759f26be4272879cff3e8d8c"
+        />
       </Head>
       <Layout>
         {/* main */}

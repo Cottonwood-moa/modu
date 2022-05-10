@@ -28,7 +28,6 @@ import { useRecoilState } from "recoil";
 import ImageDelivery from "@libs/client/imageDelivery";
 import numberWithCommas from "@libs/client/numberWithComma";
 import LazyHydrate from "react-lazy-hydration";
-import fs from "fs";
 
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
 const PostComment = dynamic(() => import("@components/PostComment"), {

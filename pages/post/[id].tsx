@@ -490,17 +490,6 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
   const {
     params: { id },
   } = ctx;
-  fs.appendFile(
-    "../../public/sitemap/sitemap-common.xml",
-    `<url>
-  <loc>https://modu.vercel.app/post/${id}</loc>
-  <lastmod>${new Date().toISOString()}</lastmod>
-</url>`,
-    function (err) {
-      if (err) throw err;
-      console.log("Saved!");
-    }
-  );
 
   try {
     const post = await client.post.findUnique({

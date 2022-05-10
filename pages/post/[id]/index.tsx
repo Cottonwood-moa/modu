@@ -244,7 +244,7 @@ const PostDetail: NextPage<staticProps> = ({
           className="right-0 left-0 m-auto mt-32 w-[60%] min-w-[800px] bg-white p-12 text-gray-800 dark:bg-slate-900 dark:text-white "
         >
           {/* post header */}
-          <LazyHydrate whenVisible>
+          
             <div className="space-y-12">
               <div className="flex  w-full items-center justify-between">
                 <svg
@@ -409,7 +409,6 @@ const PostDetail: NextPage<staticProps> = ({
                 })}
               </div>
             </div>
-          </LazyHydrate>
           {/* post content */}
           {content && (
             <LazyHydrate whenVisible>

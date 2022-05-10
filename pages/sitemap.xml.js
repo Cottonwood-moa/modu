@@ -38,6 +38,10 @@ export async function getServerSideProps({ res }) {
         location: "/",
         lastMod: getDate,
       },
+      {
+        location: "/trend",
+        lastMod: getDate,
+      },
       ...postPaths,
     ],
   };

@@ -41,7 +41,7 @@ export async function getServerSideProps({ res }) {
     ],
   };
   res.setHeader("Content-Type", "text/xml");
-  res.write(generateSitemap(data, "http://localhost:3000"));
+  res.write(generateSitemap(data, "https://modu.vercel.app"));
   res.end();
   return {
     props: {},

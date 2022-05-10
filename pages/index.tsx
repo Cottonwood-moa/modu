@@ -75,6 +75,10 @@ const Home: NextPage<IProps> = ({
     <>
       <Head>
         <title>modu</title>
+        <meta
+          property="description"
+          content="모두의 HOOK 개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요."
+        />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="modu" />
         <meta property="og:title" content="modu" />

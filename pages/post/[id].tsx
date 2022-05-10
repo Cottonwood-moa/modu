@@ -28,6 +28,8 @@ import { useRecoilState } from "recoil";
 import ImageDelivery from "@libs/client/imageDelivery";
 import numberWithCommas from "@libs/client/numberWithComma";
 import LazyHydrate from "react-lazy-hydration";
+import fs from "fs";
+
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
 const PostComment = dynamic(() => import("@components/PostComment"), {
   ssr: false,
@@ -488,6 +490,18 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
   const {
     params: { id },
   } = ctx;
+  fs.appendFile(
+    "../../public/sitemap/sitemap-common.xml",
+    `<url>
+  <loc>https://modu.vercel.app/post/${id}</loc>
+  <lastmod>${new Date().toISOString()}</lastmod>
+</url>`,
+    function (err) {
+      if (err) throw err;
+      console.log("Saved!");
+    }
+  );
+
   try {
     const post = await client.post.findUnique({
       where: {

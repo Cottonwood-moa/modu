@@ -6,22 +6,41 @@
 >
   <url>
     <loc>https://modu.vercel.app/</loc>
-    <lastmod>2022-05-10T09:46:03.687Z</lastmod>
+    <lastmod>2022-05-10T14:25:22.174Z</lastmod>
   </url>
 
   <url>
     <loc>https://modu.vercel.app/post/[id]</loc>
-    <lastmod>2022-05-10T09:46:03.687Z</lastmod>
+    <lastmod>2022-05-10T14:25:22.174Z</lastmod>
+  </url>
+
+  <url>
+    <loc>https://modu.vercel.app/psudo</loc>
+    <lastmod>2022-05-10T14:25:22.174Z</lastmod>
   </url>
 
   <url>
     <loc>https://modu.vercel.app/trend</loc>
-    <lastmod>2022-05-10T09:46:03.687Z</lastmod>
+    <lastmod>2022-05-10T14:25:22.174Z</lastmod>
+  </url>
+
+  <url>
+    <loc>https://modu.vercel.app/write</loc>
+    <lastmod>2022-05-10T14:25:22.174Z</lastmod>
+  </url>
+
+  <url>
+    <loc>https://modu.vercel.app/myPage/favs</loc>
+    <lastmod>2022-05-10T14:25:22.174Z</lastmod>
   </url>
 
   <url>
     <loc>https://modu.vercel.app/myPage/[id]</loc>
-    <lastmod>2022-05-10T09:46:03.687Z</lastmod>
+    <lastmod>2022-05-10T14:25:22.174Z</lastmod>
   </url>
 
+  <url>
+    <loc>https://modu.vercel.app/post/edit/[id]</loc>
+    <lastmod>2022-05-10T14:25:22.174Z</lastmod>
+  </url>
 </urlset>

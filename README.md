@@ -86,7 +86,8 @@ modu는 리액트 개발자를 위한 커스텀 훅이나 패키지 등을 공�
 - vercel 배포
 
 ## 🛠 Vitals  
-![webVitals](https://user-images.githubusercontent.com/79053495/167311081-9e016f84-bbdc-4adf-8ede-863ff6d05e03.png)
+![20220511142017](https://user-images.githubusercontent.com/79053495/167817296-5d00e631-d025-4284-96d4-d4101207866c.png)
+
 
 ### 구성
 

@@ -55,7 +55,7 @@ const Favs: NextPage = () => {
                 <img src="/images/loading.gif" alt="loading" />
               </div>
             ) : (
-              <div className="m-12 grid grid-cols-2 gap-6  xl:grid-cols-3 2xl:grid-cols-4">
+              <div className="grid grid-cols-2 gap-6 p-12  xl:grid-cols-3 2xl:grid-cols-4">
                 {data?.favsList?.map((post, index) => {
                   return <PostCard post={post?.post} key={index} />;
                 })}

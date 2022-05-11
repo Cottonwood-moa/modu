@@ -36,7 +36,7 @@ const Favs: NextPage = () => {
       </Head>
       <Layout>
         {data?.favsList?.length === 0 ? (
-          <div className="flex h-[80vh] translate-y-20 flex-col items-center justify-center">
+          <div className="flex min-h-[80vh] translate-y-20 flex-col items-center justify-center">
             <span className="text-4xl font-bold text-gray-800 dark:text-white ">
               좋아요 목록이 없습니다.
             </span>
@@ -51,7 +51,7 @@ const Favs: NextPage = () => {
         ) : (
           <>
             {!data ? (
-              <div className="flex h-[80vh] items-center justify-center">
+              <div className="flex min-h-[80vh] items-center justify-center">
                 <img src="/images/loading.gif" alt="loading" />
               </div>
             ) : (

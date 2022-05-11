@@ -165,7 +165,7 @@ const Profile: NextPage = () => {
       title: "이름을 변경중입니다.",
       allowOutsideClick: false,
       imageUrl:
-        "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
+        "https://media2.giphy.com/media/Is1yXI4qeobCBdqYIV/200w.webp?cid=ecf05e478vi6e4mxy3zlxydzuq36ap5nf1ghw5pl9riqg2zz&rid=200w.webp&ct=s",
       showConfirmButton: false,
     });
     nameMutation({
@@ -227,7 +227,7 @@ const Profile: NextPage = () => {
       title: "소개를 작성중입니다.",
       allowOutsideClick: false,
       imageUrl:
-        "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
+        "https://media2.giphy.com/media/Is1yXI4qeobCBdqYIV/200w.webp?cid=ecf05e478vi6e4mxy3zlxydzuq36ap5nf1ghw5pl9riqg2zz&rid=200w.webp&ct=s",
       showConfirmButton: false,
     });
     introMutation({

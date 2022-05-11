@@ -99,7 +99,7 @@ const Write: NextPage<EditProps> = ({
               title: "게시글을 수정 중입니다.",
               allowOutsideClick: false,
               imageUrl:
-                "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
+                "https://media1.giphy.com/media/LPUOYeX0G13VhQ07eA/giphy.webp?cid=ecf05e47ep89yw3hmmy0bw2p53jpwkj1jy6g1cggqcc1x08l&rid=giphy.webp&ct=s",
               showConfirmButton: false,
             });
             const { uploadURL } = await (await fetch(`/api/files`)).json();
@@ -126,7 +126,7 @@ const Write: NextPage<EditProps> = ({
               title: "게시글을 수정 중입니다.",
               allowOutsideClick: false,
               imageUrl:
-                "https://media2.giphy.com/media/Qst7IVhmrF045J2cBF/200w.webp?cid=ecf05e47uqm92thxj8d7j6e0etujb1wyszk7s67uom3pon4j&rid=200w.webp&ct=s",
+                "https://media1.giphy.com/media/LPUOYeX0G13VhQ07eA/giphy.webp?cid=ecf05e47ep89yw3hmmy0bw2p53jpwkj1jy6g1cggqcc1x08l&rid=giphy.webp&ct=s",
               showConfirmButton: false,
             });
             await postSubmit({

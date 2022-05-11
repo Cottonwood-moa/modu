@@ -71,6 +71,7 @@ modu는 리액트 개발자를 위한 커스텀 훅이나 패키지 등을 공�
 - ORM - Prisma
 - Serverless DB - Planet Scale
 - Next Auth
+- Toast Editor UI
 - CRUD / post, comment, reply
 - CloudFlare image 저장 및 최적화.
 - tailwind css -> application UI 생산성 상향.

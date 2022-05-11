@@ -30,7 +30,7 @@ export default function PostCard({ post }: IProps) {
       whileHover={{
         scale: 1.1,
       }}
-      className="aspect-square w-full min-w-[300px] max-w-md cursor-pointer space-y-2 rounded-md bg-white p-4 shadow-lg dark:border-[2px] dark:border-slate-700 dark:bg-slate-900"
+      className="aspect-square w-full min-w-[300px] max-w-md cursor-pointer space-y-2 rounded-md border-[2px] border-slate-700 bg-white p-4 shadow-lg dark:bg-slate-900"
       onClick={() => toPostDetail(post.id)}
     >
       <div className="relative h-[80%] w-full">

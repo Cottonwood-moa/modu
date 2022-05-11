@@ -9,7 +9,7 @@ async function handler(
 
   try {
     if (query?.postId) {
-      await res.unstable_revalidate(`/post/${query?.postId}`);
+      await res.unstable_revalidate(`/post/${query?.postId}/`);
       return res.json({ ok: true });
     } else {
       await res.unstable_revalidate(`/`);

@@ -46,7 +46,6 @@ const Home: NextPage<IProps> = ({
     setCurrentPage(1);
     setSearchChar(search);
   };
-
   const orderByHandle = (kind: OrderBy) => {
     setOrderBy(kind);
   };
@@ -285,7 +284,11 @@ const Home: NextPage<IProps> = ({
                     const page = 12 * currentPage;
                     if (index >= page) return;
                     if (searchChar) {
-                      if (post?.title?.includes(searchChar)) {
+                      if (
+                        post?.title
+                          ?.toLowerCase()
+                          ?.includes(searchChar.toLowerCase())
+                      ) {
                         return (
                           <LazyHydrate whenVisible key={index}>
                             <PostCard post={post} />
@@ -293,9 +296,9 @@ const Home: NextPage<IProps> = ({
                         );
                       } else {
                         const tags = post?.postTags?.map((tag) => {
-                          return tag?.tag?.name;
+                          return tag?.tag?.name?.toLowerCase();
                         });
-                        if (tags?.includes(searchChar)) {
+                        if (tags?.includes(searchChar.toLowerCase())) {
                           return (
                             <LazyHydrate whenVisible key={index}>
                               <PostCard post={post} />
@@ -315,7 +318,12 @@ const Home: NextPage<IProps> = ({
                     const page = 12 * currentPage;
                     if (index >= page) return;
                     if (searchChar) {
-                      if (post?.title?.includes(searchChar)) {
+                      console.log("??????", post?.title?.toLowerCase());
+                      if (
+                        post?.title
+                          ?.toLowerCase()
+                          ?.includes(searchChar.toLowerCase())
+                      ) {
                         return (
                           <LazyHydrate whenVisible key={index}>
                             <PostCard post={post} />
@@ -323,9 +331,9 @@ const Home: NextPage<IProps> = ({
                         );
                       } else {
                         const tags = post?.postTags?.map((tag) => {
-                          return tag?.tag?.name;
+                          return tag?.tag?.name?.toLowerCase();
                         });
-                        if (tags?.includes(searchChar)) {
+                        if (tags?.includes(searchChar.toLowerCase())) {
                           return (
                             <LazyHydrate whenVisible key={index}>
                               <PostCard post={post} />

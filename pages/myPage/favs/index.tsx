@@ -35,16 +35,14 @@ const Favs: NextPage = () => {
           <>
             {data?.favsList?.length === 0 ? (
               <div className="flex min-h-[80vh] translate-y-20 flex-col items-center justify-center">
-                <span className="text-4xl font-bold text-gray-800 dark:text-white ">
-                  좋아요 목록이 없습니다.
-                </span>
-                <Image
-                  width={1000}
-                  height={600}
-                  src="/images/main3.svg"
+                <img
+                  src="https://media2.giphy.com/media/i9sDpfoJstrx8s2IKO/200.webp?cid=ecf05e47g6xpxsjexe9f7787gpn6u0jrkpkupx4sz03qhjc3&rid=200.webp&ct=s"
                   draggable="false"
                   alt=""
                 />
+                <span className="text-4xl font-bold text-gray-800 dark:text-white ">
+                  좋아요 목록이 없습니다.
+                </span>
               </div>
             ) : (
               <>

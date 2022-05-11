@@ -200,7 +200,8 @@ const Write: NextPage = () => {
                   animate={{ x: 0, opacity: 1 }}
                   className=" fixed top-56 left-0 z-10 space-y-2 rounded-lg bg-slate-700 p-6 text-xl font-bold text-white shadow-lg xl:left-28"
                 >
-                  <p>1. 코드 블럭을 넣을 땐</p>
+                  <p>1. 우측 상단 CB를 누르면 코드블럭이 삽입됩니다.</p>
+                  <p>언어에 맞게 하이라이팅이 지원됩니다.</p>
                   <p className="my-4">
                     ```js
                     <br />

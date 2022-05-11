@@ -38,13 +38,6 @@ interface UserWithLinks extends User {
   links: Link[];
 }
 
-interface Profile {
-  totalFavs: number;
-  totalPosts: number;
-  posts: PostWithTag[];
-  pages: number;
-  user: UserWithLinks;
-}
 interface IForm {
   avatar?: string;
   name?: string;
@@ -55,9 +48,21 @@ interface IForm {
 interface AvatarResponse {
   ok: boolean;
 }
-interface ProfileResponse extends Profile {
+
+interface ProfileResponse {
   ok: boolean;
+  totalFavs: number;
+
+  user: UserWithLinks;
 }
+
+interface PostResponse {
+  ok: boolean;
+  posts: PostWithTag[];
+  totalPosts: number;
+  pages: number;
+}
+
 interface DeleteUserResponse {
   ok: boolean;
 }
@@ -66,7 +71,12 @@ const Profile: NextPage = () => {
   const { user: loggedUser } = useUser();
   const [editMode, setEditMode] = useState(false);
   const [page, setPage] = useState(1);
-  const { data, mutate } = useSWR<ProfileResponse>(
+  const { data: posts, mutate: postsMutate } = useSWR<PostResponse>(
+    router?.query?.id
+      ? `/api/user/profilePosts?id=${router?.query?.id}&page=${page}`
+      : null
+  );
+  const { data: profile, mutate: profileMutate } = useSWR<ProfileResponse>(
     router?.query?.id
       ? `/api/user/profile?id=${router?.query?.id}&page=${page}`
       : null
@@ -94,7 +104,7 @@ const Profile: NextPage = () => {
   const watchUrl = watch("url");
 
   const onAvatarValid = async ({ avatar }: IForm) => {
-    if (loggedUser?.id !== data?.user?.id) return;
+    if (loggedUser?.id !== profile?.user?.id) return;
     setLoadingState(true);
     const { uploadURL } = await (await fetch(`/api/files`)).json();
     const form = new FormData();
@@ -111,7 +121,7 @@ const Profile: NextPage = () => {
     avatarMutation({
       avatarId: id,
       loggedUserId: loggedUser?.id,
-      userId: data?.user?.id,
+      userId: profile?.user?.id,
     });
     setLoadingState(false);
   };
@@ -144,7 +154,7 @@ const Profile: NextPage = () => {
       });
       return;
     }
-    if (name === data?.user?.name) {
+    if (name === profile?.user?.name) {
       Swal.fire({
         icon: "error",
         title: "변경사항이 없습니다.",
@@ -162,7 +172,7 @@ const Profile: NextPage = () => {
     });
     nameMutation({
       name,
-      userId: data?.user?.id,
+      userId: profile?.user?.id,
       loggedUserId: loggedUser?.id,
     })
       .then(() => Swal.close())
@@ -206,7 +216,7 @@ const Profile: NextPage = () => {
       });
       return;
     }
-    if (intro === data?.user?.introduce) {
+    if (intro === profile?.user?.introduce) {
       Swal.fire({
         icon: "error",
         title: "변경사항이 없습니다.",
@@ -224,7 +234,7 @@ const Profile: NextPage = () => {
     });
     introMutation({
       intro,
-      userId: data?.user?.id,
+      userId: profile?.user?.id,
       loggedUserId: loggedUser?.id,
     })
       .then(() => Swal.close())
@@ -241,7 +251,7 @@ const Profile: NextPage = () => {
     return;
   };
   const onLinkValid = async ({ linkName, url }: IForm) => {
-    if (data?.user?.links?.length === 3) {
+    if (profile?.user?.links?.length === 3) {
       Swal.fire({
         icon: "error",
         title: "링크 수는 최대 3개입니다.",
@@ -281,7 +291,7 @@ const Profile: NextPage = () => {
     setValue("url", "");
   };
   const onLinkDelete = (linkId: number) => {
-    fetch(`/api/user/link?linkId=${linkId}`).then(() => mutate());
+    fetch(`/api/user/link?linkId=${linkId}`).then(() => profileMutate());
     Swal.fire({
       icon: "success",
       title: "링크가 삭제되었습니다.",
@@ -313,37 +323,41 @@ const Profile: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [avatar]);
   useEffect(() => {
-    if (avatarResponse && avatarResponse?.ok) mutate();
-  }, [avatarResponse, mutate]);
+    if (avatarResponse && avatarResponse?.ok) profileMutate();
+  }, [avatarResponse, profileMutate]);
   useEffect(() => {
-    if (nameResponse && nameResponse?.ok) mutate();
-  }, [nameResponse, mutate]);
+    if (nameResponse && nameResponse?.ok) profileMutate();
+  }, [nameResponse, profileMutate]);
   useEffect(() => {
-    if (introResponse && introResponse?.ok) mutate();
-  }, [introResponse, mutate]);
+    if (introResponse && introResponse?.ok) profileMutate();
+  }, [introResponse, profileMutate]);
   useEffect(() => {
-    if (linkResponse && linkResponse?.ok) mutate();
-  }, [linkResponse, mutate]);
+    if (linkResponse && linkResponse?.ok) profileMutate();
+  }, [linkResponse, profileMutate]);
   return (
     <>
       <Head>
         <title>
-          modu | {data?.user?.name ? data?.user?.name + "의 프로필" : "로딩중"}
+          modu |{" "}
+          {profile?.user?.name ? profile?.user?.name + "의 프로필" : "로딩중"}
         </title>
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="modu" />
         <meta
           property="og:title"
-          content={`${data?.user?.name as string}의 프로필`}
+          content={`${profile?.user?.name as string}의 프로필`}
         />
-        <meta property="og:description" content={`${data?.user?.introduce}`} />
+        <meta
+          property="og:description"
+          content={`${profile?.user?.introduce}`}
+        />
         <meta
           property="og:image"
-          content={`https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${data?.user?.image}/avatar`}
+          content={`https://imagedelivery.net/eckzMTmKrj-QyR0rrfO7Fw/${profile?.user?.image}/avatar`}
         />
         <meta
           property="og:url"
-          content={`https://modu.vercel.app/myPage/${data?.user?.id}`}
+          content={`https://modu.vercel.app/myPage/${profile?.user?.id}`}
         />
       </Head>
       <Layout>
@@ -381,7 +395,7 @@ const Profile: NextPage = () => {
               <motion.div layoutId="userInfo" className="flex items-center">
                 <span>프로필</span>
               </motion.div>
-              {data?.user?.id === loggedUser?.id ? (
+              {profile?.user?.id === loggedUser?.id ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className={cls(
@@ -417,17 +431,17 @@ const Profile: NextPage = () => {
                   </div>
                 ) : null}
 
-                {data?.user?.image?.includes("https") ? (
+                {profile?.user?.image?.includes("https") ? (
                   <img
-                    src={data?.user?.image}
+                    src={profile?.user?.image}
                     className="h-32 w-32 rounded-full bg-slate-200"
                     alt=""
                   />
                 ) : (
                   <img
                     src={
-                      data?.user?.image
-                        ? ImageDelivery(data?.user?.image, "avatar")
+                      profile?.user?.image
+                        ? ImageDelivery(profile?.user?.image, "avatar")
                         : "/images/modu.png"
                     }
                     className="h-32 w-32  rounded-full bg-slate-200"
@@ -460,7 +474,7 @@ const Profile: NextPage = () => {
                       />
                     </motion.svg>
                   </AnimatePresence>
-                  {/* data?.user?.id === loggedUser?.id  */}
+                  {/* profile?.user?.id === loggedUser?.id  */}
                   <input
                     {...register("avatar")}
                     className="hidden"
@@ -481,7 +495,7 @@ const Profile: NextPage = () => {
                   {...register("name")}
                   maxLength={10}
                   className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent  text-2xl font-bold text-gray-800 focus:border-b-2  focus:border-[#2ecc71] focus:outline-none focus:ring-0 dark:text-white"
-                  defaultValue={data?.user?.name ? data?.user?.name : ""}
+                  defaultValue={profile?.user?.name ? profile?.user?.name : ""}
                 />
 
                 <div className="flex justify-between p-1 text-xl font-medium text-gray-800 dark:text-white">
@@ -503,7 +517,7 @@ const Profile: NextPage = () => {
                   maxLength={100}
                   className="appearance-none border-0 border-b-2 border-gray-400 bg-transparent text-lg font-bold text-gray-800 focus:border-b-2 focus:border-[#2ecc71] focus:outline-none focus:ring-0 dark:text-white"
                   defaultValue={
-                    data?.user?.introduce ? data?.user?.introduce : ""
+                    profile?.user?.introduce ? profile?.user?.introduce : ""
                   }
                 />
                 <div className="flex justify-between p-1 text-right text-xl font-medium text-gray-800 dark:text-white">
@@ -563,7 +577,7 @@ const Profile: NextPage = () => {
                   </div>
                 </div>
                 <div className="pt-4">
-                  {data?.user?.links?.map((link) => {
+                  {profile?.user?.links?.map((link) => {
                     return (
                       <div key={link?.id} className="flex flex-col p-1">
                         <div className="flex justify-between text-base font-medium text-gray-800 dark:text-white">
@@ -598,17 +612,17 @@ const Profile: NextPage = () => {
                 layoutId="userImage"
                 className="selection:bg-transparent"
               >
-                {data?.user?.image?.includes("https") ? (
+                {profile?.user?.image?.includes("https") ? (
                   <img
-                    src={data?.user?.image}
+                    src={profile?.user?.image}
                     className="h-32 w-32  rounded-full bg-slate-200"
                     alt=""
                   />
                 ) : (
                   <img
                     src={
-                      data?.user?.image
-                        ? ImageDelivery(data?.user?.image, "avatar")
+                      profile?.user?.image
+                        ? ImageDelivery(profile?.user?.image, "avatar")
                         : "/images/modu.png"
                     }
                     className="h-32 w-32 rounded-full bg-slate-200"
@@ -618,9 +632,9 @@ const Profile: NextPage = () => {
               </motion.div>
               <div className="w-[80%] space-y-2 ">
                 <div className="flex items-center justify-between  text-2xl font-bold text-gray-800 dark:text-white">
-                  <span>{data?.user?.name}</span>
+                  <span>{profile?.user?.name}</span>
                   <div className="flex space-x-2">
-                    {data?.user?.links?.map((link) => {
+                    {profile?.user?.links?.map((link) => {
                       return (
                         <div key={link?.id}>
                           <span
@@ -635,28 +649,28 @@ const Profile: NextPage = () => {
                   </div>
                 </div>
                 <div className="flex space-x-4 text-lg font-medium">
-                  <div>포스트 {data?.totalPosts}개</div>
-                  <div>좋아요 {data?.totalFavs}개</div>
+                  <div>포스트 {posts?.totalPosts}개</div>
+                  <div>좋아요 {profile?.totalFavs}개</div>
                 </div>
 
                 <div className="text-lg font-bold text-gray-800 dark:text-white">
-                  {data?.user?.introduce}
+                  {profile?.user?.introduce}
                 </div>
               </div>
             </div>
           )}
           {/* 게시글 */}
-          {!data ? (
+          {!posts ? (
             <ProfileSkeleton />
           ) : editMode ? (
             <></>
-          ) : data?.posts?.length === 0 ? (
+          ) : posts?.posts?.length === 0 ? (
             <div className="pt-20  text-2xl font-bold text-gray-800 dark:text-white">
               게시글이 없습니다.
             </div>
           ) : (
             <div className="grid min-w-[850px] grid-cols-3 gap-2">
-              {data?.posts.map((item, index) => {
+              {posts?.posts.map((item, index) => {
                 return (
                   <motion.div
                     key={index}
@@ -721,7 +735,7 @@ const Profile: NextPage = () => {
               })}
             </div>
           )}
-          {editMode || data?.posts?.length === 0 ? (
+          {editMode || posts?.posts?.length === 0 ? (
             <></>
           ) : (
             <>
@@ -732,7 +746,7 @@ const Profile: NextPage = () => {
                     // @ts-ignore
                     setPage((prev) => {
                       if (prev === 1) {
-                        return data?.pages;
+                        return posts?.pages;
                       }
                       return prev - 1;
                     })
@@ -741,13 +755,13 @@ const Profile: NextPage = () => {
                   이전
                 </div>
                 <div>
-                  {page} of {data?.pages}
+                  {page} of {posts?.pages}
                 </div>
                 <div
                   className="cursor-pointer"
                   onClick={() =>
                     setPage((prev) => {
-                      if (prev === data?.pages) {
+                      if (prev === posts?.pages) {
                         return 1;
                       }
                       return prev + 1;

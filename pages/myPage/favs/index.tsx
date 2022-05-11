@@ -7,8 +7,8 @@ import useSWR from "swr";
 import Image from "next/image";
 import Head from "next/head";
 import useUser from "@libs/client/useUser";
-import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { motion } from "framer-motion";
 interface FavsList {
   post: PostWithInclude;
 }
@@ -20,11 +20,7 @@ const Favs: NextPage = () => {
   const router = useRouter();
   const { data } = useSWR<FavsListResponse>(`/api/user/favsList`);
   const { user } = useUser();
-  useEffect(() => {
-    if (!user) {
-      router.replace("/login");
-    }
-  }, []);
+
   return (
     <>
       <Head>
@@ -35,33 +31,53 @@ const Favs: NextPage = () => {
         <meta property="og:url" content="https://modu.vercel.app" />
       </Head>
       <Layout>
-        {data?.favsList?.length === 0 ? (
-          <div className="flex min-h-[80vh] translate-y-20 flex-col items-center justify-center">
-            <span className="text-4xl font-bold text-gray-800 dark:text-white ">
-              좋아요 목록이 없습니다.
-            </span>
-            <Image
-              width={1000}
-              height={600}
-              src="/images/main3.svg"
+        {user ? (
+          <>
+            {data?.favsList?.length === 0 ? (
+              <div className="flex min-h-[80vh] translate-y-20 flex-col items-center justify-center">
+                <span className="text-4xl font-bold text-gray-800 dark:text-white ">
+                  좋아요 목록이 없습니다.
+                </span>
+                <Image
+                  width={1000}
+                  height={600}
+                  src="/images/main3.svg"
+                  draggable="false"
+                  alt=""
+                />
+              </div>
+            ) : (
+              <>
+                {!data ? (
+                  <div className="flex min-h-[80vh] items-center justify-center">
+                    <img src="/images/loading.gif" alt="loading" />
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-6 p-12  xl:grid-cols-3 2xl:grid-cols-4">
+                    {data?.favsList?.map((post, index) => {
+                      return <PostCard post={post?.post} key={index} />;
+                    })}
+                  </div>
+                )}
+              </>
+            )}
+          </>
+        ) : (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", delay: 0.8, damping: 10 }}
+            className="flex min-h-[80vh] translate-y-20 flex-col items-center justify-center"
+          >
+            <img
+              src="https://media2.giphy.com/media/i9sDpfoJstrx8s2IKO/200.webp?cid=ecf05e47g6xpxsjexe9f7787gpn6u0jrkpkupx4sz03qhjc3&rid=200.webp&ct=s"
               draggable="false"
               alt=""
             />
-          </div>
-        ) : (
-          <>
-            {!data ? (
-              <div className="flex min-h-[80vh] items-center justify-center">
-                <img src="/images/loading.gif" alt="loading" />
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-6 p-12  xl:grid-cols-3 2xl:grid-cols-4">
-                {data?.favsList?.map((post, index) => {
-                  return <PostCard post={post?.post} key={index} />;
-                })}
-              </div>
-            )}
-          </>
+            <span className="text-4xl font-bold text-gray-800 dark:text-white ">
+              로그인이 필요합니다.
+            </span>
+          </motion.div>
         )}
       </Layout>
     </>

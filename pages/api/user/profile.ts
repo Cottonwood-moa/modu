@@ -10,7 +10,7 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const {
-    query: { id, page },
+    query: { id },
   } = req;
 
   const user = await client.user.findFirst({

@@ -77,9 +77,7 @@ const Profile: NextPage = () => {
       : null
   );
   const { data: profile, mutate: profileMutate } = useSWR<ProfileResponse>(
-    router?.query?.id
-      ? `/api/user/profile?id=${router?.query?.id}&page=${page}`
-      : null
+    router?.query?.id ? `/api/user/profile?id=${router?.query?.id}` : null
   );
   const { register, watch, setValue } = useForm<IForm>();
   const [avatarMutation, { data: avatarResponse }] =

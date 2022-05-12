@@ -73,7 +73,7 @@ const Home: NextPage<IProps> = ({
   return (
     <>
       <Head>
-        <title>modu</title>
+        <title>modu | 모두의 HOOK</title>
         <meta
           property="description"
           content="모두의 HOOK 개발자 동료들에게 도움이 되는 여러분의 훅을 공유해보세요."

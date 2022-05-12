@@ -51,10 +51,10 @@ export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
                 <motion.div
                   initial={{ scale: 0, rotate: 360 }}
                   animate={{ scale: 1, rotate: 0 }}
-                  transition={{ type: "spring", damping: 10 }}
+                  transition={{ type: "spring", damping: 10, delay: 0.2 }}
                   whileHover={{
                     rotate: [0, 32, 0],
-                    transition: { type: "spring", damping: 20 },
+                    transition: { type: "spring", damping: 20, delay: 0 },
                   }}
                   className="m-2 flex cursor-pointer flex-col items-center justify-center"
                   onClick={() =>

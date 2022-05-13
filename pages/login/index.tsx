@@ -50,8 +50,11 @@ export const SignIn: NextPage<{ providers: AppProvider; previous: any }> = ({
               <div>
                 <motion.div
                   initial={{ scale: 0, rotate: 360 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ type: "spring", damping: 10, delay: 0.2 }}
+                  animate={{
+                    scale: 1,
+                    rotate: 0,
+                    transition: { type: "spring", damping: 20, delay: 0.2 },
+                  }}
                   whileHover={{
                     rotate: [0, 32, 0],
                     transition: { type: "spring", damping: 20, delay: 0 },

@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 import { orderAtom, OrderBy, pageAtom, searchAtom } from "@atom/atom";
 import type { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useViewportScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import client from "@libs/server/client";
 import { Post, User } from "@prisma/client";
@@ -40,7 +40,7 @@ const Home: NextPage<IProps> = ({
   const [orderBy, setOrderBy] = useRecoilState(orderAtom);
   const [searchChar, setSearchChar] = useRecoilState(searchAtom);
   const [currentPage, setCurrentPage] = useRecoilState(pageAtom);
-  const [prevent, setPrevent] = useState(false);
+  const { scrollYProgress } = useViewportScroll();
   const { register, handleSubmit, reset } = useForm<SearchForm>();
   const onValid = ({ search }: SearchForm) => {
     setCurrentPage(1);
@@ -54,21 +54,14 @@ const Home: NextPage<IProps> = ({
     reset();
   };
 
-  const handleScroll = () => {
-    if (
-      document.documentElement.scrollTop + window.innerHeight ===
-      document.documentElement.scrollHeight
-    ) {
-      setCurrentPage((p) => p + 1);
-    }
-  };
-
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    scrollYProgress.onChange(() => {
+      if(scrollYProgress.get() === 1){
+        setCurrentPage((p) => p + 1);
+      }
+      console.log("이거", scrollYProgress.get());
+    });
+  }, [scrollYProgress]);
 
   return (
     <>

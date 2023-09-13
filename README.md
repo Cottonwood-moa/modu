@@ -2,19 +2,22 @@
 
 ![modu](https://user-images.githubusercontent.com/79053495/167311059-f9d3c49d-34ba-4d26-9ecb-b6134c0302c8.png)  
 
-React 개발자를 위한 HOOK 공유 사이트.
-
-modu는 리액트 개발자를 위한 커스텀 훅이나 패키지 등을 공유하기 위한 사이트 입니다. 
-
-리액트는 이미 레딧, 페이스북 , 해쉬노드 등 거대한 커뮤니티 들이 많지만
-
-필요한 훅이나 패키지들을 찾아내기가 쉽지 않았습니다.
-
-이 사이트는 오직 그것만을 위해 만든 저 개인의 욕심이 투영된 사이트 입니다.
-
-여러분들이 사용한 강력한 훅이나 패키지 등을 자유롭게 공유해주세요.
-
-투고된 게시물은 즉시 정적 사이트로 생성되며 SEO에 최적화 되어 있습니다.
+React 개발자를 위한 훅 공유 어플리케이션 입니다.
+-Next.js + Typescript Severless application
+-Next API Routes와 Prisma를 이용하여 API 서버를 구축하고 기본적인 CRUD를 구현했습니다.
+-SWR을 적극 사용하여 state 관리를 최소화 하였습니다.
+-전역 상태가 불가피한 경우 Recoil을 사용했습니다.
+-Static Generation으로 포스트를 작성하는 즉시 정적사이트로 배포하여 유저경험을 높였고 Vercel Web Vitals score 최고 98점을 기록했습니다.
+-정적 생성에 대응하는 Sitemap 로직을 구현했습니다.
+-Incremental Static Regeneration(증분 정적 재생성) 컨셉을 적용해 수정되는 리소스에 대응하였습니다.
+-Next Auth로 깃허브와 구글 연동 로그인을 구현하였습니다.
+-Toast Editor UI와 React Markdown으로 마크다운과 위지윅을 지원하였습니다.
+-CloudFlare Image에 이미지를 저장합니다.
+-tailwind css를 적극 사용하여 다크모드를 포함한 application UI 생산성 상향하였습니다.
+-Framer motion으로 애니메이션을 구현하였습니다.
+-Apex chart로 차트 데이터를 시각화 하였습니다.
+-웹 성능 최적화를 위해 Lazy loading과 Dynamic Import 기능 및 Lazy Hydration 패키지를 사용하였습니다.
+-배포는 Vercel을 이용했습니다.
 
 ***
 
